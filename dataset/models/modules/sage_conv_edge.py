@@ -1,3 +1,5 @@
+# Custom implementation of SAGEConv with edge features based on torch_geometric.nn.conv.SAGEConv
+
 from typing import List, Optional, Tuple, Union
 
 import torch

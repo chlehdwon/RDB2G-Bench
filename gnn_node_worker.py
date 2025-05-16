@@ -1,3 +1,5 @@
+# Reference: https://github.com/snap-stanford/relbench/blob/main/examples/gnn_node.py
+
 import argparse
 import copy
 import json

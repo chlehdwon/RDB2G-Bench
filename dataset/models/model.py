@@ -1,3 +1,5 @@
+# Reference: https://github.com/snap-stanford/relbench/blob/main/examples/model.py
+
 from typing import Any, Dict, List
 
 import torch
@@ -9,7 +11,7 @@ from torch_geometric.nn import MLP
 from torch_geometric.typing import NodeType
 
 from relbench.modeling.nn import HeteroEncoder, HeteroTemporalEncoder, HeteroGraphSAGE
-from .modules.nn import HeteroGraphSAGE, HeteroGAT, HeteroGIN, HeteroGATv2, HeteroGPS
+from .modules.nn import HeteroGraphSAGE, HeteroGIN,  HeteroGPS
 from dataset.utils import divide_node_edge_dict
 
 class Model(torch.nn.Module):
@@ -55,20 +57,6 @@ class Model(torch.nn.Module):
                 channels=channels,
                 aggr=aggr,
                 num_layers=num_layers,
-            )
-        elif gnn == "GAT":
-            self.gnn = HeteroGAT(
-                node_types=data.node_types,
-                edge_types=data.edge_types,
-                channels=channels,
-                aggr=aggr,
-            )
-        elif gnn == "GATv2":
-            self.gnn = HeteroGATv2(
-                node_types=data.node_types,
-                edge_types=data.edge_types,
-                channels=channels,
-                aggr=aggr,
             )
         elif gnn == "GIN":
             self.gnn = HeteroGIN(

@@ -1,3 +1,5 @@
+# Custom implementation of GPSConv based on torch_geometric.nn.conv.GPSConv
+
 import inspect
 from typing import Any, Dict, Optional, Union
 
