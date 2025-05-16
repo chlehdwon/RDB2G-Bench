@@ -16,9 +16,22 @@ RDB2G-Bench leverages the RelBench datasets to transform relational data into gr
 - Construct Extensive dataset covering 5 real-world RDBs and 12 predictive tasks.
 - Performance evaluation of various search methods (Greedy, Evolutionary Algorithm, LLM, etc.).
 
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/chlehdwon/RDB2G-Bench.git
+cd RDB2G-Bench
+```
+
+2. Install the main dependencies:
+```bash
+pip install -r requirements.txt
+```
+
 ## Usage
 
-### Reproduce the RDB2G-Bench dataset (or you can find [here](https://huggingface.co/datasets/kaistdata/RDB2G-Bench))
+### Reproducing our dataset (or you can find [here](https://huggingface.co/datasets/kaistdata/RDB2G-Bench))
 #### Key Parameters
 
 - `--dataset`: Name of the RelBench dataset to use (default: "rel-f1")
