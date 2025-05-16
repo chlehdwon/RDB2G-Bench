@@ -34,7 +34,8 @@ class PerformancePredictionDataset(Dataset):
                  seed: int = 42,
                  device: str = 'cpu',
                  train_ratio: float = 0.1,
-                 valid_ratio: float = 0.5):
+                 valid_ratio: float = 0.5,
+                 bidirect: bool = False):
         """
         Initializes the dataset, handling data loading and preprocessing.
 
@@ -47,6 +48,8 @@ class PerformancePredictionDataset(Dataset):
             seed (int): Random seed for reproducibility (data splitting, etc.).
             device (str): Device ('cpu' or 'cuda:X') for potential GPU operations like text embedding.
             train_ratio (float): Combined proportion of the dataset for the training and validation sets (e.g., 0.2 means 10% train, 10% validation, 80% test).
+            valid_ratio (float): Proportion of validation set within the train_ratio portion.
+            bidirect (bool): Whether to create bidirectional edges for regular edges.
         """
         super().__init__()
         self.dataset_name = dataset_name
@@ -58,6 +61,7 @@ class PerformancePredictionDataset(Dataset):
         self.device = torch.device(device)
         self.train_ratio = train_ratio
         self.valid_ratio = valid_ratio
+        self.bidirect = bidirect
         if not (0 < train_ratio < 1.0):
              raise ValueError("train_ratio must be between 0 and 1 (exclusive) to represent the combined train+validation proportion.")
 
@@ -112,7 +116,7 @@ class PerformancePredictionDataset(Dataset):
             gnn_search_space_cls = IDGNNLinkSearchSpace
         else:
             raise ValueError(f"Unsupported task type: {self.task.task_type}")
-        self.target_col = f"test_{self.tune_metric}"
+        self.target_col = "test_tune_metric"
         print(f"Task type: {self.task.task_type}, Tune metric: {self.tune_metric}, Target (y): {self.target_col}")
 
         print("Calculating full edge set using TotalSearchSpace...")
@@ -140,7 +144,7 @@ class PerformancePredictionDataset(Dataset):
         df_result = pd.DataFrame()
         required_cols = [
             "idx", "graph",
-            f"test_{self.tune_metric}",
+            "test_tune_metric",
             "params", "train_time",
             "valid_time", "test_time"
         ]
@@ -162,7 +166,7 @@ class PerformancePredictionDataset(Dataset):
         print(f"Loaded {len(df_result)} rows from {len([f for f in file_names if f.endswith('.csv')])} CSV files.")
 
         agg_dict = {
-            f"test_{self.tune_metric}": ["mean", "std"],
+            "test_tune_metric": ["mean", "std"],
             "params": "mean",
             "train_time": "mean",
             "valid_time": "mean",

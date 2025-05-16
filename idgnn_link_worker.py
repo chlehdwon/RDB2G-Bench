@@ -208,7 +208,7 @@ if args.debug:
     args.idx = args.debug_idx
     args.workers = search_space_size
 
-columns = ["idx", "graph"] + ["train_"+tune_metric] + ["val_"+tune_metric] + ["test_"+tune_metric] + ["params", "train_time", "valid_time", "test_time", "total_time"]
+columns = ["idx", "graph"] + ["train_tune_metric"] + ["val_tune_metric"] + ["test_tune_metric"] + ["params", "train_time", "valid_time", "test_time"] + ["dataset", "task", "seed"]
 csv_dir = f"{args.result_dir}/tables/{args.dataset}/{args.task}/{args.tag}"
 os.makedirs(csv_dir, exist_ok=True)
 csv_path = f"{csv_dir}/{args.seed}.csv"
@@ -374,7 +374,7 @@ for idx, graph_config in graphs_to_run:
     if not args.debug:
         graph_str = ''.join(map(str, graph.int().tolist()))
         graph_str = f"graph_{graph_str}"
-        one_data = [idx, graph_str] + [train_metrics[tune_metric], val_metrics[tune_metric], test_metrics[tune_metric]] + [params, train_time, valid_time, test_time, time.time() - iter_start]
+        one_data = [idx, graph_str] + [train_metrics[tune_metric], val_metrics[tune_metric], test_metrics[tune_metric]] + [params, train_time, valid_time, test_time] + [args.dataset, args.task, args.seed]
         df_one = pd.DataFrame([one_data], columns=columns)
         df_one.to_csv(csv_path, mode='a', header=False, index=False)
     else:
