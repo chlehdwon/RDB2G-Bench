@@ -1,0 +1,392 @@
+{
+    "rel-f1": {
+        "0": [
+            "constructors",
+            "r2e_constructor_results",
+            "races"
+        ],
+        "1": [
+            "constructors",
+            "r2e_constructor_standings",
+            "races"
+        ],
+        "2": [
+            "drivers",
+            "r2e_standings",
+            "races"
+        ],
+        "3": [
+            "constructor_results",
+            "f2p_constructorId",
+            "constructors"
+        ],
+        "4": [
+            "constructor_results",
+            "f2p_raceId",
+            "races"
+        ],
+        "5": [
+            "constructor_standings",
+            "f2p_constructorId",
+            "constructors"
+        ],
+        "6": [
+            "constructor_standings",
+            "f2p_raceId",
+            "races"
+        ],
+        "7": [
+            "qualifying",
+            "f2p_constructorId",
+            "constructors"
+        ],
+        "8": [
+            "qualifying",
+            "f2p_driverId",
+            "drivers"
+        ],
+        "9": [
+            "qualifying",
+            "f2p_raceId",
+            "races"
+        ],
+        "10": [
+            "races",
+            "f2p_circuitId",
+            "circuits"
+        ],
+        "11": [
+            "results",
+            "f2p_constructorId",
+            "constructors"
+        ],
+        "12": [
+            "results",
+            "f2p_driverId",
+            "drivers"
+        ],
+        "13": [
+            "results",
+            "f2p_raceId",
+            "races"
+        ],
+        "14": [
+            "standings",
+            "f2p_driverId",
+            "drivers"
+        ],
+        "15": [
+            "standings",
+            "f2p_raceId",
+            "races"
+        ]
+    },
+    "rel-event": {
+        "0": [
+            "events",
+            "r2e_event_attendees",
+            "users"
+        ],
+        "1": [
+            "events",
+            "r2e_event_interest",
+            "users"
+        ],
+        "2": [
+            "users",
+            "r2e_user_friends",
+            "users"
+        ],
+        "3": [
+            "event_attendees",
+            "f2p_event",
+            "events"
+        ],
+        "4": [
+            "event_attendees",
+            "f2p_user_id",
+            "users"
+        ],
+        "5": [
+            "event_interest",
+            "f2p_event",
+            "events"
+        ],
+        "6": [
+            "event_interest",
+            "f2p_user",
+            "users"
+        ],
+        "7": [
+            "events",
+            "f2p_user_id",
+            "users"
+        ],
+        "8": [
+            "user_friends",
+            "f2p_friend",
+            "users"
+        ],
+        "9": [
+            "user_friends",
+            "f2p_user",
+            "users"
+        ]
+    },
+    "rel-avito": {
+        "0": [
+            "AdsInfo",
+            "r2e_PhoneRequestsStream",
+            "UserInfo"
+        ],
+        "1": [
+            "AdsInfo",
+            "r2e_SearchStream",
+            "SearchInfo"
+        ],
+        "2": [
+            "AdsInfo",
+            "r2e_VisitStream",
+            "UserInfo"
+        ],
+        "3": [
+            "AdsInfo",
+            "f2p_CategoryID",
+            "Category"
+        ],
+        "4": [
+            "AdsInfo",
+            "f2p_LocationID",
+            "Location"
+        ],
+        "5": [
+            "PhoneRequestsStream",
+            "f2p_AdID",
+            "AdsInfo"
+        ],
+        "6": [
+            "PhoneRequestsStream",
+            "f2p_UserID",
+            "UserInfo"
+        ],
+        "7": [
+            "SearchInfo",
+            "f2p_CategoryID",
+            "Category"
+        ],
+        "8": [
+            "SearchInfo",
+            "f2p_LocationID",
+            "Location"
+        ],
+        "9": [
+            "SearchInfo",
+            "f2p_UserID",
+            "UserInfo"
+        ],
+        "10": [
+            "SearchStream",
+            "f2p_AdID",
+            "AdsInfo"
+        ],
+        "11": [
+            "SearchStream",
+            "f2p_SearchID",
+            "SearchInfo"
+        ],
+        "12": [
+            "VisitStream",
+            "f2p_AdID",
+            "AdsInfo"
+        ],
+        "13": [
+            "VisitStream",
+            "f2p_UserID",
+            "UserInfo"
+        ]
+    },
+    "rel-stack": {
+        "0": [
+            "posts",
+            "r2e_comments",
+            "users"
+        ],
+        "1": [
+            "posts",
+            "r2e_postHistory",
+            "users"
+        ],
+        "2": [
+            "posts",
+            "r2e_postLinks",
+            "posts"
+        ],
+        "3": [
+            "posts",
+            "r2e_votes",
+            "users"
+        ],
+        "4": [
+            "badges",
+            "f2p_UserId",
+            "users"
+        ],
+        "5": [
+            "comments",
+            "f2p_PostId",
+            "posts"
+        ],
+        "6": [
+            "comments",
+            "f2p_UserId",
+            "users"
+        ],
+        "7": [
+            "postHistory",
+            "f2p_PostId",
+            "posts"
+        ],
+        "8": [
+            "postHistory",
+            "f2p_UserId",
+            "users"
+        ],
+        "9": [
+            "postLinks",
+            "f2p_PostId",
+            "posts"
+        ],
+        "10": [
+            "postLinks",
+            "f2p_RelatedPostId",
+            "posts"
+        ],
+        "11": [
+            "posts",
+            "f2p_AcceptedAnswerId",
+            "posts"
+        ],
+        "12": [
+            "posts",
+            "f2p_OwnerUserId",
+            "users"
+        ],
+        "13": [
+            "posts",
+            "f2p_ParentId",
+            "posts"
+        ],
+        "14": [
+            "votes",
+            "f2p_PostId",
+            "posts"
+        ],
+        "15": [
+            "votes",
+            "f2p_UserId",
+            "users"
+        ]
+    },
+    "rel-trial": {
+        "0": [
+            "conditions",
+            "r2e_conditions_studies",
+            "studies"
+        ],
+        "1": [
+            "facilities",
+            "r2e_facilities_studies",
+            "studies"
+        ],
+        "2": [
+            "interventions",
+            "r2e_interventions_studies",
+            "studies"
+        ],
+        "3": [
+            "studies",
+            "r2e_outcome_analyses",
+            "outcomes"
+        ],
+        "4": [
+            "studies",
+            "r2e_sponsors_studies",
+            "sponsors"
+        ],
+        "5": [
+            "conditions_studies",
+            "f2p_condition_id",
+            "conditions"
+        ],
+        "6": [
+            "conditions_studies",
+            "f2p_nct_id",
+            "studies"
+        ],
+        "7": [
+            "designs",
+            "f2p_nct_id",
+            "studies"
+        ],
+        "8": [
+            "drop_withdrawals",
+            "f2p_nct_id",
+            "studies"
+        ],
+        "9": [
+            "eligibilities",
+            "f2p_nct_id",
+            "studies"
+        ],
+        "10": [
+            "facilities_studies",
+            "f2p_facility_id",
+            "facilities"
+        ],
+        "11": [
+            "facilities_studies",
+            "f2p_nct_id",
+            "studies"
+        ],
+        "12": [
+            "interventions_studies",
+            "f2p_intervention_id",
+            "interventions"
+        ],
+        "13": [
+            "interventions_studies",
+            "f2p_nct_id",
+            "studies"
+        ],
+        "14": [
+            "outcome_analyses",
+            "f2p_nct_id",
+            "studies"
+        ],
+        "15": [
+            "outcome_analyses",
+            "f2p_outcome_id",
+            "outcomes"
+        ],
+        "16": [
+            "outcomes",
+            "f2p_nct_id",
+            "studies"
+        ],
+        "17": [
+            "reported_event_totals",
+            "f2p_nct_id",
+            "studies"
+        ],
+        "18": [
+            "sponsors_studies",
+            "f2p_nct_id",
+            "studies"
+        ],
+        "19": [
+            "sponsors_studies",
+            "f2p_sponsor_id",
+            "sponsors"
+        ]
+    }
+}

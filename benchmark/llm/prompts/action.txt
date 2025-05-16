@@ -1,0 +1,52 @@
+Here is the introduction of the function add_fk_pk_edge:
+Description:
+Add a foreign key (FK) constraint from a column in one table to the primary key (PK) of another table.
+This establishes a directed relationship between two tables, allowing the database to enforce referential integrity.
+Parameters:
+    from_table_name: the name of the table containing the foreign key
+    from_col_name: the name of the foreign key column in to_table
+    to_table_name: the name of the table containing the primary key
+Here is the introduction of the function remove_fk_pk_edge:
+Description:
+Remove an existing foreign key (FK) constraint from a column in a table.
+This breaks the referential integrity between the two tables, allowing the foreign key column to contain values not present in the referenced primary key column.
+Parameters:
+    from_table_name: the name of the table containing the foreign key
+    from_col_name: the name of the primary key column in to_table
+    to_table_name: the name of the table containing the primary key
+Here is the introduction of the function convert_row_to_edge:
+Description:
+Convert a table that represents entities (rows) into a table that represents relationships (edges) between entities.
+This is typically done by ensuring the table contains only 2 foreign keys referencing other tables, thus modeling a relationship.
+Note that table_1_name and table_2_name can be equal when the edge_table_name has 2 foreign keys which refer to the same primary key.
+Parameters:
+    table_1_name: the name of the first row table
+    table_2_name: the name of the second row table
+    edge_table_name: the name of the table to convert to edge between table_1_name and table_2_name
+Here is the introduction of the function convert_edge_to_row:
+Description:
+Convert a table that represents relationships (edges) into a table that represents entities (rows).
+So the table is treated as a set of entities.
+Note that table_1_name and table_2_name can be equal when the edge_table_name has 2 foreign keys which refer to the same primary key.
+Parameters:
+    table_1_name: the name of the first row table
+    table_2_name: the name of the second row table
+    edge_table_name: the name of the edge table to convert to rows between table_1_name and table_2_name
+Here is the introduction of the function add_row2edge_edge:
+Description:
+Create a new edge (relationship) between two row tables by introducing a new edge table.
+The new edge table will contain foreign keys referencing the primary keys of the two row tables, representing a many-to-many relationship.
+Note that table_1_name and table_2_name can be equal when the edge_table_name has 2 foreign keys which refer to the same primary key.
+Parameters:
+    table_1_name: the name of the first row table
+    table_2_name: the name of the second row table
+    edge_table_name: the name of the new edge table to create between table_1_name and table_2_name
+Here is the introduction of the function remove_row2edge_edge:
+Description:
+Remove an edge (relationship) between two row tables by deleting the edge table.
+This operation eliminates the explicit relationship between the two tables.
+Note that table_1_name and table_2_name can be equal when the edge_table_name has 2 foreign keys which refer to the same primary key.
+Parameters:
+    table_1_name: the name of the first row table
+    table_2_name: the name of the second row table
+    edge_table_name: the name of the edge table to remove between table_1_name and table_2_name

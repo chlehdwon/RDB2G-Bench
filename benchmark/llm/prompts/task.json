@@ -1,0 +1,15 @@
+{
+    "driver-dnf": "For each driver predict the if they will DNF (did not finish) a race in the next 1 month.",
+    "driver-top3": "For each driver predict the top 3 teams they will drive for in the next 1 month.",
+    "driver-position": "For each driver predict the position they will finish in the next 1 month.",
+    "user-repeat": "Predict whether a user will attend an event(by responding yes or maybe) in the next 7 days if they have already attended an event in the last 14 days.",
+    "user-ignore": "Predict whether a user will ignore more than 2 event invitations in the next 7 days",
+    "user-attendance": "Predict how many events each user will respond yes or maybe in the next seven days.",
+    "user-clicks": "Predict whether each customer will click on more than one Ads in the next 4 days.",
+    "user-visits": "Predict whether each customer will visit more than one Ad in the next 4 days.",
+    "ad-ctr": "Assuming the Ad will be clicked in the next 4 days, predict the Click-Through-Rate (CTR) for each Ad.",
+    "user-ad-visit":"Predict the list of ads a user will visit in the next 4 days.", 
+    "post-post-related" :"Predict a list of existing posts that users will link a given post to in the next two years.",
+    "study-outcome":"Predict if the trials will achieve its primary outcome (defined as p-value < 0.05)."
+}
+
