@@ -57,11 +57,11 @@ Note: Please verify that all datasets are saved in the result directory specifie
 python run_benchmark.py --dataset rel-f1 --task driver-top3 --method all --result_dir [result_dir]
 ```
 
-### Key Parameters
+#### Key Parameters
 
 - `--dataset`: Name of the RelBench dataset to use (default: "rel-f1")
 - `--task`: Name of the task to perform (default: "driver-top3")
-- `--method`: Analysis method ('all', 'gnn', 'ea', 'greedy', 'rl', 'bo')
+- `--method`: Analysis method ('all', 'ea', 'greedy', 'rl', 'bo')
 - `--seed`: Random seed (default: 0)
 
 
