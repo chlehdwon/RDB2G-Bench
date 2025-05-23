@@ -1,3 +1,5 @@
+# Custom implementation of GINConv based on torch_geometric.nn.conv.GINConv
+
 from typing import Callable, Optional, Union
 
 import torch
