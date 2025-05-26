@@ -54,7 +54,7 @@ python idgnn_link_worker.py --dataset [dataset_name] --task [task_name] --idx 0 
 
 ### 2. Running the Basic Benchmark
 
-Note: Please verify that all datasets are saved in the result directory specified by `--result_dir` parameter before running the benchmark. (default: `./benchmark/results`)
+Note: Please verify that all datasets are saved in the result directory specified by `--result_dir` parameter before running the benchmark. (default: `benchmark/results`)
 
 #### 2.1 Action-based Baselines
 
