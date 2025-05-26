@@ -52,7 +52,7 @@ python gnn_node_worker.py --dataset [dataset_name] --task [task_name] --idx 0 --
 python idgnn_link_worker.py --dataset [dataset_name] --task [task_name] --idx 0 --workers 1 --gnn GraphSAGE
 ```
 
-### 2. Running the Basic Benchmark
+### 2. Running the Benchmark on our dataset
 
 Note: Please verify that all datasets are saved in the result directory specified by `--result_dir` parameter before running the benchmark. (default: `benchmark/results`)
 
