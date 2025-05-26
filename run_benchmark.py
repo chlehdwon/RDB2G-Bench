@@ -26,7 +26,7 @@ parser.add_argument('--evo_tourn_size', type=int, default=10, help='Tournament s
 parser.add_argument('--evo_max_iter', type=int, default=1000, help='Max iterations for evolutionary heuristic')
 
 # Training Hyperparameters
-parser.add_argument("--train_ratio", type=float, default=0.05, help="Combined proportion for train and validation sets (e.g., 0.1 means 5% train, 5% valid).")
+parser.add_argument("--budget_percentage", type=float, default=0.05, help="Budget percentage for the search algorithm")
 parser.add_argument("--epochs", type=int, default=200, help="Maximum number of training epochs")
 parser.add_argument("--batch_size", type=int, default=16, help="Batch size for training and evaluation")
 parser.add_argument("--lr", type=float, default=0.001, help="Learning rate")
@@ -42,7 +42,7 @@ parser.add_argument(
     type=str,
     nargs='+',
     default=['all'], 
-    choices=['all', 'gnn', 'ea', 'greedy', 'rl', 'bo'],
+    choices=['all', 'ea', 'greedy', 'rl', 'bo'],
     help='Which analysis method(s) to run. Specify one or more methods separated by spaces. \'all\' runs all methods.'
 )
 

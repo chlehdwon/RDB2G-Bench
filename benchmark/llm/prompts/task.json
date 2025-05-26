@@ -1,7 +1,7 @@
 {
     "driver-dnf": "For each driver predict the if they will DNF (did not finish) a race in the next 1 month.",
-    "driver-top3": "For each driver predict the top 3 teams they will drive for in the next 1 month.",
-    "driver-position": "For each driver predict the position they will finish in the next 1 month.",
+    "driver-top3": "For each driver predict if they will qualify in the top-3 for a race in the next 1 month.",
+    "driver-position": "Predict the average finishing position of each driver all races in the next 2 months.",
     "user-repeat": "Predict whether a user will attend an event(by responding yes or maybe) in the next 7 days if they have already attended an event in the last 14 days.",
     "user-ignore": "Predict whether a user will ignore more than 2 event invitations in the next 7 days",
     "user-attendance": "Predict how many events each user will respond yes or maybe in the next seven days.",

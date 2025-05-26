@@ -153,7 +153,7 @@ def main(args):
         result_dir=args.result_dir,
         seed=base_seed,
         device=str(device),
-        train_ratio=args.train_ratio,
+        train_ratio=args.budget_percentage,
         valid_ratio=args.valid_ratio
     )
     print("Dataset initialized.")
@@ -213,7 +213,7 @@ def main(args):
             micro_action_set=micro_action_set,
             overall_actual_y=overall_actual_y_run,
             higher_is_better=higher_is_better,
-            termination_threshold_ratio=args.train_ratio,
+            termination_threshold_ratio=args.budget_percentage,
         )
         if res_random: run_analysis_results[res_random["method"]] = res_random
         print("Random Heuristic analysis finished.")
@@ -224,7 +224,7 @@ def main(args):
             micro_action_set=micro_action_set,
             overall_actual_y=overall_actual_y_run,
             higher_is_better=higher_is_better,
-            termination_threshold_ratio=args.train_ratio,
+            termination_threshold_ratio=args.budget_percentage,
         )
         if res_random_seq: run_analysis_results[res_random_seq["method"]] = res_random_seq
         print("Random Sequential analysis finished.")
@@ -245,7 +245,7 @@ def main(args):
                 micro_action_set=micro_action_set, 
                 overall_actual_y=overall_actual_y_run,
                 higher_is_better=higher_is_better,
-                termination_threshold_ratio=args.train_ratio,
+                termination_threshold_ratio=args.budget_percentage,
                 population_size=args.evo_pop_size,
                 tournament_size=args.evo_tourn_size,
                 max_iterations=args.evo_max_iter,
@@ -260,7 +260,7 @@ def main(args):
                 micro_action_set=micro_action_set,
                 overall_actual_y=overall_actual_y_run,
                 higher_is_better=higher_is_better,
-                termination_threshold_ratio=args.train_ratio,
+                termination_threshold_ratio=args.budget_percentage,
             )
             if res_greedy_forward: run_analysis_results[res_greedy_forward["method"]] = res_greedy_forward
             res_greedy_backward = backward_greedy_heuristic_analysis(
@@ -268,7 +268,7 @@ def main(args):
                 micro_action_set=micro_action_set,
                 overall_actual_y=overall_actual_y_run,
                 higher_is_better=higher_is_better,
-                termination_threshold_ratio=args.train_ratio,
+                termination_threshold_ratio=args.budget_percentage,
             ) 
             if res_greedy_backward: run_analysis_results[res_greedy_backward["method"]] = res_greedy_backward
             print("Greedy Heuristic analysis finished.")
@@ -277,7 +277,7 @@ def main(args):
                 micro_action_set=micro_action_set,
                 overall_actual_y=overall_actual_y_run,
                 higher_is_better=higher_is_better,
-                termination_threshold_ratio=args.train_ratio,
+                termination_threshold_ratio=args.budget_percentage,
             )
             if res_random_greedy: run_analysis_results[res_random_greedy["method"]] = res_random_greedy
             print("Random Greedy Heuristic analysis finished.")
@@ -289,7 +289,7 @@ def main(args):
                 micro_action_set=micro_action_set,
                 overall_actual_y=overall_actual_y_run,
                 higher_is_better=higher_is_better,
-                termination_threshold_ratio=args.train_ratio,
+                termination_threshold_ratio=args.budget_percentage,
             )
             if res_rl: run_analysis_results[res_rl["method"]] = res_rl
             print("RL Heuristic analysis finished.")
@@ -301,7 +301,7 @@ def main(args):
                 micro_action_set=micro_action_set,
                 overall_actual_y=overall_actual_y_run,
                 higher_is_better=higher_is_better,
-                termination_threshold_ratio=args.train_ratio,
+                termination_threshold_ratio=args.budget_percentage,
                 initial_sampling_size=args.evo_pop_size,
             )
             if res_bo: run_analysis_results[res_bo["method"]] = res_bo
@@ -440,7 +440,7 @@ def main(args):
                 avg_trajectory_perf = np.nanmean(trajectories_array, axis=0)
                 std_trajectory_perf = np.nanstd(trajectories_array, axis=0)
                 
-                max_percent = args.train_ratio * 100
+                max_percent = args.budget_percentage * 100
                 budget_steps = np.arange(1, expected_length + 1)
                 budget_percents = (budget_steps / expected_length) * max_percent
                 
