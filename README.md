@@ -38,7 +38,7 @@ pip install -r requirements.txt
 - `--task`: Name of the task to perform (default: "driver-top3")
 - `--idx`: Worker index for parallel processing (ex: 0 ~ `workers`-1)
 - `--workers`: Total number of workers for parallel processing (ex: 1)
-- `--gnn`: Type of GNN model to use (default: "GraphSAGE", options: "GIN", "GPS")
+- `--gnn`: Type of GNN model to use (default: `GraphSAGE`, options: `GIN`, `GPS`)
 
 #### 1.1 Classification & Regression Task
 
@@ -49,7 +49,7 @@ python gnn_node_worker.py --dataset [dataset_name] --task [task_name] --idx 0 --
 #### 1.2 Recommendation Task
 
 ```bash
-python idgnn_link_worker.py --dataset [dataset_name] --task [task_name]
+python idgnn_link_worker.py --dataset [dataset_name] --task [task_name] --idx 0 --workers 1 --gnn GraphSAGE
 ```
 
 ### 2. Running the Basic Benchmark
