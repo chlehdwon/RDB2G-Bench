@@ -36,11 +36,14 @@ pip install -r requirements.txt
 
 - `--dataset`: Name of the RelBench dataset to use (default: "rel-f1")
 - `--task`: Name of the task to perform (default: "driver-top3")
+- `--idx`: Worker index for parallel processing (ex: 0 ~ `workers`-1)
+- `--workers`: Total number of workers for parallel processing (ex: 1)
+- `--gnn`: Type of GNN model to use (default: "GraphSAGE", options: "GIN", "GPS")
 
 #### 1.1 Classification & Regression Task
 
 ```bash
-python gnn_node_worker.py --dataset [dataset_name] --task [task_name]
+python gnn_node_worker.py --dataset [dataset_name] --task [task_name] --idx 0 --workers 1 --gnn GraphSAGE
 ```
 
 #### 1.2 Recommendation Task
@@ -56,7 +59,7 @@ Note: Please verify that all datasets are saved in the result directory specifie
 #### 2.1 Action-based Baselines
 
 ```bash
-python run_benchmark.py --dataset rel-f1 --task driver-top3 --budget_percentage 0.05 --method all --result_dir [result_dir] 
+python run_benchmark.py --dataset [dataset_name] --task [task_name] --budget_percentage 0.05 --method all --result_dir [result_dir] 
 ```
 
 #### Key Parameters
@@ -71,7 +74,7 @@ python run_benchmark.py --dataset rel-f1 --task driver-top3 --budget_percentage 
 Note: Please replace `"YOUR_API_KEY"` into your private key in `./benchmark/llm/llm_autog.py`.
 
 ```bash
-python ./benchmark/llm/llm_autog.py --dataset rel-f1 --task driver-top3 --budget_percentage 0.05 --temperature 0.8 --result_dir [result_dir]
+python benchmark/llm/llm_autog.py --dataset [dataset_name] --task [task_name] --budget_percentage 0.05 --temperature 0.8 --result_dir [result_dir]
 ```
 
 #### Key Parameters
