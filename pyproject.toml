@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rdb2g-bench"
+version = "0.1.0"
+description = "A benchmark framework for automatic graph modeling of relational databases"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    {name = "RDB2G-Bench Team", email = "chlehdwon@kaist.ac.kr"}
+]
+maintainers = [
+    {name = "RDB2G-Bench Team", email = "chlehdwon@kaist.ac.kr"}
+]
+keywords = ["graph neural networks", "relational databases", "benchmark", "machine learning"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.7"
+dependencies = [
+    "torch>=2.1.0",
+    "numpy>=1.26.0",
+    "pandas>=2.2.0",
+    "scikit-learn>=1.6.0",
+    "pytorch-frame>=0.2.5",
+    "torch_geometric==2.6.1",
+    "relbench==1.1.0",
+    "sentence-transformers>=3.3.1",
+    "matplotlib>=3.10.0",
+    "seaborn>=0.13.0",
+    "networkx>=3.1",
+    "tqdm>=4.65.0",
+    "anthropic>=0.25.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/chlehdwon/RDB2G-Bench"
+Repository = "https://github.com/chlehdwon/RDB2G-Bench"
+Issues = "https://github.com/chlehdwon/RDB2G-Bench/issues"
+
+[tool.setuptools.packages.find]
+include = ["rdb2g_bench*"]
+
+[tool.setuptools.package-data]
+rdb2g_bench = ["*.txt", "*.md"] 

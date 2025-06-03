@@ -1,0 +1,11 @@
+include README.md
+include LICENSE
+include requirements.txt
+include pyproject.toml
+recursive-include rdb2g_bench *.py
+recursive-include rdb2g_bench *.txt
+recursive-include rdb2g_bench *.md
+recursive-include rdb2g_bench *.json
+recursive-exclude rdb2g_bench __pycache__
+recursive-exclude rdb2g_bench *.pyc
+recursive-exclude rdb2g_bench *.pyo 
