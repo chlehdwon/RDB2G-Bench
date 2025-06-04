@@ -4,11 +4,10 @@
 [![Hugging Face](https://img.shields.io/badge/🤗_Hugging_Face-Datasets-blue)](https://huggingface.co/datasets/kaistdata/RDB2G-Bench)
 [![arXiv](https://img.shields.io/badge/arXiv-2506.01360-b31b1b.svg)](https://arxiv.org/abs/2506.01360)
 
-RDB2G-Bench is a easy-to-use framework for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs.
-
 This is the official implementation of the paper **RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases.**
 
-Our dataset is also available at [Hugging Face](https://huggingface.co/datasets/kaistdata/RDB2G-Bench).
+**RDB2G-Bench** is a easy-to-use framework for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs.
+
 
 ## Installation
 
@@ -42,7 +41,7 @@ export ANTHROPIC_API_KEY="YOUR_API_KEY"
 ```
 
 ```python
-from rdb2g_bench.benchmark.llm import run_llm_baseline
+from rdb2g_bench.benchmark.llm.llm_runner import run_llm_baseline
 
 results = run_llm_baseline(
     dataset="rel-f1",
@@ -57,9 +56,9 @@ results = run_llm_baseline(
 ### Reproduce Dataset for Classification & Regression Tasks
 
 ```python
-from rdb2g_bench.benchmark import micro_action
+from rdb2g_bench.dataset.node_worker import run_gnn_node_worker
 
-results = micro_action.run_node_task(
+results = run_gnn_node_worker(
     dataset="rel-f1",
     task="driver-top3",
     gnn_model="GraphSAGE",
@@ -71,9 +70,9 @@ results = micro_action.run_node_task(
 ### Reproduce Dataset for Recommendation Tasks
 
 ```python
-from rdb2g_bench.benchmark import micro_action
+from rdb2g_bench.dataset.link_worker import run_idgnn_link_worker
 
-results = micro_action.run_link_task(
+results = run_idgnn_link_worker(
     dataset="rel-avito",
     task="user-ad-visit",
     gnn_model="GraphSAGE",
