@@ -23,9 +23,8 @@ pip install -e .
 ### Running Benchmarks
 
 ```python
-from rdb2g_bench.benchmark.benchmark import main as run_benchmark
+from rdb2g_bench.benchmark.runner import run_benchmark
 
-# Compare different graph modeling approaches
 results = run_benchmark(
     dataset="rel-f1",
     task="driver-top3", 
@@ -34,12 +33,32 @@ results = run_benchmark(
 )
 ```
 
+### Running LLM-based baseline
+
+Before using LLM-based baseline, you need to set up your API key:
+
+```bash
+export ANTHROPIC_API_KEY="YOUR_API_KEY"
+```
+
+```python
+from rdb2g_bench.benchmark.llm import run_llm_baseline
+
+results = run_llm_baseline(
+    dataset="rel-f1",
+    task="driver-top3",
+    budget_percentage=0.05,
+    model="claude-3-5-sonnet-latest",
+    temperature=0.8,
+    seed=42
+)
+```
+
 ### Reproduce Dataset for Classification & Regression Tasks
 
 ```python
 from rdb2g_bench.benchmark import micro_action
 
-# Run node classification/regression task
 results = micro_action.run_node_task(
     dataset="rel-f1",
     task="driver-top3",
@@ -54,7 +73,6 @@ results = micro_action.run_node_task(
 ```python
 from rdb2g_bench.benchmark import micro_action
 
-# Run link prediction task  
 results = micro_action.run_link_task(
     dataset="rel-avito",
     task="user-ad-visit",
@@ -64,11 +82,14 @@ results = micro_action.run_link_task(
 )
 ```
 
+
 ## Package Structure
 
 ```
 rdb2g_bench/
 ├── benchmark/         # Core benchmarking functionality
+│   ├── llm/           # LLM-based baseline methods
+│   └── baselines/     # Other baseline methods
 ├── common/            # Shared utilities and search spaces  
 ├── dataset/           # Dataset loading and processing
 └── __init__.py        # Package initialization
