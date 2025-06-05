@@ -6,8 +6,7 @@
 
 This is the official implementation of the paper **RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases.**
 
-**RDB2G-Bench** is a easy-to-use framework for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs.
-
+**RDB2G-Bench** is an easy-to-use framework for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs.
 
 ## Installation
 
@@ -17,7 +16,57 @@ cd RDB2G-Bench
 pip install -e .
 ```
 
+Also, please install additional PyG dependencies. The below shows an example when you use torch 2.1.0 + cuda 12.1.
+
+```bash
+pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.1.0+cu121.html
+```
+You can skip this part if you don't want to reproduce our dataset.
+
 ## Python API Usage
+
+You can also check the `examples/` directory for complete usage examples and tutorials.
+
+### Download Pre-computed Datasets
+
+```python
+from rdb2g_bench.dataset.dataset import load_rdb2g_bench
+
+bench = load_rdb2g_bench("./results")
+
+result = bench['rel-f1']['driver-top3'][0]  # Access by graph index
+test_metric = result['test_metric']         # Test performance
+params = result['params']                   # Model parameters
+train_time = result['train_time']           # Train time
+```
+
+### Reproduce Datasets for Classification & Regression Tasks
+
+```python
+from rdb2g_bench.dataset.node_worker import run_gnn_node_worker
+
+results = run_gnn_node_worker(
+    dataset="rel-f1",
+    task="driver-top3",
+    gnn_model="GraphSAGE",
+    epochs=20,
+    lr=0.005
+)
+```
+
+### Reproduce Datasets for Recommendation Tasks
+
+```python
+from rdb2g_bench.dataset.link_worker import run_idgnn_link_worker
+
+results = run_idgnn_link_worker(
+    dataset="rel-avito",
+    task="user-ad-visit",
+    gnn_model="GraphSAGE",
+    epochs=20,
+    lr=0.001
+)
+```
 
 ### Running Benchmarks
 
@@ -28,7 +77,9 @@ results = run_benchmark(
     dataset="rel-f1",
     task="driver-top3", 
     budget_percentage=0.05,
-    method="all"
+    method="all",
+    num_runs=10,
+    seed=0
 )
 ```
 
@@ -53,35 +104,6 @@ results = run_llm_baseline(
 )
 ```
 
-### Reproduce Dataset for Classification & Regression Tasks
-
-```python
-from rdb2g_bench.dataset.node_worker import run_gnn_node_worker
-
-results = run_gnn_node_worker(
-    dataset="rel-f1",
-    task="driver-top3",
-    gnn_model="GraphSAGE",
-    epochs=20,
-    lr=0.005
-)
-```
-
-### Reproduce Dataset for Recommendation Tasks
-
-```python
-from rdb2g_bench.dataset.link_worker import run_idgnn_link_worker
-
-results = run_idgnn_link_worker(
-    dataset="rel-avito",
-    task="user-ad-visit",
-    gnn_model="GraphSAGE",
-    epochs=20,
-    lr=0.005
-)
-```
-
-
 ## Package Structure
 
 ```
@@ -93,12 +115,6 @@ rdb2g_bench/
 ├── dataset/           # Dataset loading and processing
 └── __init__.py        # Package initialization
 ```
-
-
-## Examples
-
-Check the `examples/` directory for complete usage examples and tutorials.
-
 
 ## Reference
 
