@@ -2,94 +2,139 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Hugging Face](https://img.shields.io/badge/🤗_Hugging_Face-Datasets-blue)](https://huggingface.co/datasets/kaistdata/RDB2G-Bench)
+[![arXiv](https://img.shields.io/badge/arXiv-2506.01360-b31b1b.svg)](https://arxiv.org/abs/2506.01360)
 
-This is an offical implementation of the paper **RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases.**
+This is the official implementation of the paper **RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases.**
 
-RDB2G-Bench is a toolkit for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs.
-
-Our dataset is available at [huggingface ](https://huggingface.co/datasets/kaistdata/RDB2G-Bench).
-
-## Overview
-
-RDB2G-Bench leverages the RelBench datasets to transform relational data into graphs and evaluates the performance of various analysis methods. Key features include:
-
-- Construct Extensive dataset covering 5 real-world RDBs and 12 predictive tasks.
-- Performance evaluation of various search methods (Greedy, Evolutionary Algorithm, LLM, etc.).
+**RDB2G-Bench** is an easy-to-use framework for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs.
 
 ## Installation
 
-1. Clone the repository:
 ```bash
 git clone https://github.com/chlehdwon/RDB2G-Bench.git
 cd RDB2G-Bench
+pip install -e .
 ```
 
-2. Install the main dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-### 1. Reproducing our dataset (or you can find [here](https://huggingface.co/datasets/kaistdata/RDB2G-Bench))
-#### Key Parameters
-
-- `--dataset`: Name of the RelBench dataset to use (default: "rel-f1")
-- `--task`: Name of the task to perform (default: "driver-top3")
-- `--idx`: Worker index for parallel processing (ex: 0 ~ `workers`-1)
-- `--workers`: Total number of workers for parallel processing (ex: 1)
-- `--gnn`: Type of GNN model to use (default: `GraphSAGE`, options: `GIN`, `GPS`)
-
-#### 1.1 Classification & Regression Task
+Also, please install additional PyG dependencies. The below shows an example when you use torch 2.1.0 + cuda 12.1.
 
 ```bash
-python gnn_node_worker.py --dataset [dataset_name] --task [task_name] --idx 0 --workers 1 --gnn GraphSAGE
+pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.1.0+cu121.html
+```
+You can skip this part if you don't want to reproduce our dataset.
+
+## Python API Usage
+
+You can also check the `examples/` directory for complete usage examples and tutorials.
+
+### Download Pre-computed Datasets
+
+```python
+from rdb2g_bench.dataset.dataset import load_rdb2g_bench
+
+bench = load_rdb2g_bench("./results")
+
+result = bench['rel-f1']['driver-top3'][0]  # Access by graph index
+test_metric = result['test_metric']         # Test performance
+params = result['params']                   # Model parameters
+train_time = result['train_time']           # Train time
 ```
 
-#### 1.2 Recommendation Task
+### Reproduce Datasets for Classification & Regression Tasks
+
+```python
+from rdb2g_bench.dataset.node_worker import run_gnn_node_worker
+
+results = run_gnn_node_worker(
+    dataset="rel-f1",
+    task="driver-top3",
+    gnn_model="GraphSAGE",
+    epochs=20,
+    lr=0.005
+)
+```
+
+### Reproduce Datasets for Recommendation Tasks
+
+```python
+from rdb2g_bench.dataset.link_worker import run_idgnn_link_worker
+
+results = run_idgnn_link_worker(
+    dataset="rel-avito",
+    task="user-ad-visit",
+    gnn_model="GraphSAGE",
+    epochs=20,
+    lr=0.001
+)
+```
+
+### Running Benchmarks
+
+```python
+from rdb2g_bench.benchmark.runner import run_benchmark
+
+results = run_benchmark(
+    dataset="rel-f1",
+    task="driver-top3", 
+    budget_percentage=0.05,
+    method="all",
+    num_runs=10,
+    seed=0
+)
+```
+
+### Running LLM-based baseline
+
+Before using LLM-based baseline, you need to set up your API key:
 
 ```bash
-python idgnn_link_worker.py --dataset [dataset_name] --task [task_name] --idx 0 --workers 1 --gnn GraphSAGE
+export ANTHROPIC_API_KEY="YOUR_API_KEY"
 ```
 
-### 2. Running the Benchmark on our dataset
+```python
+from rdb2g_bench.benchmark.llm.llm_runner import run_llm_baseline
 
-Note: Please verify that all datasets are saved in the result directory specified by `--result_dir` parameter before running the benchmark. (default: `benchmark/results`)
-
-#### 2.1 Action-based Baselines
-
-```bash
-python run_benchmark.py --dataset [dataset_name] --task [task_name] --budget_percentage 0.05 --method all --result_dir [result_dir] 
+results = run_llm_baseline(
+    dataset="rel-f1",
+    task="driver-top3",
+    budget_percentage=0.05,
+    model="claude-3-5-sonnet-latest",
+    temperature=0.8,
+    seed=42
+)
 ```
 
-#### Key Parameters
+## Package Structure
 
-- `--dataset`: Name of the RelBench dataset to use (default: "rel-f1")
-- `--task`: Name of the task to perform (default: "driver-top3")
-- `--budget_percentage`: Budget Ratio (default: 0.05)
-- `--method`: Analysis method ('all', 'ea', 'greedy', 'rl', 'bo')
-
-#### 2.2 LLM-based Baseline
-
-Note: Please replace `"YOUR_API_KEY"` into your private key in `./benchmark/llm/llm_autog.py`.
-
-```bash
-python benchmark/llm/llm_autog.py --dataset [dataset_name] --task [task_name] --budget_percentage 0.05 --temperature 0.8 --result_dir [result_dir]
 ```
-
-#### Key Parameters
-
-- `--dataset`: Name of the RelBench dataset to use (default: "rel-f1")
-- `--task`: Name of the task to perform (default: "driver-top3")
-- `--budget_percentage`: Budget Ratio (default: 0.05)
-- `--temperature`: LLM temperature (default: 0.8)
+rdb2g_bench/
+├── benchmark/         # Core benchmarking functionality
+│   ├── llm/           # LLM-based baseline methods
+│   └── baselines/     # Other baseline methods
+├── common/            # Shared utilities and search spaces  
+├── dataset/           # Dataset loading and processing
+└── __init__.py        # Package initialization
+```
 
 ## Reference
 
-The dataset construction and implementation of RDB2G-Bench based on [RelBench](https://github.com/snap-stanford/relbench) framework.
+The dataset construction and implementation of RDB2G-Bench is based on the [RelBench](https://github.com/snap-stanford/relbench) framework.
 
+## Citation
+
+If you use RDB2G-Bench in your research, please cite:
+
+```bibtex
+@article{choi2025rdb2gbench,
+    title={RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases}, 
+    author={Dongwon Choi and Sunwoo Kim and Juyeon Kim and Kyungho Kim and Geon Lee and Shinhwan Kang and Myunghwan Kim and Kijung Shin},
+    year={2025},
+    url={https://arxiv.org/abs/2506.01360}, 
+}
+```
 
 ## License
 
 This project is distributed under the MIT License as specified in the LICENSE file.
+
 
