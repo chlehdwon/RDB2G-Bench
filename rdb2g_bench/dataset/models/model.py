@@ -12,7 +12,7 @@ from torch_geometric.typing import NodeType
 
 from relbench.modeling.nn import HeteroEncoder, HeteroTemporalEncoder, HeteroGraphSAGE
 from .modules.nn import HeteroGraphSAGE, HeteroGIN,  HeteroGPS
-from dataset.utils import divide_node_edge_dict
+from ..utils import divide_node_edge_dict
 
 class Model(torch.nn.Module):
     def __init__(

@@ -53,8 +53,8 @@ def run_gnn_node_worker(
     tag: str = "",
     debug: bool = False,
     debug_idx: int = -1,
-    idx: Optional[int] = None,
-    workers: Optional[int] = None,
+    idx: Optional[int] = 0,
+    workers: Optional[int] = 1,
     target_indices: Optional[List[int]] = None,
     device: Optional[torch.device] = None,
     save_csv: bool = True,
@@ -254,7 +254,7 @@ def run_gnn_node_worker(
         
         csv_file_path = f"{csv_dir}/{seed}.csv"
         
-        columns = ["idx", "graph", "train_tune_metric", "val_tune_metric", "test_tune_metric", "params", "train_time", "valid_time", "test_time", "dataset", "task", "seed"]
+        columns = ["idx", "graph", "train_metric", "val_metric", "test_metric", "params", "train_time", "valid_time", "test_time", "dataset", "task", "seed"]
         
         if not os.path.exists(csv_file_path):
             print(f"Creating CSV file: {csv_file_path}")

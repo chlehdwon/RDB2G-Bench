@@ -59,8 +59,8 @@ def run_idgnn_link_worker(
     tag: str = "",
     debug: bool = False,
     debug_idx: int = -1,
-    idx: Optional[int] = None,
-    workers: Optional[int] = None,
+    idx: Optional[int] = 0,
+    workers: Optional[int] = 1,
     target_indices: Optional[List[int]] = None,
     device: Optional[torch.device] = None,
     save_csv: bool = True,
@@ -105,7 +105,7 @@ def run_idgnn_link_worker(
     """
     
     if device is None:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
     if torch.cuda.is_available():
         torch.set_num_threads(1)
@@ -255,14 +255,15 @@ def run_idgnn_link_worker(
         graphs_to_run = []
     
     csv_file_path = None
-    columns = None
+    csv_writer = None
+    csv_file = None
     if save_csv:
         csv_dir = f"{result_dir}/tables/{dataset_name}/{task_name}/{tag}"
         os.makedirs(csv_dir, exist_ok=True)
         
         csv_file_path = f"{csv_dir}/{seed}.csv"
         
-        columns = ["idx", "graph", "train_tune_metric", "val_tune_metric", "test_tune_metric", "params", "train_time", "valid_time", "test_time", "dataset", "task", "seed"]
+        columns = ["idx", "graph", "train_metric", "val_metric", "test_metric", "params", "train_time", "valid_time", "test_time", "dataset", "task", "seed"]
         
         if not os.path.exists(csv_file_path):
             print(f"Creating CSV file: {csv_file_path}")
@@ -304,29 +305,25 @@ def run_idgnn_link_worker(
             num_neighbors_list = [int(num_neighbors / 2**i) for i in range(num_layers)]
         
         loader_dict: Dict[str, NeighborLoader] = {}
-        train_sparse_tensor = None
-        
+        dst_nodes_dict: Dict[str, Tuple[NodeType, Tensor]] = {}
         for split in ["train", "val", "test"]:
             table = task.get_table(split)
-            table_input = get_link_train_table_input(table=table, task=task)
-            
+            table_input = get_link_train_table_input(table, task)
+            dst_nodes_dict[split] = table_input.dst_nodes
             loader_dict[split] = NeighborLoader(
                 search_data,
                 num_neighbors=num_neighbors_list,
                 time_attr="time" if is_time_exist else None,
-                input_nodes=table_input.nodes,
-                input_time=table_input.time if is_time_exist else None,
-                transform=table_input.transform,
+                input_nodes=table_input.src_nodes,
+                input_time=table_input.src_time if is_time_exist else None,
+                subgraph_type="bidirectional",
                 batch_size=batch_size,
                 temporal_strategy=temporal_strategy,
                 shuffle=split == "train",
                 num_workers=num_workers,
                 persistent_workers=num_workers > 0,
+                disjoint=True,
             )
-            
-            if split == "train":
-                train_sparse_tensor = SparseTensor.from_dgl(table_input.src_batch_to_dst_index)
-                train_sparse_tensor = train_sparse_tensor.to(device)
         
         model = Model(
             data=search_data,
@@ -335,27 +332,26 @@ def run_idgnn_link_worker(
             channels=channels,
             out_channels=1,
             aggr=aggr,
-            gnn=gnn,
-            norm="batch_norm",
+            norm="layer_norm",
+            id_awareness=True,
         ).to(device)
         optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+        train_sparse_tensor = SparseTensor(dst_nodes_dict["train"][1], device=device)
         
         params = sum(p.numel() for p in model.parameters() if p.requires_grad)
         print(f"Total learnable parameters: {params}")
         
         state_dict = None
-        best_val_metric = -math.inf
+        best_val_metric = 0
         patience_counter = 0
         train_start = time.time()
         
         for epoch in range(1, epochs + 1):
             train_loss = train(model, loader_dict, optimizer, train_sparse_tensor, edge_tf_dict)
-            
-            if epoch % eval_epochs_interval == 0 or epoch == epochs:
+            if epoch % eval_epochs_interval == 0:
                 val_pred = test(model, loader_dict["val"], edge_tf_dict)
                 val_metrics = task.evaluate(val_pred, task.get_table("val"))
-                
-                if val_metrics[tune_metric] >= best_val_metric:
+                if val_metrics[tune_metric] > best_val_metric:
                     best_val_metric = val_metrics[tune_metric]
                     state_dict = copy.deepcopy(model.state_dict())
                     patience_counter = 0
@@ -395,7 +391,7 @@ def run_idgnn_link_worker(
         
         processed_graphs.append(graph_idx)
         
-        del search_data, loader_dict, model, optimizer, train_sparse_tensor
+        del search_data, loader_dict, model, optimizer
         if 'train_pred' in locals():
             del train_pred, val_pred, test_pred
         if 'state_dict' in locals():
