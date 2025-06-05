@@ -6,12 +6,12 @@ pandas>=2.2.0
 scikit-learn>=1.6.0
 sentence-transformers>=3.3.1
 
-# PyTorch Geometric dependencies
-# Install separately: pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.1.0+cu121.html
-
 # RelBench 
 relbench==1.1.0
 pytorch-frame>=0.2.5
+
+# Hugging Face datasets
+datasets>=2.15.0
 
 # Plotting and visualization
 matplotlib>=3.10.0
@@ -23,3 +23,6 @@ tqdm>=4.65.0
 
 # LLM dependencies
 anthropic>=0.25.0
+
+# PyTorch Geometric dependencies
+# Install separately: pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.1.0+cu121.html
