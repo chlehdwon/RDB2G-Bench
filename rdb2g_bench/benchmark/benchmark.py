@@ -9,32 +9,26 @@ from torch_frame import stype
 from torch_frame.config.text_embedder import TextEmbedderConfig
 
 from pathlib import Path
-import time
 import numpy as np
 import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch_geometric.loader import DataLoader
 from torch_geometric.seed import seed_everything
-from torch.utils.data import Subset
-import matplotlib.pyplot as plt
 
-from benchmark.dataset import PerformancePredictionDataset
-from benchmark.micro_action import MicroActionSet
+from .dataset import PerformancePredictionDataset
+from .micro_action import MicroActionSet
 
-from common.text_embedder import GloveTextEmbedding
-from common.search_space.gnn_search_space import GNNNodeSearchSpace, IDGNNLinkSearchSpace
+from ..common.text_embedder import GloveTextEmbedding
+from ..common.search_space.gnn_search_space import GNNNodeSearchSpace, IDGNNLinkSearchSpace
 
 from relbench.base import TaskType
 from relbench.tasks import get_task
 from relbench.datasets import get_dataset
 
-from benchmark.baselines.ea import evolutionary_heuristic_analysis
-from benchmark.baselines.random import random_heuristic_analysis
-from benchmark.baselines.greedy import forward_greedy_heuristic_analysis, backward_greedy_heuristic_analysis, random_greedy_heuristic_analysis
-from benchmark.baselines.rl import rl_heuristic_analysis
-from benchmark.baselines.bo import bayesian_optimization_analysis
-from benchmark.baselines.utils import calculate_overall_rank
+from .baselines.ea import evolutionary_heuristic_analysis
+from .baselines.random import random_heuristic_analysis
+from .baselines.greedy import forward_greedy_heuristic_analysis, backward_greedy_heuristic_analysis, random_greedy_heuristic_analysis
+from .baselines.rl import rl_heuristic_analysis
+from .baselines.bo import bayesian_optimization_analysis
+from .baselines.utils import calculate_overall_rank
 
 def full_graph_heuristic_analysis(
     dataset: PerformancePredictionDataset,
@@ -153,8 +147,7 @@ def main(args):
         result_dir=args.result_dir,
         seed=base_seed,
         device=str(device),
-        train_ratio=args.budget_percentage,
-        valid_ratio=args.valid_ratio
+        train_ratio=args.budget_percentage
     )
     print("Dataset initialized.")
     
@@ -246,9 +239,6 @@ def main(args):
                 overall_actual_y=overall_actual_y_run,
                 higher_is_better=higher_is_better,
                 termination_threshold_ratio=args.budget_percentage,
-                population_size=args.evo_pop_size,
-                tournament_size=args.evo_tourn_size,
-                max_iterations=args.evo_max_iter,
             )
             if res_evo: run_analysis_results[res_evo["method"]] = res_evo
             print("Evolutionary Heuristic analysis finished.")
@@ -302,7 +292,6 @@ def main(args):
                 overall_actual_y=overall_actual_y_run,
                 higher_is_better=higher_is_better,
                 termination_threshold_ratio=args.budget_percentage,
-                initial_sampling_size=args.evo_pop_size,
             )
             if res_bo: run_analysis_results[res_bo["method"]] = res_bo
             print("Bayesian Optimization Heuristic analysis finished.")

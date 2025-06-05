@@ -2,13 +2,12 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
-import random
 import time
 from scipy.stats import norm
 
-from benchmark.dataset import PerformancePredictionDataset
-from benchmark.micro_action import MicroActionSet
-from benchmark.baselines.utils import calculate_overall_rank, get_performance_for_index, update_trajectory_and_best, pad_trajectory, calculate_evaluation_time
+from ..dataset import PerformancePredictionDataset
+from ..micro_action import MicroActionSet
+from .utils import calculate_overall_rank, get_performance_for_index, update_trajectory_and_best, pad_trajectory, calculate_evaluation_time
 
 def get_state_embedding(edge_set: list | tuple, embedding_dim: int) -> np.ndarray | None:
     """Converts the current edge set into a fixed-size numpy array embedding."""

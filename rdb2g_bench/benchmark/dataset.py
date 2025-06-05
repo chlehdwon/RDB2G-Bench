@@ -19,10 +19,9 @@ from relbench.modeling.utils import get_stype_proposal
 from torch_frame import stype
 from torch_frame.config.text_embedder import TextEmbedderConfig
 
-
-from common.text_embedder import GloveTextEmbedding
-from common.search_space.search_space import TotalSearchSpace
-from common.search_space.gnn_search_space import GNNNodeSearchSpace, IDGNNLinkSearchSpace
+from rdb2g_bench.common.text_embedder import GloveTextEmbedding
+from rdb2g_bench.common.search_space.search_space import TotalSearchSpace
+from rdb2g_bench.common.search_space.gnn_search_space import GNNNodeSearchSpace, IDGNNLinkSearchSpace
 
 class PerformancePredictionDataset(Dataset):
     def __init__(self,
@@ -33,9 +32,7 @@ class PerformancePredictionDataset(Dataset):
                  result_dir: str = os.path.expanduser("./results"),
                  seed: int = 42,
                  device: str = 'cpu',
-                 train_ratio: float = 0.1,
-                 valid_ratio: float = 0.5,
-                 bidirect: bool = False):
+                 train_ratio: float = 0.1):
         """
         Initializes the dataset, handling data loading and preprocessing.
 
@@ -48,8 +45,6 @@ class PerformancePredictionDataset(Dataset):
             seed (int): Random seed for reproducibility (data splitting, etc.).
             device (str): Device ('cpu' or 'cuda:X') for potential GPU operations like text embedding.
             train_ratio (float): Combined proportion of the dataset for the training and validation sets (e.g., 0.2 means 10% train, 10% validation, 80% test).
-            valid_ratio (float): Proportion of validation set within the train_ratio portion.
-            bidirect (bool): Whether to create bidirectional edges for regular edges.
         """
         super().__init__()
         self.dataset_name = dataset_name
@@ -60,8 +55,6 @@ class PerformancePredictionDataset(Dataset):
         self.seed = seed
         self.device = torch.device(device)
         self.train_ratio = train_ratio
-        self.valid_ratio = valid_ratio
-        self.bidirect = bidirect
         if not (0 < train_ratio < 1.0):
              raise ValueError("train_ratio must be between 0 and 1 (exclusive) to represent the combined train+validation proportion.")
 
@@ -116,7 +109,7 @@ class PerformancePredictionDataset(Dataset):
             gnn_search_space_cls = IDGNNLinkSearchSpace
         else:
             raise ValueError(f"Unsupported task type: {self.task.task_type}")
-        self.target_col = "test_tune_metric"
+        self.target_col = "test_metric"
         print(f"Task type: {self.task.task_type}, Tune metric: {self.tune_metric}, Target (y): {self.target_col}")
 
         print("Calculating full edge set using TotalSearchSpace...")
@@ -144,7 +137,7 @@ class PerformancePredictionDataset(Dataset):
         df_result = pd.DataFrame()
         required_cols = [
             "idx", "graph",
-            "test_tune_metric",
+            "test_metric",
             "params", "train_time",
             "valid_time", "test_time"
         ]
@@ -166,7 +159,7 @@ class PerformancePredictionDataset(Dataset):
         print(f"Loaded {len(df_result)} rows from {len([f for f in file_names if f.endswith('.csv')])} CSV files.")
 
         agg_dict = {
-            "test_tune_metric": ["mean", "std"],
+            "test_metric": ["mean", "std"],
             "params": "mean",
             "train_time": "mean",
             "valid_time": "mean",
@@ -209,39 +202,18 @@ class PerformancePredictionDataset(Dataset):
         self.full_graph_id = self.search_space.get_full_graph_idx(graphs_list_of_tuples)
         print(f"Full graph index: {self.full_graph_id}")
 
-        node_types_set = set()
-        for src, _, dst in self.full_edges:
-             node_types_set.add(src)
-             node_types_set.add(dst)
-
-        self.node_types = sorted(list(node_types_set))
-        self.node_type_map = {name: i for i, name in enumerate(self.node_types)}
-        self.num_nodes = len(self.node_types)
-        print(f"Total unique node types (tables): {self.num_nodes}")
-        print(f"Node types: {self.node_types}")
-
-        if self.task.task_type == TaskType.LINK_PREDICTION:
-            self.src_node_idx = self.node_type_map[self.task.src_entity_table]
-            self.dst_node_idx = self.node_type_map[self.task.dst_entity_table]
-        else:
-            self.src_node_idx = self.node_type_map[self.task.entity_table]
-            self.dst_node_idx = -1
-
-        self.static_node_features = torch.arange(self.num_nodes, dtype=torch.long)
-
         indices = self.df_result_group.index.tolist()
 
         test_size = 1.0 - self.train_ratio
-        val_prop_in_trainval = self.valid_ratio
 
-        print(f"Splitting data: Train={self.train_ratio / 2:.3f} / Val={self.train_ratio / 2:.3f} / Test={test_size:.3f} (based on train_ratio={self.train_ratio:.3f})")
+        print(f"Splitting data: Train={self.train_ratio / 2:.3f} / Test={test_size:.3f} (based on train_ratio={self.train_ratio:.3f})")
 
         train_val_indices, self.test_indices = train_test_split(
             indices, test_size=test_size, random_state=self.seed
         )
 
         self.train_indices, self.val_indices = train_test_split(
-            train_val_indices, test_size=val_prop_in_trainval, random_state=self.seed
+            train_val_indices, test_size=0.5, random_state=self.seed
         )
 
         self.splits = {
@@ -263,42 +235,8 @@ class PerformancePredictionDataset(Dataset):
             graph_bin_str = graph_bin_str[6:]
             
         target = torch.tensor([row[self.target_col]], dtype=torch.float)
-        train_time = torch.tensor([row['train_time']], dtype=torch.float)
 
-        edge_list = []
-        edge_feature_idx = []
-        for i, edge_type_tuple in enumerate(self.full_edges):
-            if graph_bin_str[i] == '1':
-                src_type, rel, dst_type = edge_type_tuple
-                if src_type in self.node_type_map and dst_type in self.node_type_map:
-                    src_idx_mapped = self.node_type_map[src_type]
-                    dst_idx_mapped = self.node_type_map[dst_type]
-                if rel[:4] == "r2e_":
-                    edge_type = rel[4:]
-                    edge_list.append([src_idx_mapped, dst_idx_mapped])
-                    edge_feature_idx.append(self.node_type_map[edge_type])
-                    edge_list.append([dst_idx_mapped, src_idx_mapped])
-                    edge_feature_idx.append(self.node_type_map[edge_type])
-                else:
-                    edge_list.append([src_idx_mapped, dst_idx_mapped])
-                    edge_feature_idx.append(-1)
-                    if self.bidirect:
-                        edge_list.append([dst_idx_mapped, src_idx_mapped])
-                        edge_feature_idx.append(-1)
-
-        edge_index = torch.tensor(edge_list, dtype=torch.long).t().contiguous() if edge_list else torch.empty((2, 0), dtype=torch.long)
-        edge_attr = torch.tensor(edge_feature_idx, dtype=torch.long)
-
-        data = Data(
-            x=self.static_node_features.clone(),
-            edge_index=edge_index,
-            edge_attr=edge_attr,
-            y=target, 
-            train_time=train_time,
-            num_nodes=self.num_nodes,
-            graph_id=torch.tensor([row['idx']], dtype=torch.long),
-            graph_bin_str=graph_bin_str
-        )
+        data = Data(y=target, graph_bin_str=graph_bin_str)
         return data
 
     def __getitem__(self, idx):

@@ -1,5 +1,4 @@
-
-from benchmark.llm.llm_micro_action import LLMMicroActionSet
+from .llm_micro_action import LLMMicroActionSet
 
 import pandas as pd
 import json

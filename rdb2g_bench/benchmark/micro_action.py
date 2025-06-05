@@ -2,8 +2,8 @@ from typing import Tuple, Set, Optional, Type, Union, List, Dict
 import torch
 from torch_geometric.data import HeteroData
 
-from common.search_space.search_space import TotalSearchSpace
-from common.search_space.gnn_search_space import GNNNodeSearchSpace, GNNLinkSearchSpace, IDGNNLinkSearchSpace
+from ..common.search_space.search_space import TotalSearchSpace
+from ..common.search_space.gnn_search_space import GNNNodeSearchSpace, GNNLinkSearchSpace, IDGNNLinkSearchSpace
 
 class MicroActionSet:
     def __init__(self,

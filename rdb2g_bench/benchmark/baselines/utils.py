@@ -1,5 +1,5 @@
 import torch
-from benchmark.dataset import PerformancePredictionDataset
+from ..dataset import PerformancePredictionDataset
 import numpy as np
 
 def calculate_overall_rank(selected_actual_y: float,

@@ -3,9 +3,9 @@ import numpy as np
 import random
 import time
 
-from benchmark.dataset import PerformancePredictionDataset
-from benchmark.micro_action import MicroActionSet
-from benchmark.baselines.utils import calculate_overall_rank, get_performance_for_index, update_trajectory_and_best, pad_trajectory, calculate_evaluation_time
+from ..dataset import PerformancePredictionDataset
+from ..micro_action import MicroActionSet
+from .utils import calculate_overall_rank, get_performance_for_index, update_trajectory_and_best, pad_trajectory, calculate_evaluation_time
 
 def evolutionary_heuristic_analysis(
     dataset: PerformancePredictionDataset,
