@@ -1,14 +1,16 @@
 # RDB2G-Bench 
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Latest Release](https://img.shields.io/badge/Latest-v0.1-success)](https://github.com/chlehdwon/RDB2G-Bench/releases)
+[![Read the Docs](https://img.shields.io/readthedocs/RDB2G-Bench)](https://rdb2g-bench.readthedocs.io/en/latest/)
 [![Hugging Face](https://img.shields.io/badge/🤗_Hugging_Face-Datasets-blue)](https://huggingface.co/datasets/kaistdata/RDB2G-Bench)
 [![arXiv](https://img.shields.io/badge/arXiv-2506.01360-b31b1b.svg)](https://arxiv.org/abs/2506.01360)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 This is the official implementation of the paper **RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases.**
 
 **RDB2G-Bench** is an easy-to-use framework for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs.
 
-## Installation
+## 🚀 Installation
 
 ```bash
 git clone https://github.com/chlehdwon/RDB2G-Bench.git
@@ -23,7 +25,9 @@ pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -
 ```
 You can skip this part if you don't want to reproduce our dataset.
 
-## Python API Usage
+## ⚡ Quick Start
+
+Comprehensive documentation and detailed guides are available at [our documentation site](https://rdb2g-bench.readthedocs.io/en/latest/).
 
 You can also check the `examples/` directory for complete usage examples and tutorials.
 
@@ -104,7 +108,7 @@ results = run_llm_baseline(
 )
 ```
 
-## Package Structure
+## 📁 Package Structure
 
 ```
 rdb2g_bench/
@@ -116,11 +120,11 @@ rdb2g_bench/
 └── __init__.py        # Package initialization
 ```
 
-## Reference
+## 📖 Reference
 
 The dataset construction and implementation of RDB2G-Bench is based on the [RelBench](https://github.com/snap-stanford/relbench) framework.
 
-## Citation
+## 📝 Citation
 
 If you use RDB2G-Bench in your research, please cite:
 
@@ -133,7 +137,7 @@ If you use RDB2G-Bench in your research, please cite:
 }
 ```
 
-## License
+## ⚖️ License
 
 This project is distributed under the MIT License as specified in the LICENSE file.
 
