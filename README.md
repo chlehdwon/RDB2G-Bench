@@ -68,7 +68,7 @@ results = run_idgnn_link_worker(
 )
 ```
 
-### Running Benchmarks
+### Run Benchmarks
 
 ```python
 from rdb2g_bench.benchmark.runner import run_benchmark
@@ -83,7 +83,7 @@ results = run_benchmark(
 )
 ```
 
-### Running LLM-based baseline
+### Run LLM-based baseline
 
 Before using LLM-based baseline, you need to set up your API key:
 
