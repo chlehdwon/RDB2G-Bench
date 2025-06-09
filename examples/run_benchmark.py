@@ -1,7 +1,11 @@
+import os
+os.environ["ANTHROPIC_API_KEY"] = "YOUR_API_KEY"
+
 from rdb2g_bench.benchmark.bench_runner import run_benchmark
+from rdb2g_bench.benchmark.llm.llm_runner import run_llm_baseline
 
 # Example 1: Basic run
-results = run_benchmark(
+run_benchmark(
     dataset="rel-f1",
     task="driver-top3", 
     budget_percentage=0.05,
@@ -10,10 +14,8 @@ results = run_benchmark(
     seed=0,
 )
 
-print(results)
-
-# Example 2: Run only for specific methods
-results_bo = run_benchmark(
+# Example 2: Run only for specific methods (Currently, Greedy, BO, RL, and EA are supported)
+run_benchmark(
     dataset="rel-f1",
     task="driver-top3", 
     budget_percentage=0.05,
@@ -22,4 +24,10 @@ results_bo = run_benchmark(
     seed=0,
 )
 
-print(results_bo)
+# Example 3: Run LLM-based baseline
+run_llm_baseline(
+    dataset="rel-f1",
+    task="driver-top3", 
+    budget_percentage=0.05,
+    seed=0,
+)
