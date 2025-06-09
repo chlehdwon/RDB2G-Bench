@@ -8,7 +8,7 @@
 
 This is the official implementation of the paper **RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases.**
 
-**RDB2G-Bench** is an easy-to-use framework for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs.
+**RDB2G-Bench** is an **easy-to-use framework** for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs.
 
 ## 🚀 Installation
 
