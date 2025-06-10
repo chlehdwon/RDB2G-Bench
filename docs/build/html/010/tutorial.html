@@ -1,0 +1,182 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial &mdash; RDB2G-Bench 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Download Pre-computed Datasets" href="../020/download_precomputed.html" />
+    <link rel="prev" title="Install and Setup" href="install_and_setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RDB2G-Bench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install_and_setup.html">Install and Setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start-example">Quick Start Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-first-benchmark">Run First Benchmark</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#package-structure-overview">Package Structure Overview</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Datasets</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../020/download_precomputed.html">Download Pre-computed Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../020/reproduce_datasets.html">Reproduce Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Benchmarks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../030/micro_action.html">Micro Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/run_benchmark.html">Run Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/random_search.html">Random Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/greedy_search.html">Greedy Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/evolutionary_algorithm.html">Evolutionary Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/bayesian_optimization.html">Bayesian Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/reinforcement_learning.html">Reinforcement Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/llm_baseline.html">LLM-based Baseline</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RDB2G-Bench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/010/tutorial.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Link to this heading"></a></h1>
+<section id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h2>
+<p>This tutorial provides a quick overview of RDB2G-Bench.</p>
+</section>
+<section id="quick-start-example">
+<h2>Quick Start Example<a class="headerlink" href="#quick-start-example" title="Link to this heading"></a></h2>
+<p>Here’s a simple example to get you started:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rdb2g_bench.dataset.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_rdb2g_bench</span>
+
+<span class="c1"># Load pre-computed benchmark results</span>
+<span class="n">bench</span> <span class="o">=</span> <span class="n">load_rdb2g_bench</span><span class="p">(</span><span class="s2">&quot;./results&quot;</span><span class="p">)</span>
+
+<span class="c1"># Access specific results</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">bench</span><span class="p">[</span><span class="s1">&#39;rel-f1&#39;</span><span class="p">][</span><span class="s1">&#39;driver-top3&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">test_metric</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;test_metric&#39;</span><span class="p">]</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span>
+<span class="n">train_time</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;train_time&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test Metric: </span><span class="si">{</span><span class="n">test_metric</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training Time: </span><span class="si">{</span><span class="n">train_time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="run-first-benchmark">
+<h2>Run First Benchmark<a class="headerlink" href="#run-first-benchmark" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rdb2g_bench.benchmark.runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_benchmark</span>
+
+<span class="c1"># Run a simple benchmark</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">run_benchmark</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;rel-f1&quot;</span><span class="p">,</span>
+    <span class="n">task</span><span class="o">=</span><span class="s2">&quot;driver-top3&quot;</span><span class="p">,</span>
+    <span class="n">budget_percentage</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+    <span class="n">num_runs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For more detailed examples, check the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> directory in the repository.</p>
+</section>
+<section id="package-structure-overview">
+<h2>Package Structure Overview<a class="headerlink" href="#package-structure-overview" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>rdb2g_bench/
+├── benchmark/         # Core benchmarking functionality
+├── common/            # Shared utilities and search spaces
+├── dataset/           # Dataset loading and processing
+└── __init__.py        # Package initialization
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install_and_setup.html" class="btn btn-neutral float-left" title="Install and Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../020/download_precomputed.html" class="btn btn-neutral float-right" title="Download Pre-computed Datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KAIST Data Mining Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

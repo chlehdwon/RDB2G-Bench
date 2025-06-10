@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Micro Actions &mdash; RDB2G-Bench 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Run Benchmark" href="run_benchmark.html" />
+    <link rel="prev" title="Reproduce Datasets" href="../020/reproduce_datasets.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RDB2G-Bench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../010/install_and_setup.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../010/tutorial.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Datasets</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../020/download_precomputed.html">Download Pre-computed Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../020/reproduce_datasets.html">Reproduce Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Benchmarks</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Micro Actions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it Works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-rdb2g_bench.benchmark.micro_action">Micro Action Set</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.benchmark.micro_action.MicroActionSet"><code class="docutils literal notranslate"><span class="pre">MicroActionSet</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rdb2g_bench.benchmark.micro_action.MicroActionSet.add_fk_pk_edge"><code class="docutils literal notranslate"><span class="pre">MicroActionSet.add_fk_pk_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rdb2g_bench.benchmark.micro_action.MicroActionSet.convert_edge_to_row"><code class="docutils literal notranslate"><span class="pre">MicroActionSet.convert_edge_to_row()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rdb2g_bench.benchmark.micro_action.MicroActionSet.convert_row_to_edge"><code class="docutils literal notranslate"><span class="pre">MicroActionSet.convert_row_to_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rdb2g_bench.benchmark.micro_action.MicroActionSet.remove_fk_pk_edge"><code class="docutils literal notranslate"><span class="pre">MicroActionSet.remove_fk_pk_edge()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#example-usage">Example Usage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-with-data-preparation">Example with Data Preparation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#basic-micro-action-operations">Basic Micro Action Operations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="run_benchmark.html">Run Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="random_search.html">Random Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="greedy_search.html">Greedy Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evolutionary_algorithm.html">Evolutionary Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bayesian_optimization.html">Bayesian Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_learning.html">Reinforcement Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="llm_baseline.html">LLM-based Baseline</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RDB2G-Bench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Micro Actions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/030/micro_action.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="micro-actions">
+<h1>Micro Actions<a class="headerlink" href="#micro-actions" title="Link to this heading"></a></h1>
+<p>This module defines the core micro actions used by all optimization algorithms for graph construction.
+These atomic operations enable systematic exploration of the graph construction space by transforming
+one valid configuration into another.</p>
+<section id="how-it-works">
+<h2>How it Works<a class="headerlink" href="#how-it-works" title="Link to this heading"></a></h2>
+<p>Micro actions represent atomic operations for transforming graph constructions:</p>
+<ol class="arabic simple">
+<li><p><strong>add_fk_pk_edge</strong>: Add foreign key-primary key edge between tables</p></li>
+<li><p><strong>remove_fk_pk_edge</strong>: Remove foreign key-primary key edge between tables</p></li>
+<li><p><strong>convert_row_to_edge</strong>: Convert row representation to edge representation</p></li>
+<li><p><strong>convert_edge_to_row</strong>: Convert edge representation to row representation</p></li>
+</ol>
+<p>Each action transforms the current graph construction (edge set) to a new valid graph construction, enabling systematic exploration of the graph construction space.</p>
+</section>
+<section id="module-rdb2g_bench.benchmark.micro_action">
+<span id="micro-action-set"></span><h2>Micro Action Set<a class="headerlink" href="#module-rdb2g_bench.benchmark.micro_action" title="Link to this heading"></a></h2>
+<p>RDB2G-Bench Micro Actions Module</p>
+<p>This module defines the core micro actions used by optimization algorithms for systematic
+graph construction exploration. Micro actions represent atomic operations that transform
+one valid graph construction (edge set) into another, enabling algorithms to navigate
+the space of possible graph configurations.</p>
+<p>The micro actions include:
+- Adding/removing foreign key-primary key edges between tables
+- Converting between row and edge representations of relational data</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdb2g_bench.benchmark.micro_action.MicroActionSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdb2g_bench.benchmark.micro_action.</span></span><span class="sig-name descname"><span class="pre">MicroActionSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">hetero_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HeteroData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GNNSpaceClass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.13)"><span class="pre">Type</span></a><span class="p"><span class="pre">[</span></span><span class="pre">GNNNodeSearchSpace</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">GNNLinkSearchSpace</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IDGNNLinkSearchSpace</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_entity_table</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst_entity_table</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdb2g_bench.benchmark.micro_action.MicroActionSet" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Defines micro actions for graph construction transformation.</p>
+<p>This class provides atomic operations to transform graph constructions by
+adding/removing edges and converting between different representations.
+It maintains mappings between different edge types and ensures that all
+transformations result in valid graph configurations.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>search_space (TotalSearchSpace): The search space containing all valid graphs
+full_edges (List[Tuple[str, str, str]]): List of all possible edge types
+fk_pk_indices (Set[int]): Indices of foreign key-primary key edges
+r2e_indices (Set[int]): Indices of row-to-edge transformation edges
+valid_edge_sets_list (List[Tuple[int, …]]): Sorted list of all valid edge sets
+valid_edge_sets (Set[Tuple[int, …]]): Set of all valid edge sets for fast lookup
+r2e_to_f2p_map (Dict[int, Tuple[Optional[int], Optional[int]]]): Mapping from</p>
+<blockquote>
+<div><p>r2e indices to corresponding f2p index pairs</p>
+</div></blockquote>
+<dl class="simple">
+<dt>f2p_pair_to_r2e_map (Dict[Tuple[int, int], int]): Mapping from f2p index pairs</dt><dd><p>to corresponding r2e indices</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">micro_actions</span> <span class="o">=</span> <span class="n">MicroActionSet</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;rel-f1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">task</span><span class="o">=</span><span class="s2">&quot;driver-top3&quot;</span><span class="p">,</span> 
+<span class="gp">... </span>    <span class="n">hetero_data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">GNNSpaceClass</span><span class="o">=</span><span class="n">GNNNodeSearchSpace</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">num_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">src_entity_table</span><span class="o">=</span><span class="s2">&quot;driver&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">current_set</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_sets</span> <span class="o">=</span> <span class="n">micro_actions</span><span class="o">.</span><span class="n">add_fk_pk_edge</span><span class="p">(</span><span class="n">current_set</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdb2g_bench.benchmark.micro_action.MicroActionSet.add_fk_pk_edge">
+<span class="sig-name descname"><span class="pre">add_fk_pk_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_edge_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdb2g_bench.benchmark.micro_action.MicroActionSet.add_fk_pk_edge" title="Link to this definition"></a></dt>
+<dd><p>Add a foreign key-primary key edge to the current edge set.</p>
+<p>This action explores adding table connections by including foreign key
+to primary key relationships that are currently not in the graph.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>current_edge_set (Tuple[int, …]): Current binary edge set representation</dt><dd><p>where 1 indicates edge is included, 0 indicates it’s not</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>List[Tuple[Tuple[int, …], int]]: List of tuples where each tuple contains:</dt><dd><ul class="simple">
+<li><p>new_edge_set: The modified edge set with an added FK-PK edge</p></li>
+<li><p>index: Index of the new edge set in the valid_edge_sets_list</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">current</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Some edges included, some not</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_sets</span> <span class="o">=</span> <span class="n">micro_actions</span><span class="o">.</span><span class="n">add_fk_pk_edge</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Returns: [((1, 1, 1, 0), 5), ((1, 0, 1, 1), 7)]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdb2g_bench.benchmark.micro_action.MicroActionSet.convert_edge_to_row">
+<span class="sig-name descname"><span class="pre">convert_edge_to_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_edge_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdb2g_bench.benchmark.micro_action.MicroActionSet.convert_edge_to_row" title="Link to this definition"></a></dt>
+<dd><p>Convert edge representation to row representation.</p>
+<p>This action transforms a graph that uses direct edges to represent
+relationships into a table row representation. It replaces a single
+direct edge with two foreign key connections through an intermediate table.</p>
+<dl>
+<dt>Args:</dt><dd><p>current_edge_set (Tuple[int, …]): Current binary edge set representation</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>List[Tuple[Tuple[int, …], int]]: List of tuples where each tuple contains:</dt><dd><ul class="simple">
+<li><p>new_edge_set: The modified edge set with edge-to-row conversion</p></li>
+<li><p>index: Index of the new edge set in the valid_edge_sets_list</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>This conversion is only possible when the R2E edge is present and
+both corresponding FK-PK edges are not yet included.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Current set has direct edge representation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">current</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Direct edge, no FK edges</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_sets</span> <span class="o">=</span> <span class="n">micro_actions</span><span class="o">.</span><span class="n">convert_edge_to_row</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Returns: [((1, 1, 0, 0), 2)]  # Two FK edges, no direct edge</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdb2g_bench.benchmark.micro_action.MicroActionSet.convert_row_to_edge">
+<span class="sig-name descname"><span class="pre">convert_row_to_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_edge_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdb2g_bench.benchmark.micro_action.MicroActionSet.convert_row_to_edge" title="Link to this definition"></a></dt>
+<dd><p>Convert row representation to edge representation.</p>
+<p>This action transforms a graph that uses table rows (via two FK-PK edges)
+to represent relationships into a direct edge representation. It replaces
+two foreign key connections with a single direct edge.</p>
+<dl>
+<dt>Args:</dt><dd><p>current_edge_set (Tuple[int, …]): Current binary edge set representation</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>List[Tuple[Tuple[int, …], int]]: List of tuples where each tuple contains:</dt><dd><ul class="simple">
+<li><p>new_edge_set: The modified edge set with row-to-edge conversion</p></li>
+<li><p>index: Index of the new edge set in the valid_edge_sets_list</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>This conversion is only possible when both required FK-PK edges are present
+and the corresponding R2E edge is not yet included.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Current set has FK edges to represent relationship via table row</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">current</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Two FK-PK edges, no direct edge</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_sets</span> <span class="o">=</span> <span class="n">micro_actions</span><span class="o">.</span><span class="n">convert_row_to_edge</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Returns: [((0, 0, 1, 0), 4)]  # Direct edge, no FK edges</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rdb2g_bench.benchmark.micro_action.MicroActionSet.remove_fk_pk_edge">
+<span class="sig-name descname"><span class="pre">remove_fk_pk_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_edge_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdb2g_bench.benchmark.micro_action.MicroActionSet.remove_fk_pk_edge" title="Link to this definition"></a></dt>
+<dd><p>Remove a foreign key-primary key edge from the current edge set.</p>
+<p>This action explores simplifying the graph by removing table connections
+that are currently included in the graph.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>current_edge_set (Tuple[int, …]): Current binary edge set representation</dt><dd><p>where 1 indicates edge is included, 0 indicates it’s not</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>List[Tuple[Tuple[int, …], int]]: List of tuples where each tuple contains:</dt><dd><ul class="simple">
+<li><p>new_edge_set: The modified edge set with a removed FK-PK edge</p></li>
+<li><p>index: Index of the new edge set in the valid_edge_sets_list</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">current</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Some edges included</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_sets</span> <span class="o">=</span> <span class="n">micro_actions</span><span class="o">.</span><span class="n">remove_fk_pk_edge</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Returns: [((0, 1, 1, 0), 2), ((1, 0, 1, 0), 3)]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="example-usage">
+<h3>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h3>
+<section id="example-with-data-preparation">
+<h4>Example with Data Preparation<a class="headerlink" href="#example-with-data-preparation" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch_frame</span><span class="w"> </span><span class="kn">import</span> <span class="n">stype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch_frame.config.text_embedder</span><span class="w"> </span><span class="kn">import</span> <span class="n">TextEmbedderConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">relbench.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">relbench.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">relbench.modeling.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pkey_fkey_graph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">relbench.modeling.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_stype_proposal</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">rdb2g_bench.benchmark.micro_action</span><span class="w"> </span><span class="kn">import</span> <span class="n">MicroActionSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rdb2g_bench.common.search_space.gnn_search_space</span><span class="w"> </span><span class="kn">import</span> <span class="n">GNNNodeSearchSpace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rdb2g_bench.common.text_embedder</span><span class="w"> </span><span class="kn">import</span> <span class="n">GloveTextEmbedding</span>
+
+<span class="c1"># Step 1: Load dataset and task</span>
+<span class="n">dataset_name</span> <span class="o">=</span> <span class="s2">&quot;rel-f1&quot;</span>
+<span class="n">task_name</span> <span class="o">=</span> <span class="s2">&quot;driver-top3&quot;</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">get_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">task</span> <span class="o">=</span> <span class="n">get_task</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">task_name</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Prepare column type information</span>
+<span class="n">cache_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~/.cache/relbench_examples&quot;</span><span class="p">)</span>
+<span class="n">stypes_cache_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">dataset_name</span><span class="si">}</span><span class="s2">/stypes.json&quot;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">stypes_cache_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">col_to_stype_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">table</span><span class="p">,</span> <span class="n">col_to_stype</span> <span class="ow">in</span> <span class="n">col_to_stype_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">stype_str</span> <span class="ow">in</span> <span class="n">col_to_stype</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">col_to_stype</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">stype</span><span class="p">(</span><span class="n">stype_str</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+    <span class="n">col_to_stype_dict</span> <span class="o">=</span> <span class="n">get_stype_proposal</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_db</span><span class="p">())</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">stypes_cache_path</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">stypes_cache_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">col_to_stype_dict</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># Step 3: Create heterogeneous graph data</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="n">hetero_data</span><span class="p">,</span> <span class="n">col_stats_dict</span> <span class="o">=</span> <span class="n">make_pkey_fkey_graph</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="o">.</span><span class="n">get_db</span><span class="p">(),</span>
+    <span class="n">col_to_stype_dict</span><span class="o">=</span><span class="n">col_to_stype_dict</span><span class="p">,</span>
+    <span class="n">text_embedder_cfg</span><span class="o">=</span><span class="n">TextEmbedderConfig</span><span class="p">(</span>
+        <span class="n">text_embedder</span><span class="o">=</span><span class="n">GloveTextEmbedding</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">),</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span>
+    <span class="p">),</span>
+    <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">dataset_name</span><span class="si">}</span><span class="s2">/materialized&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Step 4: Initialize micro action set</span>
+<span class="n">micro_actions</span> <span class="o">=</span> <span class="n">MicroActionSet</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="o">=</span><span class="n">dataset_name</span><span class="p">,</span>
+    <span class="n">task</span><span class="o">=</span><span class="n">task_name</span><span class="p">,</span>
+    <span class="n">hetero_data</span><span class="o">=</span><span class="n">hetero_data</span><span class="p">,</span>
+    <span class="n">GNNSpaceClass</span><span class="o">=</span><span class="n">GNNNodeSearchSpace</span><span class="p">,</span>
+    <span class="n">num_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">src_entity_table</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">entity_table</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total number of valid graph configurations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">micro_actions</span><span class="o">.</span><span class="n">valid_edge_sets_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of FK-PK edges: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">micro_actions</span><span class="o">.</span><span class="n">fk_pk_indices</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of R2E edges: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">micro_actions</span><span class="o">.</span><span class="n">r2e_indices</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="basic-micro-action-operations">
+<h4>Basic Micro Action Operations<a class="headerlink" href="#basic-micro-action-operations" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the first valid edge set as starting point</span>
+<span class="n">current_edge_set</span> <span class="o">=</span> <span class="n">micro_actions</span><span class="o">.</span><span class="n">valid_edge_sets_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting edge set: </span><span class="si">{</span><span class="n">current_edge_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Explore all possible FK-PK edge additions</span>
+<span class="n">add_fk_actions</span> <span class="o">=</span> <span class="n">micro_actions</span><span class="o">.</span><span class="n">add_fk_pk_edge</span><span class="p">(</span><span class="n">current_edge_set</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Possible FK-PK additions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">add_fk_actions</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">new_set</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">add_fk_actions</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>  <span class="c1"># Show first 3</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Add action: </span><span class="si">{</span><span class="n">current_edge_set</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">new_set</span><span class="si">}</span><span class="s2"> (index: </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Explore FK-PK edge removals</span>
+<span class="n">remove_fk_actions</span> <span class="o">=</span> <span class="n">micro_actions</span><span class="o">.</span><span class="n">remove_fk_pk_edge</span><span class="p">(</span><span class="n">current_edge_set</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Possible FK-PK removals: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">remove_fk_actions</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Explore row-to-edge conversions</span>
+<span class="n">row_to_edge_actions</span> <span class="o">=</span> <span class="n">micro_actions</span><span class="o">.</span><span class="n">convert_row_to_edge</span><span class="p">(</span><span class="n">current_edge_set</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Possible row-to-edge conversions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">row_to_edge_actions</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Explore edge-to-row conversions</span>
+<span class="n">edge_to_row_actions</span> <span class="o">=</span> <span class="n">micro_actions</span><span class="o">.</span><span class="n">convert_edge_to_row</span><span class="p">(</span><span class="n">current_edge_set</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Possible edge-to-row conversions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">edge_to_row_actions</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../020/reproduce_datasets.html" class="btn btn-neutral float-left" title="Reproduce Datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="run_benchmark.html" class="btn btn-neutral float-right" title="Run Benchmark" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KAIST Data Mining Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

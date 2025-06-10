@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Download Pre-computed Datasets &mdash; RDB2G-Bench 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reproduce Datasets" href="reproduce_datasets.html" />
+    <link rel="prev" title="Tutorial" href="../010/tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RDB2G-Bench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../010/install_and_setup.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../010/tutorial.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Datasets</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Download Pre-computed Datasets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-module">Dataset Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.dataset.dataset.download_rdb2g_bench"><code class="docutils literal notranslate"><span class="pre">download_rdb2g_bench()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.dataset.dataset.get_dataset_stats"><code class="docutils literal notranslate"><span class="pre">get_dataset_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.dataset.dataset.load_rdb2g_bench"><code class="docutils literal notranslate"><span class="pre">load_rdb2g_bench()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dataloader-module">Dataloader Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.dataset.dataloader.DatasetAccessor"><code class="docutils literal notranslate"><span class="pre">DatasetAccessor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.dataset.dataloader.IndexAccessor"><code class="docutils literal notranslate"><span class="pre">IndexAccessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rdb2g_bench.dataset.dataloader.IndexAccessor.stats"><code class="docutils literal notranslate"><span class="pre">IndexAccessor.stats</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.dataset.dataloader.RDB2GBench"><code class="docutils literal notranslate"><span class="pre">RDB2GBench</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rdb2g_bench.dataset.dataloader.RDB2GBench.get_available"><code class="docutils literal notranslate"><span class="pre">RDB2GBench.get_available()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.dataset.dataloader.TaskAccessor"><code class="docutils literal notranslate"><span class="pre">TaskAccessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rdb2g_bench.dataset.dataloader.TaskAccessor.get_available_indices"><code class="docutils literal notranslate"><span class="pre">TaskAccessor.get_available_indices()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#data-access-pattern">Data Access Pattern</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#directory-structure">Directory Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-usage">Example Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reproduce_datasets.html">Reproduce Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Benchmarks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../030/micro_action.html">Micro Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/run_benchmark.html">Run Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/random_search.html">Random Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/greedy_search.html">Greedy Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/evolutionary_algorithm.html">Evolutionary Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/bayesian_optimization.html">Bayesian Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/reinforcement_learning.html">Reinforcement Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../030/llm_baseline.html">LLM-based Baseline</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RDB2G-Bench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Download Pre-computed Datasets</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/020/download_precomputed.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="download-pre-computed-datasets">
+<h1>Download Pre-computed Datasets<a class="headerlink" href="#download-pre-computed-datasets" title="Link to this heading"></a></h1>
+<p>This module provides functionality to load and access pre-computed benchmark results without running experiments.
+The RDB2G-Bench dataset can be downloaded from Hugging Face Hub and accessed through a hierarchical interface.</p>
+<p>The RDB2G-Bench dataset is also available from the HuggingFace: <a class="reference external" href="https://huggingface.co/datasets/kaistdata/RDB2G-Bench">https://huggingface.co/datasets/kaistdata/RDB2G-Bench</a></p>
+<section id="dataset-module">
+<h2>Dataset Module<a class="headerlink" href="#dataset-module" title="Link to this heading"></a></h2>
+<p>The dataset module provides functions for downloading and loading benchmark data.</p>
+<p id="module-rdb2g_bench.dataset.dataset">RDB2G-Bench Dataset Management Module</p>
+<p>This module provides functionality to download, load, and manage RDB2G-Bench benchmark datasets.
+It includes functions for downloading pre-computed results from Hugging Face and organizing
+them in a structured format for easy access through the benchmark interface.</p>
+<p>The module supports:
+- Downloading benchmark data from Hugging Face Hub
+- Loading existing local benchmark results
+- Getting statistics about available datasets and tasks
+- Organizing data by dataset/task structure</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rdb2g_bench.dataset.dataset.download_rdb2g_bench">
+<span class="sig-prename descclassname"><span class="pre">rdb2g_bench.dataset.dataset.</span></span><span class="sig-name descname"><span class="pre">download_rdb2g_bench</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./results'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'hf'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdb2g_bench.dataset.dataset.download_rdb2g_bench" title="Link to this definition"></a></dt>
+<dd><p>Download RDB2G-Bench dataset from Hugging Face and organize it by dataset/task.</p>
+<p>This function downloads the complete or filtered RDB2G-Bench dataset from
+Hugging Face Hub and organizes it into a structured directory format.
+The data is grouped by dataset and task, with separate CSV files for each
+random seed.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>result_dir (str): Directory to save the organized results.</dt><dd><p>Will be created if it doesn’t exist. Defaults to “./results”.</p>
+</dd>
+<dt>cache_dir (Optional[str]): Cache directory for Hugging Face datasets.</dt><dd><p>If None, uses default HF cache location.</p>
+</dd>
+<dt>dataset_names (Optional[List[str]]): List of specific datasets to download.</dt><dd><p>If None, downloads all available datasets.</p>
+</dd>
+<dt>task_names (Optional[List[str]]): List of specific tasks to download.</dt><dd><p>If None, downloads all available tasks.</p>
+</dd>
+<dt>tag (str): Tag to identify the download and organize files.</dt><dd><p>Defaults to “hf”.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Dict[str, List[str]]: Dictionary mapping dataset/task combinations</dt><dd><p>to lists of saved file paths. Keys are in format “dataset/task”.</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">saved_files</span> <span class="o">=</span> <span class="n">download_rdb2g_bench</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dataset_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;rel-f1&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">task_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;driver-top3&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">saved_files</span><span class="p">)</span>
+<span class="go">{&#39;rel-f1/driver-top3&#39;: [&#39;./results/tables/rel-f1/driver-top3/hf/0.csv&#39;, ...]}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdb2g_bench.dataset.dataset.get_dataset_stats">
+<span class="sig-prename descclassname"><span class="pre">rdb2g_bench.dataset.dataset.</span></span><span class="sig-name descname"><span class="pre">get_dataset_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#rdb2g_bench.dataset.dataset.get_dataset_stats" title="Link to this definition"></a></dt>
+<dd><p>Get comprehensive statistics about all available datasets and tasks in RDB2G-Bench.</p>
+<p>This function loads the complete dataset from Hugging Face and computes
+aggregate statistics for each dataset/task combination, including counts
+of unique indices and seeds, as well as performance metrics statistics.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>cache_dir (Optional[str]): Cache directory for Hugging Face datasets.</dt><dd><p>If None, uses default HF cache location.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>pd.DataFrame: DataFrame with columns:</dt><dd><ul class="simple">
+<li><p>dataset: Dataset name</p></li>
+<li><p>task: Task name</p></li>
+<li><p>idx: Number of unique graph configurations</p></li>
+<li><p>seed: Number of random seeds</p></li>
+<li><p>test_metric_mean: Mean test performance</p></li>
+<li><p>test_metric_std: Standard deviation of test performance</p></li>
+<li><p>test_metric_min: Minimum test performance</p></li>
+<li><p>test_metric_max: Maximum test performance</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span> <span class="o">=</span> <span class="n">get_dataset_stats</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">dataset    task         idx  seed  test_metric_mean  test_metric_std  ...</span>
+<span class="go">rel-f1     driver-top3   50    10            0.8542           0.0123  ...</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdb2g_bench.dataset.dataset.load_rdb2g_bench">
+<span class="sig-prename descclassname"><span class="pre">rdb2g_bench.dataset.dataset.</span></span><span class="sig-name descname"><span class="pre">load_rdb2g_bench</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./results'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'hf'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#rdb2g_bench.dataset.dataloader.RDB2GBench" title="rdb2g_bench.dataset.dataloader.RDB2GBench"><span class="pre">RDB2GBench</span></a></span></span><a class="headerlink" href="#rdb2g_bench.dataset.dataset.load_rdb2g_bench" title="Link to this definition"></a></dt>
+<dd><p>Load RDB2G-Bench results from local directory, download if missing.</p>
+<p>This function serves as the main entry point for accessing RDB2G-Bench data.
+It first checks for existing data in the specified directory, and if no data
+is found and download is enabled, it automatically downloads the dataset
+from Hugging Face Hub.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>result_dir (str): Directory containing the benchmark results. </dt><dd><p>Defaults to “./results”.</p>
+</dd>
+<dt>download (bool): Whether to download data if results are missing. </dt><dd><p>Defaults to True.</p>
+</dd>
+<dt>cache_dir (Optional[str]): Cache directory for Hugging Face datasets.</dt><dd><p>If None, uses default HF cache location.</p>
+</dd>
+<dt>tag (str): Tag to use for downloaded data organization. </dt><dd><p>Defaults to “hf”.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>RDB2GBench: Benchmark object for accessing organized results with</dt><dd><p>hierarchical access pattern: bench[dataset][task][idx].</p>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt>RuntimeError: If no valid data is found in the result directory</dt><dd><p>after download attempts.</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bench</span> <span class="o">=</span> <span class="n">load_rdb2g_bench</span><span class="p">(</span><span class="s2">&quot;./my_results&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">available</span> <span class="o">=</span> <span class="n">bench</span><span class="o">.</span><span class="n">get_available</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">bench</span><span class="p">[</span><span class="s1">&#39;rel-f1&#39;</span><span class="p">][</span><span class="s1">&#39;driver-top3&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="dataloader-module">
+<h2>Dataloader Module<a class="headerlink" href="#dataloader-module" title="Link to this heading"></a></h2>
+<p>The dataloader module provides classes for hierarchical access to benchmark results.</p>
+<p id="module-rdb2g_bench.dataset.dataloader">RDB2G-Bench Data Loading and Access Module</p>
+<p>This module provides classes for hierarchical access to RDB2G-Bench benchmark data.
+The data access pattern follows: RDB2GBench[dataset][task][idx] -&gt; results.</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><p>RDB2GBench: Main benchmark data container
+DatasetAccessor: Provides access to tasks within a dataset
+TaskAccessor: Provides access to indices within a task
+IndexAccessor: Provides access to metrics for a specific graph configuration</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdb2g_bench.dataset.dataloader.DatasetAccessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdb2g_bench.dataset.dataloader.</span></span><span class="sig-name descname"><span class="pre">DatasetAccessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tasks_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdb2g_bench.dataset.dataloader.DatasetAccessor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Accessor for tasks within a specific dataset.</p>
+<p>This class provides access to all tasks available for a particular dataset
+and returns TaskAccessor objects for further navigation.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>tasks_data (Dict): Dictionary containing task data for this dataset
+dataset_name (str): Name of the dataset being accessed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdb2g_bench.dataset.dataloader.IndexAccessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdb2g_bench.dataset.dataloader.</span></span><span class="sig-name descname"><span class="pre">IndexAccessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdb2g_bench.dataset.dataloader.IndexAccessor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Accessor for aggregated results of a specific graph configuration.</p>
+<p>This class computes and provides access to aggregated statistics across
+multiple random seeds for a specific graph configuration. It automatically
+calculates means and standard deviations for performance metrics.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>data (pd.DataFrame): DataFrame containing results for this configuration
+dataset_name (str): Name of the dataset
+task_name (str): Name of the task  
+idx (int): Index of the graph configuration
+_stats (Optional[Dict]): Cached computed statistics</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="rdb2g_bench.dataset.dataloader.IndexAccessor.stats">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#rdb2g_bench.dataset.dataloader.IndexAccessor.stats" title="Link to this definition"></a></dt>
+<dd><p>Compute and cache aggregated statistics for this graph configuration.</p>
+<p>Calculates mean and standard deviation for performance metrics across
+all seeds, and mean values for parameter counts and timing information.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Dict: Dictionary containing computed statistics with keys:</dt><dd><ul class="simple">
+<li><p>params: Mean parameter count (int)</p></li>
+<li><p><a href="#id1"><span class="problematic" id="id2">*</span></a>_time: Mean timing values (float) for train/valid/test</p></li>
+<li><p><a href="#id3"><span class="problematic" id="id4">*</span></a>_mean: Mean values for other numeric columns (float)</p></li>
+<li><p><a href="#id5"><span class="problematic" id="id6">*</span></a>_std: Standard deviation for other numeric columns (float)</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdb2g_bench.dataset.dataloader.RDB2GBench">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdb2g_bench.dataset.dataloader.</span></span><span class="sig-name descname"><span class="pre">RDB2GBench</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdb2g_bench.dataset.dataloader.RDB2GBench" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Main benchmark data container for RDB2G-Bench results.</p>
+<p>This class loads and organizes all benchmark data from a specified directory
+structure and provides hierarchical access to results through dataset and task names.</p>
+<p>The expected directory structure is:
+result_dir/
+└── tables/</p>
+<blockquote>
+<div><dl class="simple">
+<dt>└── dataset_name/</dt><dd><dl class="simple">
+<dt>└── task_name/</dt><dd><dl class="simple">
+<dt>└── tag/</dt><dd><p>├── 0.csv
+├── 1.csv
+└── …</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt>Attributes:</dt><dd><p>result_dir (Path): Path to the results directory
+data (Dict): Nested dictionary containing loaded data organized by dataset/task</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bench</span> <span class="o">=</span> <span class="n">RDB2GBench</span><span class="p">(</span><span class="s2">&quot;./results&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">available</span> <span class="o">=</span> <span class="n">bench</span><span class="o">.</span><span class="n">get_available</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataset_accessor</span> <span class="o">=</span> <span class="n">bench</span><span class="p">[</span><span class="s1">&#39;rel-f1&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdb2g_bench.dataset.dataloader.RDB2GBench.get_available">
+<span class="sig-name descname"><span class="pre">get_available</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdb2g_bench.dataset.dataloader.RDB2GBench.get_available" title="Link to this definition"></a></dt>
+<dd><p>Get available datasets and tasks.</p>
+<dl>
+<dt>Returns:</dt><dd><p>Dict[str, List[str]]: Dictionary mapping dataset names to lists of available tasks</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bench</span> <span class="o">=</span> <span class="n">RDB2GBench</span><span class="p">(</span><span class="s2">&quot;./results&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">available</span> <span class="o">=</span> <span class="n">bench</span><span class="o">.</span><span class="n">get_available</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">available</span><span class="p">)</span>
+<span class="go">{&#39;rel-f1&#39;: [&#39;driver-top3&#39;, &#39;artist-top3&#39;], &#39;rel-movielens1m&#39;: [&#39;user-top3&#39;]}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rdb2g_bench.dataset.dataloader.TaskAccessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdb2g_bench.dataset.dataloader.</span></span><span class="sig-name descname"><span class="pre">TaskAccessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdb2g_bench.dataset.dataloader.TaskAccessor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Accessor for graph configurations (indices) within a specific task.</p>
+<p>This class provides access to all graph configurations available for a 
+particular dataset/task combination and returns IndexAccessor objects
+containing aggregated results.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>data (pd.DataFrame): DataFrame containing all results for this task
+dataset_name (str): Name of the dataset
+task_name (str): Name of the task</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdb2g_bench.dataset.dataloader.TaskAccessor.get_available_indices">
+<span class="sig-name descname"><span class="pre">get_available_indices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rdb2g_bench.dataset.dataloader.TaskAccessor.get_available_indices" title="Link to this definition"></a></dt>
+<dd><p>Get list of available graph configuration indices.</p>
+<dl>
+<dt>Returns:</dt><dd><p>List[int]: Sorted list of available indices for this task</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">task</span> <span class="o">=</span> <span class="n">bench</span><span class="p">[</span><span class="s1">&#39;rel-f1&#39;</span><span class="p">][</span><span class="s1">&#39;driver-top3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">indices</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">get_available_indices</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+<span class="go">[0, 1, 2, 3, ..., 49]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="data-access-pattern">
+<h2>Data Access Pattern<a class="headerlink" href="#data-access-pattern" title="Link to this heading"></a></h2>
+<p>The benchmark data follows a hierarchical access pattern:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RDB2GBench[dataset_name][task_name][idx] -&gt; IndexAccessor
+
+Example:
+bench[&#39;rel-f1&#39;][&#39;driver-top3&#39;][0] -&gt; Results for graph configuration 0
+</pre></div>
+</div>
+<section id="directory-structure">
+<h3>Directory Structure<a class="headerlink" href="#directory-structure" title="Link to this heading"></a></h3>
+<p>The downloaded data is organized in the following directory structure:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>results/
+└── tables/
+    └── dataset_name/           # e.g., rel-f1, rel-avito
+        └── task_name/          # e.g., driver-top3, user-ad-visit
+            └── tag/            # e.g., hf
+                ├── 0.csv       # Results for seed 0
+                ├── 1.csv       # Results for seed 1
+                └── ...
+</pre></div>
+</div>
+</section>
+<section id="example-usage">
+<h3>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rdb2g_bench.dataset.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_rdb2g_bench</span>
+
+<span class="c1"># Load benchmark results (downloads if missing)</span>
+<span class="n">bench</span> <span class="o">=</span> <span class="n">load_rdb2g_bench</span><span class="p">(</span><span class="s2">&quot;./results&quot;</span><span class="p">)</span>
+
+<span class="c1"># Check available datasets and tasks</span>
+<span class="n">available</span> <span class="o">=</span> <span class="n">bench</span><span class="o">.</span><span class="n">get_available</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">available</span><span class="p">)</span>
+<span class="c1"># {&#39;rel-f1&#39;: [&#39;driver-top3&#39;, &#39;driver-dnf&#39;, &#39;driver-position&#39;], ...}</span>
+
+<span class="c1"># Access results for rel-f1 dataset, driver-top3 task</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">bench</span><span class="p">[</span><span class="s1">&#39;rel-f1&#39;</span><span class="p">][</span><span class="s1">&#39;driver-top3&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># First graph configuration</span>
+
+<span class="c1"># Extract performance metrics (aggregated across seeds)</span>
+<span class="n">test_metric</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;test_metric&#39;</span><span class="p">]</span>         <span class="c1"># Test performance mean</span>
+<span class="n">test_std</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;test_metric_std&#39;</span><span class="p">]</span>        <span class="c1"># Test performance std</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span>                   <span class="c1"># Model parameters</span>
+<span class="n">train_time</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;train_time&#39;</span><span class="p">]</span>           <span class="c1"># Training time</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../010/tutorial.html" class="btn btn-neutral float-left" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reproduce_datasets.html" class="btn btn-neutral float-right" title="Reproduce Datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KAIST Data Mining Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

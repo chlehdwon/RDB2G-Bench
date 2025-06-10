@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bayesian Optimization &mdash; RDB2G-Bench 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reinforcement Learning" href="reinforcement_learning.html" />
+    <link rel="prev" title="Evolutionary Algorithm" href="evolutionary_algorithm.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            RDB2G-Bench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../010/install_and_setup.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../010/tutorial.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Datasets</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../020/download_precomputed.html">Download Pre-computed Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../020/reproduce_datasets.html">Reproduce Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Benchmarks</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="micro_action.html">Micro Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_benchmark.html">Run Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="random_search.html">Random Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="greedy_search.html">Greedy Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evolutionary_algorithm.html">Evolutionary Algorithm</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Bayesian Optimization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it Works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-rdb2g_bench.benchmark.baselines.bo">Bayesian optimization baseline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.benchmark.baselines.bo.MLPSurrogate"><code class="docutils literal notranslate"><span class="pre">MLPSurrogate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rdb2g_bench.benchmark.baselines.bo.MLPSurrogate.forward"><code class="docutils literal notranslate"><span class="pre">MLPSurrogate.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.benchmark.baselines.bo.bananas_loss"><code class="docutils literal notranslate"><span class="pre">bananas_loss()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.benchmark.baselines.bo.bayesian_optimization_analysis"><code class="docutils literal notranslate"><span class="pre">bayesian_optimization_analysis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rdb2g_bench.benchmark.baselines.bo.get_state_embedding"><code class="docutils literal notranslate"><span class="pre">get_state_embedding()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-usage">Example Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_learning.html">Reinforcement Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="llm_baseline.html">LLM-based Baseline</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RDB2G-Bench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Bayesian Optimization</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/030/bayesian_optimization.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="bayesian-optimization">
+<h1>Bayesian Optimization<a class="headerlink" href="#bayesian-optimization" title="Link to this heading"></a></h1>
+<p>This module implements Bayesian optimization baseline for neural architecture search.
+Bayesian optimization is a sequential model-based optimization technique particularly
+effective for expensive black-box optimization problems like finding optimal GNN architectures.</p>
+<section id="how-it-works">
+<h2>How it Works<a class="headerlink" href="#how-it-works" title="Link to this heading"></a></h2>
+<p>The Bayesian optimization process:</p>
+<ol class="arabic simple">
+<li><p>Build a probabilistic model (surrogate) of the objective function</p></li>
+<li><p>Use acquisition function to determine next graph construction to evaluate</p></li>
+<li><p>Evaluate the objective function at the selected graph construction</p></li>
+<li><p>Update the surrogate model with new observation</p></li>
+<li><p>Repeat until budget is exhausted</p></li>
+</ol>
+</section>
+<section id="module-rdb2g_bench.benchmark.baselines.bo">
+<span id="bayesian-optimization-baseline"></span><h2>Bayesian optimization baseline<a class="headerlink" href="#module-rdb2g_bench.benchmark.baselines.bo" title="Link to this heading"></a></h2>
+<p>RDB2G-Bench Bayesian Optimization Baseline Module</p>
+<p>This module implements Bayesian optimization for neural architecture search on RDB2G-Bench.
+It uses a Multi-Layer Perceptron (MLP) as a surrogate model to approximate the performance
+of different graph neural network architectures, and employs Expected Improvement (EI)
+as the acquisition function to guide the search process.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rdb2g_bench.benchmark.baselines.bo.MLPSurrogate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rdb2g_bench.benchmark.baselines.bo.</span></span><span class="sig-name descname"><span class="pre">MLPSurrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdb2g_bench.benchmark.baselines.bo.MLPSurrogate" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Multi-Layer Perceptron surrogate model for architecture performance prediction.</p>
+<p>This neural network serves as a surrogate model to approximate the performance
+of different graph neural network architectures. It takes graph configuration
+embeddings as input and predicts their expected performance.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>layers (nn.Sequential): Sequential layers of the MLP including dropout</p>
+</dd>
+<dt>Args:</dt><dd><p>input_dim (int): Dimensionality of input embeddings
+hidden_dim1 (int): Size of first hidden layer. Defaults to 64.
+hidden_dim2 (int): Size of second hidden layer. Defaults to 64.
+dropout_rate (float): Dropout probability for regularization. Defaults to 0.1.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MLPSurrogate</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">hidden_dim1</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">hidden_dim2</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">predictions</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">torch.Size([10, 1])</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rdb2g_bench.benchmark.baselines.bo.MLPSurrogate.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdb2g_bench.benchmark.baselines.bo.MLPSurrogate.forward" title="Link to this definition"></a></dt>
+<dd><p>Forward pass through the surrogate model.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>x (torch.Tensor): Input embeddings of shape (batch_size, input_dim)</p>
+</dd>
+<dt>Returns:</dt><dd><p>torch.Tensor: Performance predictions of shape (batch_size, 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdb2g_bench.benchmark.baselines.bo.bananas_loss">
+<span class="sig-prename descclassname"><span class="pre">rdb2g_bench.benchmark.baselines.bo.</span></span><span class="sig-name descname"><span class="pre">bananas_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-09</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdb2g_bench.benchmark.baselines.bo.bananas_loss" title="Link to this definition"></a></dt>
+<dd><p>Calculate the BANANAS loss for architecture performance prediction.</p>
+<p>The BANANAS loss is designed specifically for neural architecture search
+and is computed as: L = mean | (y_pred - y_lb) / (y_true - y_lb) - 1 |
+where y_lb is the lower bound of performance values.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>y_pred (torch.Tensor): Predicted performance values
+y_true (torch.Tensor): True performance values
+y_lb (float): Lower bound of performance values for normalization
+eps (float): Small epsilon to prevent division by zero. Defaults to 1e-9.</p>
+</dd>
+<dt>Returns:</dt><dd><p>torch.Tensor: Computed BANANAS loss value</p>
+</dd>
+<dt>Reference:</dt><dd><p>White, Colin, et al. “BANANAS: Bayesian optimization with neural 
+architectures for neural architecture search.” AAAI 2021.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdb2g_bench.benchmark.baselines.bo.bayesian_optimization_analysis">
+<span class="sig-prename descclassname"><span class="pre">rdb2g_bench.benchmark.baselines.bo.</span></span><span class="sig-name descname"><span class="pre">bayesian_optimization_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PerformancePredictionDataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">micro_action_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="micro_action.html#rdb2g_bench.benchmark.micro_action.MicroActionSet" title="rdb2g_bench.benchmark.micro_action.MicroActionSet"><span class="pre">MicroActionSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">overall_actual_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">higher_is_better</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">termination_threshold_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Bayesian</span> <span class="pre">Optimization</span> <span class="pre">Heuristic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_sampling_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mlp_hidden_dim1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mlp_hidden_dim2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mlp_dropout_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mlp_learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mlp_epochs_per_iteration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mlp_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ei_mc_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rdb2g_bench.benchmark.baselines.bo.bayesian_optimization_analysis" title="Link to this definition"></a></dt>
+<dd><p>Perform Neural Architecture Search using Bayesian Optimization.</p>
+<p>This function implements a complete Bayesian optimization loop for finding
+optimal graph neural network architectures. It uses an MLP surrogate model
+to approximate performance and Expected Improvement for acquisition.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>dataset (PerformancePredictionDataset): Dataset containing architecture </dt><dd><p>performance data</p>
+</dd>
+<dt>micro_action_set (MicroActionSet): Set of micro actions for architecture</dt><dd><p>space exploration</p>
+</dd>
+<dt>overall_actual_y (torch.Tensor | None): Complete performance tensor for</dt><dd><p>ranking calculations</p>
+</dd>
+</dl>
+<p>higher_is_better (bool): Whether higher performance values are better
+termination_threshold_ratio (float): Fraction of total architectures to</p>
+<blockquote>
+<div><p>evaluate as budget</p>
+</div></blockquote>
+<dl class="simple">
+<dt>method_name (str): Name identifier for this method. </dt><dd><p>Defaults to “Bayesian Optimization Heuristic”.</p>
+</dd>
+<dt>initial_sampling_size (int): Number of random architectures to evaluate</dt><dd><p>initially. Defaults to 10.</p>
+</dd>
+<dt>max_iterations (int): Maximum number of optimization iterations.</dt><dd><p>Defaults to 100.</p>
+</dd>
+<dt>mlp_hidden_dim1 (int): First hidden layer size for MLP surrogate.</dt><dd><p>Defaults to 32.</p>
+</dd>
+<dt>mlp_hidden_dim2 (int): Second hidden layer size for MLP surrogate.</dt><dd><p>Defaults to 32.</p>
+</dd>
+</dl>
+<p>mlp_dropout_rate (float): Dropout rate for MLP surrogate. Defaults to 0.1.
+mlp_learning_rate (float): Learning rate for MLP training. Defaults to 0.001.
+mlp_epochs_per_iteration (int): Training epochs per BO iteration.</p>
+<blockquote>
+<div><p>Defaults to 50.</p>
+</div></blockquote>
+<p>mlp_batch_size (int): Batch size for MLP training. Defaults to 32.
+ei_mc_samples (int): Monte Carlo samples for uncertainty estimation.</p>
+<blockquote>
+<div><p>Defaults to 50.</p>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Dict: Comprehensive results dictionary containing:</dt><dd><ul class="simple">
+<li><p>method: Method name</p></li>
+<li><p>selected_graph_id: Index of best found architecture</p></li>
+<li><p>actual_y_perf_of_selected: Performance of selected architecture</p></li>
+<li><p>selection_metric_value: Metric value used for selection</p></li>
+<li><p>selected_graph_origin: Origin method name</p></li>
+<li><p>discovered_count: Number of architectures evaluated</p></li>
+<li><p>total_iterations_run: Number of BO iterations completed</p></li>
+<li><p>rank_position_overall: Rank among all architectures</p></li>
+<li><p>percentile_overall: Percentile ranking</p></li>
+<li><p>total_samples_overall: Total available architectures</p></li>
+<li><p>performance_trajectory: Performance over time</p></li>
+<li><p>total_evaluation_time: Time spent on evaluations</p></li>
+<li><p>total_run_time: Total algorithm runtime</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">bayesian_optimization_analysis</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">micro_action_set</span><span class="o">=</span><span class="n">micro_actions</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">overall_actual_y</span><span class="o">=</span><span class="n">y_tensor</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">higher_is_better</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">termination_threshold_ratio</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">max_iterations</span><span class="o">=</span><span class="mi">50</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best architecture: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;selected_graph_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Performance: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;actual_y_perf_of_selected&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rdb2g_bench.benchmark.baselines.bo.get_state_embedding">
+<span class="sig-prename descclassname"><span class="pre">rdb2g_bench.benchmark.baselines.bo.</span></span><span class="sig-name descname"><span class="pre">get_state_embedding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#rdb2g_bench.benchmark.baselines.bo.get_state_embedding" title="Link to this definition"></a></dt>
+<dd><p>Convert edge set representation into a fixed-size numerical embedding.</p>
+<p>This function transforms the binary edge set representation into a padded
+or truncated numpy array suitable for neural network input.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>edge_set (list | tuple): Binary representation of which edges are active</dt><dd><p>in the current graph configuration</p>
+</dd>
+</dl>
+<p>embedding_dim (int): Target dimensionality for the embedding vector</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>np.ndarray | None: Fixed-size embedding array of shape (1, embedding_dim),</dt><dd><p>or None if edge_set is None</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">edge_set</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">embedding</span> <span class="o">=</span> <span class="n">get_state_embedding</span><span class="p">(</span><span class="n">edge_set</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">embedding</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">(1, 8)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<section id="example-usage">
+<h3>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rdb2g_bench.benchmark.runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_benchmark</span>
+
+<span class="c1"># Run Bayesian optimization with default parameters</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">run_benchmark</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;rel-f1&quot;</span><span class="p">,</span>
+    <span class="n">task</span><span class="o">=</span><span class="s2">&quot;driver-top3&quot;</span><span class="p">,</span>
+    <span class="n">budget_percentage</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bo&quot;</span><span class="p">],</span>
+    <span class="n">num_runs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+
+<span class="c1"># Access results</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best architecture found: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;bo&#39;</span><span class="p">][</span><span class="s1">&#39;selected_graph_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Performance: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;bo&#39;</span><span class="p">][</span><span class="s1">&#39;actual_y_perf_of_selected&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rank: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;bo&#39;</span><span class="p">][</span><span class="s1">&#39;rank_position_overall&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="evolutionary_algorithm.html" class="btn btn-neutral float-left" title="Evolutionary Algorithm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reinforcement_learning.html" class="btn btn-neutral float-right" title="Reinforcement Learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KAIST Data Mining Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
