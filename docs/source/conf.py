@@ -54,6 +54,7 @@ templates_path = ['_templates']
 html_theme = 'sphinx_rtd_theme'
 
 autodoc_mock_imports = [
+    "torch", "numpy", "pandas", "typing_extensions",
     "torch_frame", "torch_geometric", "torch_scatter", "torch_sparse", 
     "torch_cluster", "torch_spline_conv", "pyg_lib",
     "dgl", "sklearn", "scipy", "networkx", 
