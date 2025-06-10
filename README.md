@@ -25,7 +25,7 @@ pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -
 ```
 You can skip this part if you don't want to reproduce our dataset.
 
-## ⚡ Quick Start
+## ⚡ Package Usage
 
 Comprehensive documentation and detailed guides are available at [our documentation site](https://rdb2g-bench.readthedocs.io/en/latest/).
 

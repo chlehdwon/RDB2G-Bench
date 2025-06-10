@@ -1,21 +1,37 @@
 Bayesian Optimization
 =====================
 
-Overview
---------
+This module implements Bayesian optimization baseline for neural architecture search.
+Bayesian optimization is a sequential model-based optimization technique particularly
+effective for expensive black-box optimization problems like finding optimal GNN architectures.
 
-Bayesian optimization is a sequential design strategy for global optimization of expensive-to-evaluate functions.
+How it Works
+------------
 
-Basic Usage
+The Bayesian optimization process:
+
+1. Build a probabilistic model (surrogate) of the objective function
+2. Use acquisition function to determine next graph construction to evaluate
+3. Evaluate the objective function at the selected graph construction
+4. Update the surrogate model with new observation
+5. Repeat until budget is exhausted
+
+Bayesian optimization baseline
 -----------
 
-Run Bayesian optimization benchmark:
+.. automodule:: rdb2g_bench.benchmark.baselines.bo
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Example Usage
+~~~~~~~~~~~~~
 
 .. code-block:: python
 
    from rdb2g_bench.benchmark.runner import run_benchmark
 
-   # Run Bayesian optimization
+   # Run Bayesian optimization with default parameters
    results = run_benchmark(
        dataset="rel-f1",
        task="driver-top3", 
@@ -24,38 +40,8 @@ Run Bayesian optimization benchmark:
        num_runs=10,
        seed=42
    )
-
-How it Works
-------------
-
-The Bayesian optimization process:
-
-1. Build a probabilistic model (surrogate) of the objective function
-2. Use acquisition function to determine next point to evaluate
-3. Evaluate the objective function at the selected point
-4. Update the surrogate model with new observation
-5. Repeat until budget is exhausted
-
-Key Components
---------------
-
-**Surrogate Model**: Probabilistic model of the objective function (e.g., Gaussian Process)
-**Acquisition Function**: Strategy for selecting next evaluation point
-**Optimization**: Finding the maximum of the acquisition function
-
-Common Acquisition Functions
-----------------------------
-
-- **Expected Improvement (EI)**: Balance between exploration and exploitation
-- **Upper Confidence Bound (UCB)**: Optimistic strategy
-- **Probability of Improvement (PI)**: Conservative approach
-
-Parameters
-----------
-
-Key parameters for Bayesian optimization:
-
-- ``surrogate_model``: Type of surrogate model (GP, Random Forest, etc.)
-- ``acquisition_function``: Strategy for point selection
-- ``kernel``: Kernel function for Gaussian Process
-- ``exploration_weight``: Balance between exploration and exploitation
+   
+   # Access results
+   print(f"Best architecture found: {results['bo']['selected_graph_id']}")
+   print(f"Performance: {results['bo']['actual_y_perf_of_selected']:.4f}")
+   print(f"Rank: {results['bo']['rank_position_overall']}")

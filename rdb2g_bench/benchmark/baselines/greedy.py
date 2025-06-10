@@ -1,10 +1,20 @@
+"""
+RDB2G-Bench Greedy Search Baseline Module
+
+This module implements multiple greedy search strategies for neural architecture search on RDB2G-Bench.
+Greedy algorithms make locally optimal choices at each step, providing fast and deterministic
+search strategies for finding good graph neural network architectures.
+
+Each strategy uses micro actions to explore neighboring architectures and greedily
+selects the best improvement at each step.
+"""
+
 import torch
 import numpy as np
 import random
 import time
 from typing import Tuple
 
-# Import custom modules
 from ..dataset import PerformancePredictionDataset
 from ..micro_action import MicroActionSet
 from .utils import calculate_overall_rank, get_performance_for_index, update_trajectory_and_best, pad_trajectory, calculate_evaluation_time
@@ -17,7 +27,54 @@ def forward_greedy_heuristic_analysis(
     termination_threshold_ratio: float,
     method_name: str = "Forward Greedy Heuristic",
 ):
-    """Performs a forward greedy search starting from graphs with one edge."""
+    """
+    Perform Neural Architecture Search using Forward Greedy Strategy.
+    
+    This function implements forward greedy search that starts from minimal graph
+    configurations (single edges) and iteratively adds edges or applies transformations
+    to improve performance. The algorithm greedily selects the best local improvement
+    at each step.
+    
+    Args:
+        dataset (PerformancePredictionDataset): Dataset containing architecture 
+            performance data
+        micro_action_set (MicroActionSet): Set of micro actions for architecture
+            space exploration
+        overall_actual_y (torch.Tensor): Complete performance tensor for
+            ranking calculations
+        higher_is_better (bool): Whether higher performance values are better
+        termination_threshold_ratio (float): Fraction of total architectures to
+            evaluate as budget
+        method_name (str): Name identifier for this method. 
+            Defaults to "Forward Greedy Heuristic".
+            
+    Returns:
+        Dict: Comprehensive results dictionary containing:
+            - method: Method name
+            - selected_graph_id: Index of best found architecture
+            - actual_y_perf_of_selected: Performance of selected architecture
+            - selection_metric_value: Metric value used for selection
+            - selected_graph_origin: Origin method name
+            - discovered_count: Number of architectures evaluated
+            - total_iterations_run: Number of greedy steps completed
+            - rank_position_overall: Rank among all architectures
+            - percentile_overall: Percentile ranking
+            - total_samples_overall: Total available architectures
+            - performance_trajectory: Performance over time
+            - total_evaluation_time: Time spent on evaluations
+            - total_run_time: Total algorithm runtime
+            
+    Example:
+        >>> results = forward_greedy_heuristic_analysis(
+        ...     dataset=dataset,
+        ...     micro_action_set=micro_actions,
+        ...     overall_actual_y=y_tensor,
+        ...     higher_is_better=True,
+        ...     termination_threshold_ratio=0.05
+        ... )
+        >>> print(f"Best architecture: {results['selected_graph_id']}")
+        >>> print(f"Performance: {results['actual_y_perf_of_selected']:.4f}")
+    """
     performance_cache = {}
     time_cache = {}
     performance_trajectory = []
@@ -189,7 +246,39 @@ def backward_greedy_heuristic_analysis(
     termination_threshold_ratio: float,
     method_name: str = "Backward Greedy Heuristic",
 ):
-    """Performs a backward greedy search starting from the full graph state."""
+    """
+    Perform Neural Architecture Search using Backward Greedy Strategy.
+    
+    This function implements backward greedy search that starts from full graph
+    configurations and iteratively removes edges or applies
+    transformations to improve performance. The algorithm greedily selects the
+    best local improvement at each step.
+    
+    Args:
+        dataset (PerformancePredictionDataset): Dataset containing architecture 
+            performance data
+        micro_action_set (MicroActionSet): Set of micro actions for architecture
+            space exploration
+        overall_actual_y (torch.Tensor): Complete performance tensor for
+            ranking calculations
+        higher_is_better (bool): Whether higher performance values are better
+        termination_threshold_ratio (float): Fraction of total architectures to
+            evaluate as budget
+        method_name (str): Name identifier for this method. 
+            Defaults to "Backward Greedy Heuristic".
+            
+    Returns:
+        Dict: Comprehensive results dictionary with same structure as forward_greedy
+            
+    Example:
+        >>> results = backward_greedy_heuristic_analysis(
+        ...     dataset=dataset,
+        ...     micro_action_set=micro_actions,
+        ...     overall_actual_y=y_tensor,
+        ...     higher_is_better=True,
+        ...     termination_threshold_ratio=0.05
+        ... )
+    """
     performance_cache = {}
     time_cache = {}
     performance_trajectory = []
@@ -316,7 +405,54 @@ def random_greedy_heuristic_analysis(
     termination_threshold_ratio: float,
     method_name: str = "Local Greedy Heuristic",
 ):
-    """Performs a greedy search starting from a randomly chosen graph."""
+    """
+    Perform Neural Architecture Search using Random/Local Greedy Strategy.
+    
+    This function implements random greedy search that starts from a randomly chosen
+    graph configuration and iteratively applies all types of micro actions (add/remove
+    edges, conversions) to improve performance. The algorithm greedily selects the
+    best local improvement at each step from the full set of available actions.
+    
+    Args:
+        dataset (PerformancePredictionDataset): Dataset containing architecture 
+            performance data
+        micro_action_set (MicroActionSet): Set of micro actions for architecture
+            space exploration
+        overall_actual_y (torch.Tensor): Complete performance tensor for
+            ranking calculations
+        higher_is_better (bool): Whether higher performance values are better
+        termination_threshold_ratio (float): Fraction of total architectures to
+            evaluate as budget
+        method_name (str): Name identifier for this method. 
+            Defaults to "Local Greedy Heuristic".
+            
+    Returns:
+        Dict: Comprehensive results dictionary containing:
+            - method: Method name
+            - selected_graph_id: Index of best found architecture
+            - actual_y_perf_of_selected: Performance of selected architecture
+            - selection_metric_value: Metric value used for selection
+            - selected_graph_origin: Origin method name
+            - discovered_count: Number of architectures evaluated
+            - total_iterations_run: Number of greedy steps completed
+            - rank_position_overall: Rank among all architectures
+            - percentile_overall: Percentile ranking
+            - total_samples_overall: Total available architectures
+            - performance_trajectory: Performance over time
+            - total_evaluation_time: Time spent on evaluations
+            - total_run_time: Total algorithm runtime
+            
+    Example:
+        >>> results = random_greedy_heuristic_analysis(
+        ...     dataset=dataset,
+        ...     micro_action_set=micro_actions,
+        ...     overall_actual_y=y_tensor,
+        ...     higher_is_better=True,
+        ...     termination_threshold_ratio=0.05
+        ... )
+        >>> print(f"Best architecture: {results['selected_graph_id']}")
+        >>> print(f"Performance: {results['actual_y_perf_of_selected']:.4f}")
+    """
     performance_cache = {}
     time_cache = {}
     performance_trajectory = []

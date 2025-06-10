@@ -1,3 +1,14 @@
+"""
+RDB2G-Bench Reinforcement Learning Baseline Module
+
+This module implements reinforcement learning for neural architecture search on RDB2G-Bench.
+The approach uses a recurrent neural network controller that learns to generate sequences
+of micro actions to construct high-performing graph neural network architectures.
+
+The reinforcement learning approach can learn complex policies for architecture
+construction by exploring the space of micro action sequences.
+"""
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -14,7 +25,50 @@ from ..micro_action import MicroActionSet
 from .utils import calculate_overall_rank, get_performance_for_index, update_trajectory_and_best, pad_trajectory, calculate_evaluation_time
 
 class ControllerRNN(nn.Module):
+    """
+    Recurrent Neural Network Controller for Architecture Search.
+    
+    This controller generates sequences of actions to construct graph neural network
+    architectures. It uses either LSTM or GRU cells to maintain state across the
+    action sequence and outputs action probabilities for policy gradient training.
+    
+    Attributes:
+        hidden_dim (int): Hidden dimension of the RNN
+        num_layers (int): Number of RNN layers
+        rnn_type (str): Type of RNN cell ('lstm' or 'gru')
+        rnn (nn.Module): The RNN module (LSTM or GRU)
+        action_head (nn.Linear): Linear layer for action probability output
+    
+    Args:
+        input_dim (int): Dimensionality of input state embeddings
+        hidden_dim (int): Hidden dimension of the RNN
+        num_actions (int): Number of possible actions in the action space
+        rnn_type (str): Type of RNN to use ('lstm' or 'gru'). Defaults to 'lstm'.
+        num_layers (int): Number of RNN layers. Defaults to 1.
+        
+    Example:
+        >>> controller = ControllerRNN(
+        ...     input_dim=20,
+        ...     hidden_dim=64,
+        ...     num_actions=10,
+        ...     rnn_type='lstm'
+        ... )
+        >>> state_emb = torch.randn(1, 1, 20)
+        >>> hidden = controller.init_hidden()
+        >>> action_logits, new_hidden = controller(state_emb, hidden)
+    """
+    
     def __init__(self, input_dim, hidden_dim, num_actions, rnn_type='lstm', num_layers=1):
+        """
+        Initialize the Controller RNN.
+        
+        Args:
+            input_dim (int): Dimensionality of input state embeddings
+            hidden_dim (int): Hidden dimension of the RNN
+            num_actions (int): Number of possible actions
+            rnn_type (str): Type of RNN ('lstm' or 'gru')
+            num_layers (int): Number of RNN layers
+        """
         super(ControllerRNN, self).__init__()
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
@@ -30,11 +84,32 @@ class ControllerRNN(nn.Module):
         self.action_head = nn.Linear(hidden_dim, num_actions)
 
     def forward(self, state_embedding, hidden_state):
+        """
+        Forward pass through the controller.
+        
+        Args:
+            state_embedding (torch.Tensor): Current state embedding of shape (batch, seq, input_dim)
+            hidden_state (tuple or torch.Tensor): Hidden state from previous step
+            
+        Returns:
+            tuple: (action_logits, new_hidden_state)
+                - action_logits: Logits for action selection of shape (batch, num_actions)
+                - new_hidden_state: Updated hidden state
+        """
         output, next_hidden = self.rnn(state_embedding, hidden_state)
         action_logits = self.action_head(output.squeeze(1))
         return action_logits, next_hidden
 
     def init_hidden(self, batch_size=1):
+        """
+        Initialize hidden state for the RNN.
+        
+        Args:
+            batch_size (int): Batch size for initialization
+            
+        Returns:
+            tuple or torch.Tensor: Initial hidden state
+        """
         weight = next(self.parameters()).data
         if self.rnn_type == 'lstm':
             return (weight.new(self.num_layers, batch_size, self.hidden_dim).zero_(),
@@ -45,7 +120,25 @@ class ControllerRNN(nn.Module):
              raise ValueError(f"Trying to initialize hidden state for unsupported RNN type: {self.rnn_type}")
 
 def get_state_embedding(current_edge_set, embedding_dim):
-    """Converts the current edge set into a fixed-size embedding for the RNN."""
+    """
+    Convert edge set representation into a fixed-size embedding for RNN input.
+    
+    This function transforms the binary edge set representation into a padded
+    or truncated tensor suitable for the RNN controller input.
+    
+    Args:
+        current_edge_set (tuple or list): Binary representation of active edges
+        embedding_dim (int): Target dimensionality for the embedding
+        
+    Returns:
+        torch.Tensor: State embedding of shape (1, 1, embedding_dim)
+        
+    Example:
+        >>> edge_set = (1, 0, 1, 0)
+        >>> embedding = get_state_embedding(edge_set, 8)
+        >>> print(embedding.shape)
+        torch.Size([1, 1, 8])
+    """
     embedding = torch.zeros(1, 1, embedding_dim)
     edge_tensor = torch.tensor(current_edge_set, dtype=torch.float)
     current_len = len(edge_tensor)
@@ -58,7 +151,25 @@ def get_state_embedding(current_edge_set, embedding_dim):
     return embedding
 
 def get_action_space(micro_action_set: MicroActionSet, current_edge_set):
-    """Determines the valid actions (transitions to next states) from the current state."""
+    """
+    Determine valid actions from the current architecture state.
+    
+    This function analyzes the current edge set and returns all possible
+    micro actions that can be applied, along with a special stop action.
+    
+    Args:
+        micro_action_set (MicroActionSet): Set of available micro actions
+        current_edge_set (tuple): Current binary edge set representation
+        
+    Returns:
+        tuple: (possible_actions_with_ids, num_total_valid_actions)
+            - possible_actions_with_ids: List of (action_detail, action_id) tuples
+            - num_total_valid_actions: Total number of available actions including stop
+            
+    Example:
+        >>> actions, num_actions = get_action_space(micro_actions, current_set)
+        >>> print(f"Available actions: {num_actions}")
+    """
     possible_actions_with_ids = []
     action_id_counter = 0
     num_total_valid_graphs = len(micro_action_set.valid_edge_sets_list)
@@ -97,7 +208,26 @@ def get_action_space(micro_action_set: MicroActionSet, current_edge_set):
     return possible_actions_with_ids, num_total_valid_actions
 
 def apply_action(current_edge_set, action_details, micro_action_set: MicroActionSet):
-    """Applies the chosen action by transitioning to the target state index."""
+    """
+    Apply the selected action to transition to a new architecture state.
+    
+    This function executes the chosen micro action and returns the resulting
+    edge set configuration and its index in the valid edge sets list.
+    
+    Args:
+        current_edge_set (tuple): Current binary edge set representation
+        action_details (dict): Action specification with 'type' and 'target_index'
+        micro_action_set (MicroActionSet): Set of available micro actions
+        
+    Returns:
+        tuple: (new_edge_set, new_index)
+            - new_edge_set: Resulting edge set after action application
+            - new_index: Index of new edge set in valid_edge_sets_list
+            
+    Example:
+        >>> action = {"type": "add_fk_pk", "target_index": 42}
+        >>> new_set, new_idx = apply_action(current_set, action, micro_actions)
+    """
     target_index = action_details.get("target_index")
     action_type = action_details.get("type")
 
@@ -135,7 +265,66 @@ def rl_heuristic_analysis(
     termination_threshold_ratio: float = 0.1,
     method_name: str = "RL Heuristic (Policy Gradient)",
 ):
-    """Performs Neural Architecture Search using Policy Gradients (REINFORCE)."""
+    """
+    Perform Neural Architecture Search using Reinforcement Learning with Policy Gradients.
+    
+    This function implements a complete RL-based search using REINFORCE algorithm.
+    An RNN controller learns to generate sequences of micro actions that construct
+    high-performing graph neural network architectures.
+
+    Args:
+        dataset (PerformancePredictionDataset): Dataset containing architecture 
+            performance data
+        micro_action_set (MicroActionSet): Set of micro actions for architecture
+            space exploration
+        overall_actual_y (torch.Tensor): Complete performance tensor for
+            ranking calculations
+        higher_is_better (bool): Whether higher performance values are better
+        controller_rnn_type (str): RNN type for controller ('lstm' or 'gru').
+            Defaults to 'lstm'.
+        controller_num_layers (int): Number of RNN layers. Defaults to 1.
+        controller_hidden_dim (int): Hidden dimension of controller RNN.
+            Defaults to 32.
+        learning_rate (float): Learning rate for controller optimization.
+            Defaults to 0.005.
+        num_episodes (int): Number of RL episodes to run. Defaults to 50.
+        max_steps_per_episode (int): Maximum steps per episode. Defaults to 5.
+        gamma (float): Discount factor for returns computation. Defaults to 0.99.
+        termination_threshold_ratio (float): Fraction of total architectures to
+            evaluate as budget. Defaults to 0.1.
+        method_name (str): Name identifier for this method. 
+            Defaults to "RL Heuristic (Policy Gradient)".
+            
+    Returns:
+        Dict: Comprehensive results dictionary containing:
+            - method: Method name
+            - selected_graph_id: Index of best found architecture
+            - actual_y_perf_of_selected: Performance of selected architecture
+            - selection_metric_value: Metric value used for selection
+            - selected_graph_origin: Origin method name
+            - discovered_count: Number of architectures evaluated
+            - total_iterations_run: Number of episodes completed
+            - rank_position_overall: Rank among all architectures
+            - percentile_overall: Percentile ranking
+            - total_samples_overall: Total available architectures
+            - performance_trajectory: Performance over time
+            - total_evaluation_time: Time spent on evaluations
+            - total_run_time: Total algorithm runtime
+            
+    Example:
+        >>> results = rl_heuristic_analysis(
+        ...     dataset=dataset,
+        ...     micro_action_set=micro_actions,
+        ...     overall_actual_y=y_tensor,
+        ...     higher_is_better=True,
+        ...     controller_rnn_type='lstm',
+        ...     controller_hidden_dim=64,
+        ...     num_episodes=100,
+        ...     max_steps_per_episode=10
+        ... )
+        >>> print(f"Best architecture: {results['selected_graph_id']}")
+        >>> print(f"Performance: {results['actual_y_perf_of_selected']:.4f}")
+    """
     performance_cache = {}
     time_cache = {}
     performance_trajectory = []

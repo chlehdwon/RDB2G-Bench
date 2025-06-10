@@ -1,7 +1,9 @@
 Welcome to RDB2G-Bench Documentation!
 ========================================
 
-**RDB2G-Bench** is an *easy-to-use framework* for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs. This is the official documentation of the paper **RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases.**
+This is the official documentation of the paper **RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases.**
+
+**RDB2G-Bench** is an *easy-to-use framework* for benchmarking graph-based analysis and prediction tasks by converting relational database data into graphs. 
 
 Contents
 --------
@@ -24,6 +26,9 @@ Contents
    :maxdepth: 2
    :caption: Benchmarks
 
+   030/micro_action
+   030/run_benchmark
+   030/random_search
    030/greedy_search
    030/evolutionary_algorithm
    030/bayesian_optimization

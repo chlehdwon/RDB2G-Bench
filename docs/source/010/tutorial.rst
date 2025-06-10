@@ -4,7 +4,7 @@ Tutorial
 Basic Usage
 -----------
 
-This tutorial provides a quick overview of RDB2G-Bench's main functionality.
+This tutorial provides a quick overview of RDB2G-Bench.
 
 Quick Start Example
 -------------------
@@ -27,7 +27,7 @@ Here's a simple example to get you started:
    print(f"Test Metric: {test_metric}")
    print(f"Training Time: {train_time}")
 
-Running Your First Benchmark
+Run First Benchmark
 -----------------------------
 
 .. code-block:: python
@@ -39,7 +39,7 @@ Running Your First Benchmark
        dataset="rel-f1",
        task="driver-top3", 
        budget_percentage=0.05,
-       method="greedy",
+       method="all",
        num_runs=3,
        seed=42
    )

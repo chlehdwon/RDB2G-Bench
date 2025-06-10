@@ -1,3 +1,15 @@
+"""
+RDB2G-Bench Node Classification/Regression Worker Module
+
+This module provides functionality to run GNN-based node classification and regression
+experiments on RDB2G-Bench datasets. It supports various GNN architectures and handles
+the complete training pipeline including data loading, model training, evaluation,
+and result saving.
+
+The worker function processes different graph configurations generated from a search space
+and evaluates their performance on node-level prediction tasks.
+"""
+
 # Reference: https://github.com/snap-stanford/relbench/blob/main/examples/gnn_node.py
 
 import copy
@@ -62,39 +74,81 @@ def run_gnn_node_worker(
     """
     Run GNN node classification/regression worker function.
     
+    This function executes node-level prediction experiments using Graph Neural Networks
+    on RDB2G-Bench datasets. It supports various task types including binary classification,
+    regression, and multilabel classification. The function can process multiple graph
+    configurations in parallel and provides comprehensive logging and result export.
+    
     Args:
-        dataset_name: Name of the dataset (e.g., "rel-f1")
-        task_name: Name of the task (e.g., "driver-top3")
-        lr: Learning rate
-        weight_decay: Weight decay for optimizer
-        epochs: Number of training epochs
-        batch_size: Batch size for training
-        channels: Number of hidden channels
-        aggr: Aggregation method
-        gnn: GNN model type ("GraphSAGE", "GIN", "GPS")
-        num_layers: Number of GNN layers
-        num_neighbors: Number of neighbors for sampling
-        temporal_strategy: Temporal sampling strategy
-        max_steps_per_epoch: Maximum steps per epoch
-        num_workers: Number of workers for data loading
-        seed: Random seed
-        patience: Early stopping patience
-        cache_dir: Cache directory path
-        result_dir: Results directory path
-        tag: Tag for result organization
-        debug: Enable debug mode
-        debug_idx: Debug graph index
-        idx: Worker index for parallel processing
-        workers: Total number of workers
-        target_indices: Specific graph indices to run
-        device: Device to use (if None, auto-detect)
-        save_csv: Whether to save results to CSV file
+        dataset_name (str): Name of the dataset (e.g., "rel-f1", "rel-movielens1m").
+            Defaults to "rel-f1".
+        task_name (str): Name of the task (e.g., "driver-top3", "user-top3").
+            Defaults to "driver-top3".
+        lr (float): Learning rate for the optimizer. Defaults to 0.005.
+        weight_decay (float): Weight decay (L2 regularization) for the optimizer.
+            Defaults to 0.
+        epochs (int): Maximum number of training epochs. Defaults to 20.
+        batch_size (int): Batch size for training and evaluation. Defaults to 512.
+        channels (int): Number of hidden channels in the GNN layers. Defaults to 128.
+        aggr (str): Aggregation method for GNN layers ("sum", "mean", "max").
+            Defaults to "sum".
+        gnn (str): GNN architecture to use ("GraphSAGE", "GIN", "GPS").
+            Defaults to "GraphSAGE".
+        num_layers (int): Number of GNN layers. Defaults to 2.
+        num_neighbors (int): Number of neighbors to sample per layer. Defaults to 128.
+        temporal_strategy (str): Temporal sampling strategy ("uniform", "last").
+            Defaults to "uniform".
+        max_steps_per_epoch (int): Maximum number of training steps per epoch.
+            Defaults to 2000.
+        num_workers (int): Number of workers for data loading. Defaults to 0.
+        seed (int): Random seed for reproducibility. Defaults to 42.
+        patience (int): Early stopping patience (epochs without improvement).
+            Defaults to 20.
+        cache_dir (str): Directory for caching processed data.
+            Defaults to "~/.cache/relbench_examples".
+        result_dir (str): Directory for saving results. Defaults to "./results".
+        tag (str): Tag for organizing results in subdirectories. Defaults to "".
+        debug (bool): Enable debug mode (runs only one graph configuration).
+            Defaults to False.
+        debug_idx (int): Specific graph index to run in debug mode. If -1, uses
+            full graph. Defaults to -1.
+        idx (Optional[int]): Worker index for parallel processing. Defaults to 0.
+        workers (Optional[int]): Total number of parallel workers. Defaults to 1.
+        target_indices (Optional[List[int]]): Specific graph indices to process.
+            If None, processes based on worker assignment. Defaults to None.
+        device (Optional[torch.device]): Device to use for training. If None,
+            auto-detects CUDA availability. Defaults to None.
+        save_csv (bool): Whether to save results to CSV file. Defaults to True.
         
     Returns:
-        Dictionary containing processing status:
-        - 'processed_graphs': List of graph indices that were processed
-        - 'total_processed': Number of graphs processed
-        - 'csv_file': Path to CSV file if save_csv=True, None otherwise
+        Dict: Dictionary containing processing status with keys:
+            - 'processed_graphs' (List[int]): List of graph indices that were processed
+            - 'total_processed' (int): Number of graphs processed
+            - 'csv_file' (Optional[str]): Path to CSV file if save_csv=True, None otherwise
+            
+    Raises:
+        ValueError: If idx and workers are not specified when not in debug mode
+            and target_indices is not provided.
+        ValueError: If unsupported task type is encountered.
+        
+    Example:
+        >>> # Run single experiment in debug mode
+        >>> results = run_gnn_node_worker(
+        ...     dataset_name="rel-f1",
+        ...     task_name="driver-top3",
+        ...     debug=True,
+        ...     epochs=10
+        ... )
+        >>> print(f"Processed {results['total_processed']} graphs")
+        
+        >>> # Run parallel processing
+        >>> results = run_gnn_node_worker(
+        ...     dataset_name="rel-f1",
+        ...     task_name="driver-top3",
+        ...     idx=0,
+        ...     workers=1,
+        ...     epochs=20
+        ... )
     """
     
     if device is None:
@@ -160,6 +214,19 @@ def run_gnn_node_worker(
         raise ValueError(f"Task type {task.task_type} is unsupported")
     
     def train(model, loader_dict, optimizer, entity_table, edge_tf_dict) -> float:
+        """
+        Train the model for one epoch.
+        
+        Args:
+            model: GNN model to train
+            loader_dict: Dictionary containing data loaders
+            optimizer: PyTorch optimizer
+            entity_table: Target entity table name
+            edge_tf_dict: Edge transformation dictionary
+            
+        Returns:
+            float: Average training loss for the epoch
+        """
         model.train()
         loss_accum = count_accum = 0
         steps = 0
@@ -186,6 +253,18 @@ def run_gnn_node_worker(
     
     @torch.no_grad()
     def test(model, loader: NeighborLoader, entity_table, edge_tf_dict) -> np.ndarray:
+        """
+        Evaluate the model on a given data loader.
+        
+        Args:
+            model: GNN model to evaluate
+            loader: Data loader for evaluation
+            entity_table: Target entity table name
+            edge_tf_dict: Edge transformation dictionary
+            
+        Returns:
+            np.ndarray: Model predictions as numpy array
+        """
         model.eval()
         pred_list = []
         

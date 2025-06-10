@@ -1,3 +1,14 @@
+"""
+RDB2G-Bench LLM Baseline Module
+
+This module implements Large Language Model (LLM) based baseline for neural architecture search 
+on RDB2G-Bench. The LLM baseline leverages the reasoning capabilities of large language models
+to iteratively improve graph modelings.
+
+The LLM approach uses conversational AI to understand the graph modeling task and make informed
+decisions about which micro actions to apply for architecture optimization. 
+"""
+
 import os
 import json
 import ast
@@ -43,31 +54,78 @@ def run_llm_baseline(
     **kwargs
 ) -> Dict:
     """
-    Run LLM-based graph modeling baseline.
+    Perform Neural Architecture Search using Large Language Model Strategy.
+    
+    This function implements LLM-based neural architecture search that leverages the reasoning
+    capabilities of large language models to iteratively improve graph configurations.
+    The LLM interacts with the search space through natural language, making informed decisions
+    about micro actions based on current performance and historical context.
+    
+    The LLM baseline operates in two phases:
+    1. Initial exploration: Try to find an initial improvement from the full graph configuration
+    2. Iterative refinement: Continue optimizing based on performance feedback and action history
     
     Args:
-        dataset: Name of the RelBench dataset (e.g., "rel-f1", "rel-avito")
-        task: Name of the RelBench task (e.g., "driver-top3", "user-ad-visit")
-        budget_percentage: Budget percentage for the search process
-        seed: Random seed for reproducibility
-        model: LLM model to use (default: "claude-3-5-sonnet-latest")
-        temperature: Temperature for LLM generation (0.0-1.0)
-        tag: Tag identifying the experiment
-        cache_dir: Directory for caching dataset and model data
-        result_dir: Root directory for results
-        **kwargs: Additional configuration parameters
+        dataset (str): Name of the RelBench dataset (e.g., "rel-f1", "rel-avito").
+            Defaults to "rel-f1".
+        task (str): Name of the RelBench task (e.g., "driver-top3", "user-ad-visit").
+            Defaults to "driver-top3".
+        budget_percentage (float): Budget percentage for the search process as fraction
+            of total search space. Defaults to 0.05.
+        seed (int): Random seed for reproducibility. Defaults to 42.
+        model (str): LLM model identifier to use for reasoning. 
+            Defaults to "claude-3-5-sonnet-latest".
+        temperature (float): Temperature for LLM generation controlling randomness (0.0-1.0).
+            Higher values increase creativity. Defaults to 0.8.
+        tag (str): Tag identifying the experiment for result organization.
+            Defaults to "final".
+        cache_dir (str): Directory for caching dataset and model data.
+            Defaults to "~/.cache/relbench_examples".
+        result_dir (str): Root directory for saving results.
+            Defaults to "./results".
+        **kwargs: Additional configuration parameters passed to underlying components.
         
     Returns:
-        Dictionary containing baseline results:
-        - 'best_score': Best achieved performance score
-        - 'best_edge_set': Best graph edge configuration found
-        - 'initial_score': Initial performance before search
-        - 'score_result': Performance trajectory during search
-        - 'budget_percentage': Budget percentage used
-        - 'remaining_budget': Remaining unused budget
+        Dict: Comprehensive results dictionary containing:
+            - best_score: Best achieved performance score during search
+            - best_edge_set: Best graph edge configuration found
+            - best_valid_action_result: Sequence of valid actions leading to best result
+            - initial_score: Initial performance before search optimization
+            - initial_edge_set: Initial graph edge configuration
+            - budget_percentage: Budget percentage used for the search
+            - initial_budget: Total evaluation budget allocated
+            - remaining_budget: Unused evaluation budget remaining
+            - history_actions: String representation of action history
+            - action_result: Complete sequence of all actions attempted
+            - score_result: Performance trajectory during search process
+            
+    Raises:
+        ValueError: If ANTHROPIC_API_KEY environment variable is not set
+        ValueError: If unsupported task type is encountered
+        ValueError: If link prediction task missing required table attributes
+        
+    Example:
+        >>> # Set API key first
+        >>> import os
+        >>> os.environ["ANTHROPIC_API_KEY"] = "your_api_key_here"
+        >>> 
+        >>> # Run LLM baseline
+        >>> results = run_llm_baseline(
+        ...     dataset="rel-f1",
+        ...     task="driver-top3",
+        ...     budget_percentage=0.05,
+        ...     model="claude-3-5-sonnet-latest",
+        ...     temperature=0.8,
+        ...     seed=42
+        ... )
+        >>> print(f"Best performance: {results['best_score']:.4f}")
+        >>> print(f"Initial performance: {results['initial_score']:.4f}")
+        >>> print(f"Improvement: {results['best_score'] - results['initial_score']:.4f}")
         
     Note:
-        Requires ANTHROPIC_API_KEY environment variable to be set.
+        This function requires an active internet connection and valid Anthropic API credentials.
+        The ANTHROPIC_API_KEY environment variable must be set before calling this function.
+        Results are automatically saved to JSON files in the specified output directory.
     """
     
     if not os.getenv("ANTHROPIC_API_KEY"):

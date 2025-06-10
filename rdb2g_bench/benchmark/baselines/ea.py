@@ -1,3 +1,15 @@
+"""
+RDB2G-Bench Evolutionary Algorithm Baseline Module
+
+This module implements evolutionary algorithm for neural architecture search on RDB2G-Bench.
+The evolutionary approach maintains a population of graph neural network architectures and
+evolves them through selection, mutation, and replacement operations to find high-performing
+configurations.
+
+The evolutionary algorithm is particularly effective for exploring large search spaces
+and maintaining diversity in the population of candidate architectures.
+"""
+
 import torch
 import numpy as np
 import random
@@ -19,7 +31,60 @@ def evolutionary_heuristic_analysis(
     max_iterations: int = 1000,
 ):
     """
-    Performs evolutionary search to find a high-performing graph configuration.
+    Perform Neural Architecture Search using Evolutionary Algorithm.
+    
+    This function implements a complete evolutionary algorithm for finding optimal
+    graph neural network architectures. It maintains a population of architectures,
+    applies micro action-based mutations, and uses tournament selection for evolution.
+    
+    Args:
+        dataset (PerformancePredictionDataset): Dataset containing architecture 
+            performance data
+        micro_action_set (MicroActionSet): Set of micro actions for architecture
+            space exploration
+        overall_actual_y (torch.Tensor): Complete performance tensor for
+            ranking calculations
+        higher_is_better (bool): Whether higher performance values are better
+        termination_threshold_ratio (float): Fraction of total architectures to
+            evaluate as budget
+        method_name (str): Name identifier for this method. 
+            Defaults to "Evolutionary Heuristic".
+        population_size (int): Number of individuals in the population.
+            Defaults to 10.
+        tournament_size (int): Number of individuals selected for tournament.
+            Defaults to 10.
+        max_iterations (int): Maximum number of evolutionary generations.
+            Defaults to 1000.
+            
+    Returns:
+        Dict: Comprehensive results dictionary containing:
+            - method: Method name
+            - selected_graph_id: Index of best found architecture
+            - actual_y_perf_of_selected: Performance of selected architecture
+            - selection_metric_value: Metric value used for selection
+            - selected_graph_origin: Origin method name
+            - discovered_count: Number of architectures evaluated
+            - total_iterations_run: Number of generations completed
+            - rank_position_overall: Rank among all architectures
+            - percentile_overall: Percentile ranking
+            - total_samples_overall: Total available architectures
+            - performance_trajectory: Performance over time
+            - total_evaluation_time: Time spent on evaluations
+            - total_run_time: Total algorithm runtime
+            
+    Example:
+        >>> results = evolutionary_heuristic_analysis(
+        ...     dataset=dataset,
+        ...     micro_action_set=micro_actions,
+        ...     overall_actual_y=y_tensor,
+        ...     higher_is_better=True,
+        ...     termination_threshold_ratio=0.05,
+        ...     population_size=20,
+        ...     tournament_size=5,
+        ...     max_iterations=100
+        ... )
+        >>> print(f"Best architecture: {results['selected_graph_id']}")
+        >>> print(f"Performance: {results['actual_y_perf_of_selected']:.4f}")
     """
     population = []
     seen_indices = set()

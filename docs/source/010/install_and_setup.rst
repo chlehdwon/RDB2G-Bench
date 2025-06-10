@@ -32,13 +32,3 @@ For LLM-based baselines, set up your API key:
 .. code-block:: bash
 
    export ANTHROPIC_API_KEY="YOUR_API_KEY"
-
-Verification
-------------
-
-Verify your installation by importing the package:
-
-.. code-block:: python
-
-   import rdb2g_bench
-   print("RDB2G-Bench installed successfully!") 

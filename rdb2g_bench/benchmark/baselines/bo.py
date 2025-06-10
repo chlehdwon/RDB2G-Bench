@@ -1,3 +1,12 @@
+"""
+RDB2G-Bench Bayesian Optimization Baseline Module
+
+This module implements Bayesian optimization for neural architecture search on RDB2G-Bench.
+It uses a Multi-Layer Perceptron (MLP) as a surrogate model to approximate the performance
+of different graph neural network architectures, and employs Expected Improvement (EI)
+as the acquisition function to guide the search process.
+"""
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -10,7 +19,27 @@ from ..micro_action import MicroActionSet
 from .utils import calculate_overall_rank, get_performance_for_index, update_trajectory_and_best, pad_trajectory, calculate_evaluation_time
 
 def get_state_embedding(edge_set: list | tuple, embedding_dim: int) -> np.ndarray | None:
-    """Converts the current edge set into a fixed-size numpy array embedding."""
+    """
+    Convert edge set representation into a fixed-size numerical embedding.
+    
+    This function transforms the binary edge set representation into a padded
+    or truncated numpy array suitable for neural network input.
+    
+    Args:
+        edge_set (list | tuple): Binary representation of which edges are active
+            in the current graph configuration
+        embedding_dim (int): Target dimensionality for the embedding vector
+        
+    Returns:
+        np.ndarray | None: Fixed-size embedding array of shape (1, embedding_dim),
+            or None if edge_set is None
+            
+    Example:
+        >>> edge_set = [1, 0, 1, 0]
+        >>> embedding = get_state_embedding(edge_set, 8)
+        >>> print(embedding.shape)
+        (1, 8)
+    """
     if edge_set is None:
         return None
     numeric_edge_set = [int(e) if isinstance(e, bool) else e for e in edge_set]
@@ -27,7 +56,40 @@ def get_state_embedding(edge_set: list | tuple, embedding_dim: int) -> np.ndarra
     return embedding.reshape(1, -1)
 
 class MLPSurrogate(nn.Module):
+    """
+    Multi-Layer Perceptron surrogate model for architecture performance prediction.
+    
+    This neural network serves as a surrogate model to approximate the performance
+    of different graph neural network architectures. It takes graph configuration
+    embeddings as input and predicts their expected performance.
+    
+    Attributes:
+        layers (nn.Sequential): Sequential layers of the MLP including dropout
+        
+    Args:
+        input_dim (int): Dimensionality of input embeddings
+        hidden_dim1 (int): Size of first hidden layer. Defaults to 64.
+        hidden_dim2 (int): Size of second hidden layer. Defaults to 64.
+        dropout_rate (float): Dropout probability for regularization. Defaults to 0.1.
+        
+    Example:
+        >>> model = MLPSurrogate(input_dim=20, hidden_dim1=32, hidden_dim2=32)
+        >>> x = torch.randn(10, 20)
+        >>> predictions = model(x)
+        >>> print(predictions.shape)
+        torch.Size([10, 1])
+    """
+    
     def __init__(self, input_dim, hidden_dim1=64, hidden_dim2=64, dropout_rate=0.1):
+        """
+        Initialize the MLP surrogate model.
+        
+        Args:
+            input_dim (int): Dimensionality of input embeddings
+            hidden_dim1 (int): Size of first hidden layer
+            hidden_dim2 (int): Size of second hidden layer 
+            dropout_rate (float): Dropout probability for regularization
+        """
         super(MLPSurrogate, self).__init__()
         self.layers = nn.Sequential(
             nn.Linear(input_dim, hidden_dim1),
@@ -40,10 +102,38 @@ class MLPSurrogate(nn.Module):
         )
 
     def forward(self, x):
+        """
+        Forward pass through the surrogate model.
+        
+        Args:
+            x (torch.Tensor): Input embeddings of shape (batch_size, input_dim)
+            
+        Returns:
+            torch.Tensor: Performance predictions of shape (batch_size, 1)
+        """
         return self.layers(x)
 
 def bananas_loss(y_pred: torch.Tensor, y_true: torch.Tensor, y_lb: float, eps: float = 1e-9):
-    """Calculates the BANANAS loss: L = mean | (y_pred - y_lb) / (y_true - y_lb) - 1 |"""
+    """
+    Calculate the BANANAS loss for architecture performance prediction.
+    
+    The BANANAS loss is designed specifically for neural architecture search
+    and is computed as: L = mean | (y_pred - y_lb) / (y_true - y_lb) - 1 |
+    where y_lb is the lower bound of performance values.
+    
+    Args:
+        y_pred (torch.Tensor): Predicted performance values
+        y_true (torch.Tensor): True performance values
+        y_lb (float): Lower bound of performance values for normalization
+        eps (float): Small epsilon to prevent division by zero. Defaults to 1e-9.
+        
+    Returns:
+        torch.Tensor: Computed BANANAS loss value
+        
+    Reference:
+        White, Colin, et al. "BANANAS: Bayesian optimization with neural 
+        architectures for neural architecture search." AAAI 2021.
+    """
     numerator = y_pred - y_lb
     denominator = y_true - y_lb
     loss = torch.mean(torch.abs(numerator / (denominator + eps) - 1.0))
@@ -66,7 +156,69 @@ def bayesian_optimization_analysis(
     mlp_batch_size: int = 32,
     ei_mc_samples: int = 50,
 ):
-    """Performs Neural Architecture Search using Bayesian Optimization with an MLP Surrogate Model"""
+    """
+    Perform Neural Architecture Search using Bayesian Optimization.
+    
+    This function implements a complete Bayesian optimization loop for finding
+    optimal graph neural network architectures. It uses an MLP surrogate model
+    to approximate performance and Expected Improvement for acquisition.
+    
+    Args:
+        dataset (PerformancePredictionDataset): Dataset containing architecture 
+            performance data
+        micro_action_set (MicroActionSet): Set of micro actions for architecture
+            space exploration
+        overall_actual_y (torch.Tensor | None): Complete performance tensor for
+            ranking calculations
+        higher_is_better (bool): Whether higher performance values are better
+        termination_threshold_ratio (float): Fraction of total architectures to
+            evaluate as budget
+        method_name (str): Name identifier for this method. 
+            Defaults to "Bayesian Optimization Heuristic".
+        initial_sampling_size (int): Number of random architectures to evaluate
+            initially. Defaults to 10.
+        max_iterations (int): Maximum number of optimization iterations.
+            Defaults to 100.
+        mlp_hidden_dim1 (int): First hidden layer size for MLP surrogate.
+            Defaults to 32.
+        mlp_hidden_dim2 (int): Second hidden layer size for MLP surrogate.
+            Defaults to 32.
+        mlp_dropout_rate (float): Dropout rate for MLP surrogate. Defaults to 0.1.
+        mlp_learning_rate (float): Learning rate for MLP training. Defaults to 0.001.
+        mlp_epochs_per_iteration (int): Training epochs per BO iteration.
+            Defaults to 50.
+        mlp_batch_size (int): Batch size for MLP training. Defaults to 32.
+        ei_mc_samples (int): Monte Carlo samples for uncertainty estimation.
+            Defaults to 50.
+            
+    Returns:
+        Dict: Comprehensive results dictionary containing:
+            - method: Method name
+            - selected_graph_id: Index of best found architecture
+            - actual_y_perf_of_selected: Performance of selected architecture
+            - selection_metric_value: Metric value used for selection
+            - selected_graph_origin: Origin method name
+            - discovered_count: Number of architectures evaluated
+            - total_iterations_run: Number of BO iterations completed
+            - rank_position_overall: Rank among all architectures
+            - percentile_overall: Percentile ranking
+            - total_samples_overall: Total available architectures
+            - performance_trajectory: Performance over time
+            - total_evaluation_time: Time spent on evaluations
+            - total_run_time: Total algorithm runtime
+            
+    Example:
+        >>> results = bayesian_optimization_analysis(
+        ...     dataset=dataset,
+        ...     micro_action_set=micro_actions,
+        ...     overall_actual_y=y_tensor,
+        ...     higher_is_better=True,
+        ...     termination_threshold_ratio=0.05,
+        ...     max_iterations=50
+        ... )
+        >>> print(f"Best architecture: {results['selected_graph_id']}")
+        >>> print(f"Performance: {results['actual_y_perf_of_selected']:.4f}")
+    """
     performance_cache = {}
     embedding_cache = {}
     time_cache = {}

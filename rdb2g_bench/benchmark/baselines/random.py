@@ -1,3 +1,14 @@
+"""
+RDB2G-Bench Random Search Baseline Module
+
+This module implements random search baseline for neural architecture search on RDB2G-Bench.
+Random search provides a simple yet effective baseline by uniformly sampling architectures
+from the search space without any heuristic guidance.
+
+Random search is particularly useful as a baseline method to evaluate the difficulty
+of the search space and compare against more sophisticated optimization algorithms.
+"""
+
 import torch
 import random
 import numpy as np
@@ -15,7 +26,55 @@ def random_heuristic_analysis(
     termination_threshold_ratio: float,
     method_name: str = "Random Heuristic",
 ):
-    """Performs sequential evaluation of graphs chosen randomly from the entire valid graph pool"""
+    """
+    Perform Neural Architecture Search using Random Sampling Strategy.
+    
+    This function implements pure random search that uniformly samples graph neural
+    network architectures from the entire valid search space. Each architecture is
+    evaluated independently without any guidance from previous evaluations, providing
+    an unbiased baseline for comparison with other optimization methods.
+    
+    Args:
+        dataset (PerformancePredictionDataset): Dataset containing architecture 
+            performance data
+        micro_action_set (MicroActionSet): Set of micro actions defining the
+            architecture search space
+        overall_actual_y (torch.Tensor): Complete performance tensor for
+            ranking calculations
+        higher_is_better (bool): Whether higher performance values are better
+        termination_threshold_ratio (float): Fraction of total architectures to
+            evaluate as budget
+        method_name (str): Name identifier for this method. 
+            Defaults to "Random Heuristic".
+            
+    Returns:
+        Dict: Comprehensive results dictionary containing:
+            - method: Method name
+            - selected_graph_id: Index of best found architecture
+            - actual_y_perf_of_selected: Performance of selected architecture
+            - selection_metric_value: Metric value used for selection
+            - selected_graph_origin: Origin method name
+            - discovered_count: Number of architectures evaluated
+            - total_iterations_run: Number of random samples drawn
+            - rank_position_overall: Rank among all architectures
+            - percentile_overall: Percentile ranking
+            - total_samples_overall: Total available architectures
+            - performance_trajectory: Performance over time
+            - total_evaluation_time: Time spent on evaluations
+            - total_run_time: Total algorithm runtime
+            
+    Example:
+        >>> results = random_heuristic_analysis(
+        ...     dataset=dataset,
+        ...     micro_action_set=micro_actions,
+        ...     overall_actual_y=y_tensor,
+        ...     higher_is_better=True,
+        ...     termination_threshold_ratio=0.05
+        ... )
+        >>> print(f"Best architecture: {results['selected_graph_id']}")
+        >>> print(f"Performance: {results['actual_y_perf_of_selected']:.4f}")
+        >>> print(f"Evaluated: {results['discovered_count']} architectures")
+    """
     performance_cache = {}
     time_cache = {}
     performance_trajectory = []

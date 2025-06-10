@@ -1,3 +1,15 @@
+"""
+RDB2G-Bench Benchmark Runner Module
+
+This module provides the main entry point for running comprehensive benchmarks on RDB2G-Bench.
+It offers a simplified interface to execute multiple neural architecture search algorithms
+and compare their performance across different datasets and tasks.
+
+The benchmark runner supports multiple search strategies including evolutionary algorithms,
+greedy search, reinforcement learning, Bayesian optimization, and random sampling baselines.
+Results are automatically aggregated and analyzed for statistical comparison.
+"""
+
 import os
 from typing import Dict, List, Union, Optional
 
@@ -14,24 +26,108 @@ def run_benchmark(
     **kwargs
 ) -> Dict:
     """
-    Run benchmark analysis on the specified dataset and task.
+    Execute comprehensive benchmark analysis on specified dataset and task.
+    
+    This function provides a high-level interface for running neural architecture search
+    benchmarks on RDB2G-Bench. It supports multiple optimization methods and automatically
+    handles data preparation, model training, evaluation, and results aggregation across
+    multiple runs for statistical robustness.
+    
+    The benchmark process includes:
+    1. Dataset and task preparation with proper caching
+    2. Search space initialization with micro actions
+    3. Performance prediction dataset setup
+    4. Multiple independent runs with different random seeds
+    5. Statistical analysis and results aggregation
+    6. Trajectory analysis and CSV export for visualization
     
     Args:
-        dataset: Name of the RelBench dataset
-        task: Name of the RelBench task  
-        budget_percentage: Budget percentage for the search algorithm
-        method: Which analysis method(s) to run ('all', 'ea', 'greedy', 'rl', 'bo')
-        num_runs: Number of times to repeat the training and evaluation process
-        seed: Initial random seed (seed for run i will be seed + i)
-        **kwargs: Additional configuration parameters
-        
-    Available kwargs (with defaults):
-        tag (str): Tag identifying the results sub-directory (default: "hf")
-        cache_dir (str): Directory for caching (default: "~/.cache/relbench_examples")
-        result_dir (str): Root directory for results (default: "./results")
+        dataset (str): Name of the RelBench dataset to benchmark on.
+            Available datasets include "rel-f1", "rel-avito", "rel-amazon", etc.
+            Defaults to "rel-f1".
+        task (str): Name of the RelBench task to evaluate.
+            Task names depend on the dataset (e.g., "driver-top3", "user-ad-visit").
+            Defaults to "driver-top3".
+        budget_percentage (float): Budget percentage for search algorithms as fraction
+            of total search space (0.0-1.0). Higher values allow more thorough search
+            but increase computational cost. Defaults to 0.05 (5%).
+        method (Union[str, List[str]]): Search method(s) to benchmark.
+            Options: "all", "ea", "greedy", "rl", "bo", "random", or list of methods.
+            "all" runs all available methods. Defaults to "all".
+        num_runs (int): Number of independent runs for statistical analysis.
+            More runs provide better statistical confidence but increase runtime.
+            Defaults to 10.
+        seed (int): Base random seed for reproducibility. Each run uses seed + run_index.
+            Defaults to 0.
+        **kwargs: Additional configuration parameters:
+            - tag (str): Experiment tag for result organization. Defaults to "hf".
+            - cache_dir (str): Directory for caching datasets and models. 
+              Defaults to "~/.cache/relbench_examples".
+            - result_dir (str): Root directory for saving results and trajectories.
+              Defaults to "./results".
         
     Returns:
-        Dictionary containing benchmark results
+        Dict: Comprehensive benchmark results containing:
+            - Method-wise aggregated statistics across all runs
+            - Performance trajectories and convergence analysis
+            - Statistical comparisons and rankings
+            - Timing and efficiency metrics
+            - Best architecture configurations found
+            
+        Each method entry includes:
+            - avg_actual_y_perf_of_selected: Average performance across runs
+            - avg_rank_position_overall: Average ranking position
+            - avg_percentile_overall: Average percentile ranking
+            - selected_graph_ids_runs: Graph IDs selected in each run
+            - avg_evaluation_time: Average time spent on evaluations
+            - avg_run_time: Average total runtime per run
+            
+    Raises:
+        ValueError: If unsupported dataset, task, or method specified
+        FileNotFoundError: If required data files cannot be found or downloaded
+        RuntimeError: If benchmark execution fails due to system constraints
+        
+    Example:
+        >>> # Run all methods on default dataset/task
+        >>> results = run_benchmark(
+        ...     dataset="rel-f1",
+        ...     task="driver-top3",
+        ...     budget_percentage=0.05,
+        ...     method="all",
+        ...     num_runs=10,
+        ...     seed=42
+        ... )
+        >>> 
+        >>> # Print aggregated results
+        >>> for method, stats in results.items():
+        ...     if 'avg_actual_y_perf_of_selected' in stats:
+        ...         print(f"{method}: {stats['avg_actual_y_perf_of_selected']:.4f}")
+        
+        >>> # Run specific methods with custom configuration
+        >>> results = run_benchmark(
+        ...     dataset="rel-avito",
+        ...     task="user-ad-visit",
+        ...     budget_percentage=0.10,
+        ...     method=["ea", "greedy", "rl"],
+        ...     num_runs=5,
+        ...     tag="custom_experiment",
+        ...     cache_dir="/custom/cache",
+        ...     result_dir="/custom/results"
+        ... )
+        
+        >>> # Run quick test with single method
+        >>> results = run_benchmark(
+        ...     method="all",
+        ...     num_runs=10,
+        ...     budget_percentage=0.05
+        ... )
+        
+    Note:
+        - Results are automatically saved to CSV files for further analysis
+        - Performance trajectories are exported for visualization
+        - All intermediate data is cached to speed up repeated experiments
+        - GPU acceleration is used automatically when available
+        - Large datasets may require significant memory and storage
     """
     
     if isinstance(method, str):

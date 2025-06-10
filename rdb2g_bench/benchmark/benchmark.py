@@ -1,3 +1,21 @@
+"""
+RDB2G-Bench Core Benchmark Module
+
+This module contains the core benchmark execution logic for RDB2G-Bench. It orchestrates
+the complete benchmarking process including dataset preparation, search space initialization,
+multiple algorithm execution, and comprehensive results analysis.
+
+The module handles:
+- Dataset loading and preprocessing with caching
+- Task-specific configuration and search space setup  
+- Multi-run execution with proper seeding for reproducibility
+- Performance prediction dataset management
+- Statistical analysis and ranking across all methods
+- Results export and trajectory visualization data generation
+
+This is the main execution engine called by the bench_runner interface.
+"""
+
 import argparse
 import json
 import os

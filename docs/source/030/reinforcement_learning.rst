@@ -1,21 +1,39 @@
 Reinforcement Learning
 ======================
 
-Overview
---------
+This module implements reinforcement learning baseline for neural architecture search.
+The approach uses deep reinforcement learning with policy gradients to train
+a recurrent neural network controller that learns to generate sequences of micro actions
+for constructing high-performing graph neural network architectures.
 
-Reinforcement learning approaches treat hyperparameter optimization as a sequential decision-making problem.
+How it Works
+------------
 
-Basic Usage
------------
+The reinforcement learning process:
 
-Run reinforcement learning benchmark:
+1. Initialize RNN-based controller to learn graph construction actions
+2. Start from random graph construction and convert to state embedding
+3. Controller selects actions
+4. Evaluate performance of new graph construction and compute reward
+5. Update controller policy using Policy Gradient based on discounted rewards
+6. Repeat episodes until budget is exhausted
+
+Reinforcement Learning Baseline
+-------------------------------
+
+.. automodule:: rdb2g_bench.benchmark.baselines.rl
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Example Usage
+~~~~~~~~~~~~~
 
 .. code-block:: python
 
    from rdb2g_bench.benchmark.runner import run_benchmark
 
-   # Run reinforcement learning approach
+   # Run reinforcement learning with default parameters
    results = run_benchmark(
        dataset="rel-f1",
        task="driver-top3", 
@@ -24,41 +42,8 @@ Run reinforcement learning benchmark:
        num_runs=10,
        seed=42
    )
-
-How it Works
-------------
-
-The RL-based optimization process:
-
-1. Define the search space as an environment
-2. Train an RL agent to navigate the space
-3. Agent learns to select promising configurations
-4. Reward is based on model performance
-5. Agent improves its strategy over time
-
-Key Components
---------------
-
-**Environment**: The hyperparameter search space
-**Agent**: The learning algorithm that selects configurations
-**State**: Current configuration or search history
-**Action**: Moving to a new configuration
-**Reward**: Performance improvement or absolute performance
-
-Common RL Algorithms
---------------------
-
-- **Q-Learning**: Value-based method for discrete spaces
-- **Policy Gradient**: Direct policy optimization
-- **Actor-Critic**: Combines value and policy methods
-- **Deep Q-Networks (DQN)**: Deep learning extension of Q-learning
-
-Parameters
-----------
-
-Key parameters for RL-based optimization:
-
-- ``algorithm``: Type of RL algorithm
-- ``learning_rate``: Step size for policy updates
-- ``exploration_rate``: Balance between exploration and exploitation
-- ``network_architecture``: Neural network design for deep RL
+   
+   # Access results
+   print(f"Best architecture found: {results['rl']['selected_graph_id']}")
+   print(f"Performance: {results['rl']['actual_y_perf_of_selected']:.4f}")
+   print(f"Episodes completed: {results['rl']['total_iterations_run']}")

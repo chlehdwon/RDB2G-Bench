@@ -1,10 +1,24 @@
+"""
+RDB2G-Bench Dataset Management Module
+
+This module provides functionality to download, load, and manage RDB2G-Bench benchmark datasets.
+It includes functions for downloading pre-computed results from Hugging Face and organizing
+them in a structured format for easy access through the benchmark interface.
+
+The module supports:
+- Downloading benchmark data from Hugging Face Hub
+- Loading existing local benchmark results
+- Getting statistics about available datasets and tasks
+- Organizing data by dataset/task structure
+"""
+
 import os
 import pandas as pd
 from pathlib import Path
 from typing import Optional, List, Dict, Union
 from datasets import load_dataset
 
-from .bench import RDB2GBench
+from .dataloader import RDB2GBench
 
 
 def load_rdb2g_bench(
@@ -16,14 +30,33 @@ def load_rdb2g_bench(
     """
     Load RDB2G-Bench results from local directory, download if missing.
     
+    This function serves as the main entry point for accessing RDB2G-Bench data.
+    It first checks for existing data in the specified directory, and if no data
+    is found and download is enabled, it automatically downloads the dataset
+    from Hugging Face Hub.
+    
     Args:
-        result_dir: Directory containing the results
-        download: Whether to download if results are missing
-        cache_dir: Cache directory for Hugging Face datasets
-        tag: Tag to use for downloaded data organization
+        result_dir (str): Directory containing the benchmark results. 
+            Defaults to "./results".
+        download (bool): Whether to download data if results are missing. 
+            Defaults to True.
+        cache_dir (Optional[str]): Cache directory for Hugging Face datasets.
+            If None, uses default HF cache location.
+        tag (str): Tag to use for downloaded data organization. 
+            Defaults to "hf".
         
     Returns:
-        RDB2GBench object for accessing results
+        RDB2GBench: Benchmark object for accessing organized results with
+            hierarchical access pattern: bench[dataset][task][idx].
+        
+    Raises:
+        RuntimeError: If no valid data is found in the result directory
+            after download attempts.
+            
+    Example:
+        >>> bench = load_rdb2g_bench("./my_results")
+        >>> available = bench.get_available()
+        >>> result = bench['rel-f1']['driver-top3'][0]
     """
     result_path = Path(result_dir)
     tables_path = result_path / "tables"
@@ -69,15 +102,34 @@ def download_rdb2g_bench(
     """
     Download RDB2G-Bench dataset from Hugging Face and organize it by dataset/task.
     
+    This function downloads the complete or filtered RDB2G-Bench dataset from
+    Hugging Face Hub and organizes it into a structured directory format.
+    The data is grouped by dataset and task, with separate CSV files for each
+    random seed.
+    
     Args:
-        result_dir: Directory to save the organized results
-        cache_dir: Cache directory for Hugging Face datasets
-        dataset_names: List of specific datasets to download (if None, download all)
-        task_names: List of specific tasks to download (if None, download all)
-        tag: Tag to identify the download
+        result_dir (str): Directory to save the organized results.
+            Will be created if it doesn't exist. Defaults to "./results".
+        cache_dir (Optional[str]): Cache directory for Hugging Face datasets.
+            If None, uses default HF cache location.
+        dataset_names (Optional[List[str]]): List of specific datasets to download.
+            If None, downloads all available datasets.
+        task_names (Optional[List[str]]): List of specific tasks to download.
+            If None, downloads all available tasks.
+        tag (str): Tag to identify the download and organize files.
+            Defaults to "hf".
         
     Returns:
-        Dictionary mapping dataset/task combinations to saved file paths
+        Dict[str, List[str]]: Dictionary mapping dataset/task combinations
+            to lists of saved file paths. Keys are in format "dataset/task".
+            
+    Example:
+        >>> saved_files = download_rdb2g_bench(
+        ...     dataset_names=['rel-f1'],
+        ...     task_names=['driver-top3']
+        ... )
+        >>> print(saved_files)
+        {'rel-f1/driver-top3': ['./results/tables/rel-f1/driver-top3/hf/0.csv', ...]}
     """
     result_dir = Path(result_dir)
     result_dir.mkdir(parents=True, exist_ok=True)
@@ -128,13 +180,32 @@ def download_rdb2g_bench(
 
 def get_dataset_stats(cache_dir: Optional[str] = None) -> pd.DataFrame:
     """
-    List all available datasets and tasks in the RDB2G-Bench dataset.
+    Get comprehensive statistics about all available datasets and tasks in RDB2G-Bench.
+    
+    This function loads the complete dataset from Hugging Face and computes
+    aggregate statistics for each dataset/task combination, including counts
+    of unique indices and seeds, as well as performance metrics statistics.
     
     Args:
-        cache_dir: Cache directory for Hugging Face datasets
+        cache_dir (Optional[str]): Cache directory for Hugging Face datasets.
+            If None, uses default HF cache location.
         
     Returns:
-        DataFrame with unique dataset/task combinations and their statistics
+        pd.DataFrame: DataFrame with columns:
+            - dataset: Dataset name
+            - task: Task name  
+            - idx: Number of unique graph configurations
+            - seed: Number of random seeds
+            - test_metric_mean: Mean test performance
+            - test_metric_std: Standard deviation of test performance
+            - test_metric_min: Minimum test performance
+            - test_metric_max: Maximum test performance
+            
+    Example:
+        >>> stats = get_dataset_stats()
+        >>> print(stats.head())
+        dataset    task         idx  seed  test_metric_mean  test_metric_std  ...
+        rel-f1     driver-top3   50    10            0.8542           0.0123  ...
     """
     dataset = load_dataset(
         "kaistdata/RDB2G-Bench",
@@ -150,7 +221,6 @@ def get_dataset_stats(cache_dir: Optional[str] = None) -> pd.DataFrame:
         'test_metric': ['mean', 'std', 'min', 'max']
     }).round(4)
 
-    
     stats.columns = ['_'.join(col).strip() for col in stats.columns]
 
     stats = stats.rename(columns={
