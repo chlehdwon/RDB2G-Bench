@@ -46,7 +46,18 @@ templates_path = ['_templates']
 
 html_theme = 'sphinx_rtd_theme'
 
-autodoc_mock_imports = ["torch", "dgl", "numpy", "os", "time", "copy", "itertools", "pickle", "torch_scatter", "sklearn", "ogb", "scipy", "networkx", "tqdm", "qpth", "quadprog", "cvxpy", "rdkit", "dgllife", "pandas"]
+autodoc_mock_imports = [
+    "torch", "torch_frame", "torch_geometric", "torch_scatter", "torch_sparse", 
+    "torch_cluster", "torch_spline_conv", "pyg_lib",
+    "dgl", "numpy", "pandas", "sklearn", "scipy", "networkx", 
+    "ogb", "tqdm", "qpth", "quadprog", "cvxpy", "rdkit", "dgllife",
+    "relbench", "anthropic", "openai", 
+    "typin", "pathlib", "json", "ast", "copy", "itertools", "pickle",
+    "matplotlib", "seaborn", "plotly", "wandb", "tensorboard",
+    "transformers", "datasets", "tokenizers", "accelerate",
+    "optuna", "ray", "hyperopt", "ax-platform",
+    "psutil", "memory_profiler", "line_profiler"
+]
 
 
 # -- Options for EPUB output
