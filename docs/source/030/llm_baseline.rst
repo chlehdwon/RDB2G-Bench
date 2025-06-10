@@ -28,15 +28,15 @@ Example Usage
 
 .. code-block:: python
 
-   from rdb2g_bench.benchmark.runner import run_benchmark
+   from rdb2g_bench.benchmark.llm.llm_runner import run_llm_baseline
 
    # Run LLM-based baseline
-   results = run_benchmark(
+   results = run_llm_baseline(
        dataset="rel-f1",
        task="driver-top3", 
        budget_percentage=0.05,
-       method=["llm"],
-       num_runs=10,
-       seed=42
+       seed=42,
+       model="claude-3-5-sonnet-latest",
+       temperature=0.8,
    )
 

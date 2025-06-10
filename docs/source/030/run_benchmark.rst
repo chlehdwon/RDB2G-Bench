@@ -85,7 +85,6 @@ The benchmark runner supports the following search methods:
 - **"greedy"**: Greedy Search strategies (forward, backward, random)
 - **"rl"**: Reinforcement Learning with policy gradients
 - **"bo"**: Bayesian Optimization with surrogate models
-- **"random"**: Random sampling baseline
 
 You can specify a single method as a string or multiple methods as a list.
 
