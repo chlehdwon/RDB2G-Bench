@@ -6,6 +6,13 @@ sys.path.append(os.path.abspath('.'))
 sys.path.append(os.path.abspath('..'))
 sys.path.append(os.path.abspath('../..'))
 
+# ReadTheDocs-specific configuration
+on_rtd = os.environ.get('READTHEDOCS') == 'True'
+if on_rtd:
+    # ReadTheDocs automatically installs the package via .readthedocs.yaml
+    # But we need to ensure the path is correct
+    sys.path.insert(0, os.path.abspath('../../'))
+
 # -- Project information
 
 project = 'RDB2G-Bench'
@@ -47,18 +54,27 @@ templates_path = ['_templates']
 html_theme = 'sphinx_rtd_theme'
 
 autodoc_mock_imports = [
-    "torch", "torch_frame", "torch_geometric", "torch_scatter", "torch_sparse", 
+    "torch_frame", "torch_geometric", "torch_scatter", "torch_sparse", 
     "torch_cluster", "torch_spline_conv", "pyg_lib",
-    "dgl", "numpy", "pandas", "sklearn", "scipy", "networkx", 
+    "dgl", "sklearn", "scipy", "networkx", 
     "ogb", "tqdm", "qpth", "quadprog", "cvxpy", "rdkit", "dgllife",
     "relbench", "anthropic", "openai", 
     "typin", "pathlib", "json", "ast", "copy", "itertools", "pickle",
     "matplotlib", "seaborn", "plotly", "wandb", "tensorboard",
     "transformers", "datasets", "tokenizers", "accelerate",
     "optuna", "ray", "hyperopt", "ax-platform",
-    "psutil", "memory_profiler", "line_profiler"
+    "psutil", "memory_profiler", "line_profiler",
+    # ReadTheDocs specific mocks
+    "torch.nn", "torch.optim", "torch.utils", "torch.cuda"
 ]
 
+# ReadTheDocs-specific mock extensions
+if on_rtd:
+    autodoc_mock_imports.extend([
+        "torch.nn.functional", "torch.distributions",
+        "torch_geometric.nn", "torch_geometric.data", "torch_geometric.utils",
+        "relbench.base", "relbench.datasets", "relbench.modeling", "relbench.tasks"
+    ])
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
