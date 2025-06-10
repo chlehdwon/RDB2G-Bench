@@ -69,7 +69,6 @@ autodoc_mock_imports = [
     "torch.nn", "torch.optim", "torch.utils", "torch.cuda"
 ]
 
-# ReadTheDocs-specific mock extensions
 if on_rtd:
     autodoc_mock_imports.extend([
         "torch.nn.functional", "torch.distributions",

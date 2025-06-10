@@ -12,13 +12,14 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 import time
+from typing import Dict, Optional, Union
 from scipy.stats import norm
 
 from ..dataset import PerformancePredictionDataset
 from ..micro_action import MicroActionSet
 from .utils import calculate_overall_rank, get_performance_for_index, update_trajectory_and_best, pad_trajectory, calculate_evaluation_time
 
-def get_state_embedding(edge_set: list | tuple, embedding_dim: int) -> np.ndarray | None:
+def get_state_embedding(edge_set: Union[list, tuple], embedding_dim: int) -> Optional[np.ndarray]:
     """
     Convert edge set representation into a fixed-size numerical embedding.
     
@@ -26,12 +27,12 @@ def get_state_embedding(edge_set: list | tuple, embedding_dim: int) -> np.ndarra
     or truncated numpy array suitable for neural network input.
     
     Args:
-        edge_set (list | tuple): Binary representation of which edges are active
+        edge_set (Union[list, tuple]): Binary representation of which edges are active
             in the current graph configuration
         embedding_dim (int): Target dimensionality for the embedding vector
         
     Returns:
-        np.ndarray | None: Fixed-size embedding array of shape (1, embedding_dim),
+        Optional[np.ndarray]: Fixed-size embedding array of shape (1, embedding_dim),
             or None if edge_set is None
             
     Example:
@@ -142,7 +143,7 @@ def bananas_loss(y_pred: torch.Tensor, y_true: torch.Tensor, y_lb: float, eps: f
 def bayesian_optimization_analysis(
     dataset: PerformancePredictionDataset,
     micro_action_set: MicroActionSet,
-    overall_actual_y: torch.Tensor | None,
+    overall_actual_y: Optional[torch.Tensor],
     higher_is_better: bool,
     termination_threshold_ratio: float,
     method_name: str = "Bayesian Optimization Heuristic",
@@ -168,7 +169,7 @@ def bayesian_optimization_analysis(
             performance data
         micro_action_set (MicroActionSet): Set of micro actions for architecture
             space exploration
-        overall_actual_y (torch.Tensor | None): Complete performance tensor for
+        overall_actual_y (Optional[torch.Tensor]): Complete performance tensor for
             ranking calculations
         higher_is_better (bool): Whether higher performance values are better
         termination_threshold_ratio (float): Fraction of total architectures to

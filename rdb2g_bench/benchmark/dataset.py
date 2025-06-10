@@ -9,6 +9,7 @@ import torch
 from torch_geometric.data import Dataset, Data
 from torch_geometric.seed import seed_everything
 from sklearn.model_selection import train_test_split
+from typing import Dict, Optional
 
 from relbench.base import Dataset as RelBenchDataset, TaskType
 from relbench.datasets import get_dataset
@@ -27,7 +28,7 @@ class PerformancePredictionDataset(Dataset):
     def __init__(self,
                  dataset_name: str = "rel-f1",
                  task_name: str = "driver-top3",
-                 tag: str | None = None,
+                 tag: Optional[str] = None,
                  cache_dir: str = os.path.expanduser("~/.cache/relbench_examples"),
                  result_dir: str = os.path.expanduser("./results"),
                  seed: int = 42,
@@ -39,7 +40,7 @@ class PerformancePredictionDataset(Dataset):
         Args:
             dataset_name (str): Name of the RelBench dataset.
             task_name (str): Name of the RelBench task.
-            tag (str | None): Identifier for the results sub-directory. If None, tries to find suitable results.
+            tag (Optional[str]): Identifier for the results sub-directory. If None, tries to find suitable results.
             cache_dir (str): Directory for caching materialized graphs and stypes.
             result_dir (str): Root directory where results are stored.
             seed (int): Random seed for reproducibility (data splitting, etc.).

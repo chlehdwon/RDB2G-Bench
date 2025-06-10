@@ -1,4 +1,5 @@
 import torch
+from typing import Optional, Tuple
 from ..dataset import PerformancePredictionDataset
 import numpy as np
 
@@ -58,7 +59,7 @@ def get_performance_for_index(
 
 def update_trajectory_and_best(
     index: int,
-    perf: float | None,
+    perf: Optional[float],
     performance_cache: dict,
     initial_cache_size: int,
     total_evaluated_count: int,
@@ -66,7 +67,7 @@ def update_trajectory_and_best(
     global_best_perf: float,
     global_best_index: int,
     higher_is_better: bool,
-) -> tuple[int, float, int]:
+) -> Tuple[int, float, int]:
     """Updates trajectory and global best after a performance evaluation."""
     new_total_evaluated_count = total_evaluated_count
     new_global_best_perf = global_best_perf
