@@ -8,7 +8,6 @@ import pandas as pd
 import torch
 from torch_geometric.data import Dataset, Data
 from torch_geometric.seed import seed_everything
-from sklearn.model_selection import train_test_split
 from typing import Dict, Optional
 
 from relbench.base import Dataset as RelBenchDataset, TaskType
@@ -32,8 +31,7 @@ class PerformancePredictionDataset(Dataset):
                  cache_dir: str = os.path.expanduser("~/.cache/relbench_examples"),
                  result_dir: str = os.path.expanduser("./results"),
                  seed: int = 42,
-                 device: str = 'cpu',
-                 train_ratio: float = 0.1):
+                 device: str = 'cpu'):
         """
         Initializes the dataset, handling data loading and preprocessing.
 
@@ -43,9 +41,8 @@ class PerformancePredictionDataset(Dataset):
             tag (Optional[str]): Identifier for the results sub-directory. If None, tries to find suitable results.
             cache_dir (str): Directory for caching materialized graphs and stypes.
             result_dir (str): Root directory where results are stored.
-            seed (int): Random seed for reproducibility (data splitting, etc.).
+            seed (int): Random seed for reproducibility.
             device (str): Device ('cpu' or 'cuda:X') for potential GPU operations like text embedding.
-            train_ratio (float): Combined proportion of the dataset for the training and validation sets (e.g., 0.2 means 10% train, 10% validation, 80% test).
         """
         super().__init__()
         self.dataset_name = dataset_name
@@ -55,9 +52,6 @@ class PerformancePredictionDataset(Dataset):
         self.result_dir = result_dir
         self.seed = seed
         self.device = torch.device(device)
-        self.train_ratio = train_ratio
-        if not (0 < train_ratio < 1.0):
-             raise ValueError("train_ratio must be between 0 and 1 (exclusive) to represent the combined train+validation proportion.")
 
         seed_everything(self.seed)
 
@@ -203,31 +197,28 @@ class PerformancePredictionDataset(Dataset):
         self.full_graph_id = self.search_space.get_full_graph_idx(graphs_list_of_tuples)
         print(f"Full graph index: {self.full_graph_id}")
 
-        indices = self.df_result_group.index.tolist()
-
-        test_size = 1.0 - self.train_ratio
-
-        print(f"Splitting data: Train={self.train_ratio / 2:.3f} / Test={test_size:.3f} (based on train_ratio={self.train_ratio:.3f})")
-
-        train_val_indices, self.test_indices = train_test_split(
-            indices, test_size=test_size, random_state=self.seed
-        )
-
-        self.train_indices, self.val_indices = train_test_split(
-            train_val_indices, test_size=0.5, random_state=self.seed
-        )
-
-        self.splits = {
-            'train': self.train_indices,
-            'valid': self.val_indices,
-            'test': self.test_indices
-        }
-
-
     def len(self) -> int:
+        """
+        Returns the number of graph configurations in the dataset.
+
+        Returns:
+            int: Total number of unique graph configurations after aggregation.
+        """
         return len(self.df_result_group)
 
     def get(self, original_idx: int) -> Data:
+        """
+        Retrieves a single data sample at the specified index.
+
+        Args:
+            original_idx (int): Index of the sample to retrieve from the aggregated results.
+
+        Returns:
+            Data: PyTorch Geometric Data object with the following attributes:
+            
+            y (torch.Tensor): Target performance value as a 1D tensor.
+            graph_bin_str (str): Binary string representation of the graph configuration.
+        """
         row = self.df_result_group.iloc[original_idx]
 
         graph_bin_str = row['graph']
@@ -241,7 +232,16 @@ class PerformancePredictionDataset(Dataset):
         return data
 
     def __getitem__(self, idx):
-        return self.get(idx)
+        """
+        Enables indexing access to dataset samples.
 
-    def get_split_indices(self, split: str) -> list[int]:
-        return self.splits[split]
+        This method allows the dataset to be used with standard Python indexing
+        syntax (e.g., dataset[0]) and makes it compatible with PyTorch DataLoader.
+
+        Args:
+            idx (int): Index of the sample to retrieve.
+
+        Returns:
+            Data: PyTorch Geometric Data object containing the sample data.
+        """
+        return self.get(idx)
