@@ -142,8 +142,9 @@ class MicroActionSet:
                 
         Returns:
             List[Tuple[Tuple[int, ...], int]]: List of tuples where each tuple contains:
-                - new_edge_set: The modified edge set with an added FK-PK edge
-                - index: Index of the new edge set in the valid_edge_sets_list
+            
+            new_edge_set (Tuple[int, ...]): The modified edge set with an added FK-PK edge
+            index (int): Index of the new edge set in the valid_edge_sets_list
                 
         Example:
             >>> current = (1, 0, 1, 0)  # Some edges included, some not
@@ -177,8 +178,9 @@ class MicroActionSet:
                 
         Returns:
             List[Tuple[Tuple[int, ...], int]]: List of tuples where each tuple contains:
-                - new_edge_set: The modified edge set with a removed FK-PK edge
-                - index: Index of the new edge set in the valid_edge_sets_list
+            
+            new_edge_set (Tuple[int, ...]): The modified edge set with a removed FK-PK edge
+            index (int): Index of the new edge set in the valid_edge_sets_list
                 
         Example:
             >>> current = (1, 1, 1, 0)  # Some edges included
@@ -212,8 +214,9 @@ class MicroActionSet:
                 
         Returns:
             List[Tuple[Tuple[int, ...], int]]: List of tuples where each tuple contains:
-                - new_edge_set: The modified edge set with row-to-edge conversion
-                - index: Index of the new edge set in the valid_edge_sets_list
+            
+            new_edge_set (Tuple[int, ...]): The modified edge set with row-to-edge conversion
+            index (int): Index of the new edge set in the valid_edge_sets_list
                 
         Note:
             This conversion is only possible when both required FK-PK edges are present
@@ -255,8 +258,9 @@ class MicroActionSet:
                 
         Returns:
             List[Tuple[Tuple[int, ...], int]]: List of tuples where each tuple contains:
-                - new_edge_set: The modified edge set with edge-to-row conversion  
-                - index: Index of the new edge set in the valid_edge_sets_list
+            
+            new_edge_set (Tuple[int, ...]): The modified edge set with edge-to-row conversion  
+            index (int): Index of the new edge set in the valid_edge_sets_list
                 
         Note:
             This conversion is only possible when the R2E edge is present and

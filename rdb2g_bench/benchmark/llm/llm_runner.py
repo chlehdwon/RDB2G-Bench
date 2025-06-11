@@ -62,6 +62,7 @@ def run_llm_baseline(
     about micro actions based on current performance and historical context.
     
     The LLM baseline operates in two phases:
+
     1. Initial exploration: Try to find an initial improvement from the full graph configuration
     2. Iterative refinement: Continue optimizing based on performance feedback and action history
     
@@ -87,22 +88,18 @@ def run_llm_baseline(
         
     Returns:
         Dict: Comprehensive results dictionary containing:
-            - best_score: Best achieved performance score during search
-            - best_edge_set: Best graph edge configuration found
-            - best_valid_action_result: Sequence of valid actions leading to best result
-            - initial_score: Initial performance before search optimization
-            - initial_edge_set: Initial graph edge configuration
-            - budget_percentage: Budget percentage used for the search
-            - initial_budget: Total evaluation budget allocated
-            - remaining_budget: Unused evaluation budget remaining
-            - history_actions: String representation of action history
-            - action_result: Complete sequence of all actions attempted
-            - score_result: Performance trajectory during search process
-            
-    Raises:
-        ValueError: If ANTHROPIC_API_KEY environment variable is not set
-        ValueError: If unsupported task type is encountered
-        ValueError: If link prediction task missing required table attributes
+        
+        best_score (float): Best achieved performance score during search
+        best_edge_set (Tuple[int, ...]): Best graph edge configuration found
+        best_valid_action_result (List[Dict]): Sequence of valid actions leading to best result
+        initial_score (float): Initial performance before search optimization
+        initial_edge_set (Tuple[int, ...]): Initial graph edge configuration
+        budget_percentage (float): Budget percentage used for the search
+        initial_budget (int): Total evaluation budget allocated
+        remaining_budget (int): Unused evaluation budget remaining
+        history_actions (str): String representation of action history
+        action_result (List[Dict]): Complete sequence of all actions attempted
+        score_result (List[float]): Performance trajectory during search process
         
     Example:
         >>> # Set API key first

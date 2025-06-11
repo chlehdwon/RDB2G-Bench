@@ -53,10 +53,10 @@ Both workers support multiple GNN architectures:
 - **GPS**: Graph transformer with positional encodings
 
 Example Usage
-~~~~~~~~~~~~~
+----------------
 
 Node Classification/Regression
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -94,7 +94,7 @@ Node Classification/Regression
    )
 
 Link Prediction
-^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -122,8 +122,8 @@ Link Prediction
    )
 
 
-Batch Processing
-^^^^^^^^^^^^^^^^
+Parallel Processing
+~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 

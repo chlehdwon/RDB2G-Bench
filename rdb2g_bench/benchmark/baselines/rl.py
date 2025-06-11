@@ -19,6 +19,7 @@ import random
 import time
 import pandas as pd
 from collections import deque
+from typing import Union, Tuple
 
 from ..dataset import PerformancePredictionDataset
 from ..micro_action import MicroActionSet
@@ -108,7 +109,10 @@ class ControllerRNN(nn.Module):
             batch_size (int): Batch size for initialization
             
         Returns:
-            tuple or torch.Tensor: Initial hidden state
+            Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]: Initial hidden state.
+                For LSTM: tuple of (hidden_state, cell_state) tensors of shape 
+                (num_layers, batch_size, hidden_dim).
+                For GRU: single tensor of shape (num_layers, batch_size, hidden_dim).
         """
         weight = next(self.parameters()).data
         if self.rnn_type == 'lstm':

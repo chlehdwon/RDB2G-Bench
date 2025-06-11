@@ -26,6 +26,7 @@ Contents
    :maxdepth: 2
    :caption: Benchmarks
 
+   030/benchmark_dataset
    030/micro_action
    030/run_benchmark
    030/random_search

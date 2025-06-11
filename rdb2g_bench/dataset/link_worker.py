@@ -130,15 +130,11 @@ def run_idgnn_link_worker(
         
     Returns:
         Dict: Dictionary containing processing status with keys:
-            - 'processed_graphs' (List[int]): List of graph indices that were processed
-            - 'total_processed' (int): Number of graphs processed
-            - 'csv_file' (Optional[str]): Path to CSV file if save_csv=True, None otherwise
-            
-    Raises:
-        ValueError: If idx and workers are not specified when not in debug mode
-            and target_indices is not provided.
-        AssertionError: If task type is not LINK_PREDICTION.
         
+        processed_graphs (List[int]): List of graph indices that were processed
+        total_processed (int): Number of graphs processed
+        csv_file (Optional[str]): Path to CSV file if save_csv=True, None otherwise
+
     Example:
         >>> # Run single experiment in debug mode
         >>> results = run_idgnn_link_worker(

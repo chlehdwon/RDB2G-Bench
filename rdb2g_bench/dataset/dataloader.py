@@ -24,15 +24,16 @@ class RDB2GBench:
     This class loads and organizes all benchmark data from a specified directory
     structure and provides hierarchical access to results through dataset and task names.
     
-    The expected directory structure is:
-    result_dir/
-    └── tables/
-        └── dataset_name/
-            └── task_name/
-                └── tag/
-                    ├── 0.csv
-                    ├── 1.csv
-                    └── ...
+    The expected directory structure is::
+    
+        results/
+        └── tables/
+            └── dataset_name/
+                └── task_name/
+                    └── tag/
+                        ├── 0.csv
+                        ├── 1.csv
+                        └── ...
     
     Attributes:
         result_dir (Path): Path to the results directory
@@ -281,10 +282,11 @@ class IndexAccessor:
         
         Returns:
             Dict: Dictionary containing computed statistics with keys:
+            
                 - params: Mean parameter count (int)
-                - *_time: Mean timing values (float) for train/valid/test
-                - *_mean: Mean values for other numeric columns (float)
-                - *_std: Standard deviation for other numeric columns (float)
+                - \\*_time: Mean timing values (float) for train/valid/test
+                - \\*_mean: Mean values for other numeric columns (float)
+                - \\*_std: Standard deviation for other numeric columns (float)
         """
         if self._stats is None:
             self._stats = {}

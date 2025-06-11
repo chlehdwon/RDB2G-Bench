@@ -146,8 +146,7 @@ def main(args):
         cache_dir=args.cache_dir,
         result_dir=args.result_dir,
         seed=base_seed,
-        device=str(device),
-        train_ratio=args.budget_percentage
+        device=str(device)
     )
     print("Dataset initialized.")
     

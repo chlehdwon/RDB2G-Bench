@@ -34,6 +34,7 @@ def run_benchmark(
     multiple runs for statistical robustness.
     
     The benchmark process includes:
+    
     1. Dataset and task preparation with proper caching
     2. Search space initialization with micro actions
     3. Performance prediction dataset setup
@@ -60,6 +61,7 @@ def run_benchmark(
         seed (int): Base random seed for reproducibility. Each run uses seed + run_index.
             Defaults to 0.
         **kwargs: Additional configuration parameters:
+        
             - tag (str): Experiment tag for result organization. Defaults to "hf".
             - cache_dir (str): Directory for caching datasets and models. 
               Defaults to "~/.cache/relbench_examples".
@@ -68,6 +70,7 @@ def run_benchmark(
         
     Returns:
         Dict: Comprehensive benchmark results containing:
+        
             - Method-wise aggregated statistics across all runs
             - Performance trajectories and convergence analysis
             - Statistical comparisons and rankings
@@ -75,18 +78,14 @@ def run_benchmark(
             - Best architecture configurations found
             
         Each method entry includes:
+        
             - avg_actual_y_perf_of_selected: Average performance across runs
             - avg_rank_position_overall: Average ranking position
             - avg_percentile_overall: Average percentile ranking
             - selected_graph_ids_runs: Graph IDs selected in each run
             - avg_evaluation_time: Average time spent on evaluations
             - avg_run_time: Average total runtime per run
-            
-    Raises:
-        ValueError: If unsupported dataset, task, or method specified
-        FileNotFoundError: If required data files cannot be found or downloaded
-        RuntimeError: If benchmark execution fails due to system constraints
-        
+
     Example:
         >>> # Run all methods on default dataset/task
         >>> results = run_benchmark(

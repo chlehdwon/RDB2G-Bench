@@ -46,13 +46,13 @@ The downloaded data is organized in the following directory structure:
 .. code-block:: text
 
    results/
-   └── tables/
-       └── dataset_name/           # e.g., rel-f1, rel-avito
-           └── task_name/          # e.g., driver-top3, user-ad-visit
-               └── tag/            # e.g., hf
-                   ├── 0.csv       # Results for seed 0
-                   ├── 1.csv       # Results for seed 1
-                   └── ...
+     tables/
+       dataset_name/               # e.g., rel-f1, rel-avito
+         task_name/                # e.g., driver-top3, user-ad-visit
+           tag/                    # e.g., hf
+             0.csv                 # Results for seed 0
+             1.csv                 # Results for seed 1
+             ...
 
 Example Usage
 ~~~~~~~~~~~~~

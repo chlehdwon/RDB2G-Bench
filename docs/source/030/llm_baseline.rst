@@ -16,7 +16,7 @@ The LLM-based optimization process:
 6. Repeat until the budget is exhausted
 
 LLM-Based baseline
-----------
+------------------
 
 .. automodule:: rdb2g_bench.benchmark.llm.llm_runner
     :members:

@@ -6,7 +6,23 @@ import numpy as np
 def calculate_overall_rank(selected_actual_y: float,
                            overall_actual_y: torch.Tensor,
                            higher_is_better: bool):
-    """Calculates the rank (position and percentile) of a selected performance."""
+    """
+    Calculates the rank (position and percentile) of a selected performance.
+    
+    Args:
+        selected_actual_y (float): The performance score to rank
+        overall_actual_y (torch.Tensor): Tensor containing all performance values
+        higher_is_better (bool): Whether higher values indicate better performance
+        
+    Returns:
+        Optional[Dict]: Dictionary containing rank information with keys:
+        
+        rank_position_overall (int): Position in the overall ranking
+        percentile_overall (float): Percentile ranking (0-100)
+        total_samples_overall (int): Total number of samples in ranking
+            
+        Returns None if overall_actual_y is empty.
+    """
     if overall_actual_y.numel() == 0:
         print("Warning: Overall actual y tensor is empty, cannot calculate overall rank.")
         return None
@@ -35,7 +51,18 @@ def get_performance_for_index(
     dataset: PerformancePredictionDataset,
     performance_cache: dict
 ) -> float:
-    """Retrieves the performance for a given graph index, using a cache if available."""
+    """
+    Retrieves the performance for a given graph index, using a cache if available.
+    
+    Args:
+        index (int): Graph index to retrieve performance for
+        dataset (PerformancePredictionDataset): Dataset containing performance data
+        performance_cache (dict): Cache for storing retrieved performance values
+        
+    Returns:
+        Optional[float]: Performance value for the given index, or None if not found
+            or if performance data is invalid (NaN/None).
+    """
     if index in performance_cache:
         return performance_cache[index]
 
@@ -68,7 +95,27 @@ def update_trajectory_and_best(
     global_best_index: int,
     higher_is_better: bool,
 ) -> Tuple[int, float, int]:
-    """Updates trajectory and global best after a performance evaluation."""
+    """
+    Updates trajectory and global best after a performance evaluation.
+    
+    Args:
+        index (int): Index of the evaluated architecture
+        perf (Optional[float]): Performance value obtained
+        performance_cache (dict): Cache storing performance values
+        initial_cache_size (int): Initial size of performance cache
+        total_evaluated_count (int): Current count of evaluated architectures
+        performance_trajectory (list): List tracking performance over time
+        global_best_perf (float): Current best performance found
+        global_best_index (int): Index of current best architecture
+        higher_is_better (bool): Whether higher values indicate better performance
+        
+    Returns:
+        Tuple[int, float, int]: Updated values:
+        
+        new_total_evaluated_count (int): Updated evaluation count
+        new_global_best_perf (float): Updated best performance
+        new_global_best_index (int): Updated best architecture index
+    """
     new_total_evaluated_count = total_evaluated_count
     new_global_best_perf = global_best_perf
     new_global_best_index = global_best_index
@@ -130,7 +177,18 @@ def calculate_evaluation_time(
     dataset: PerformancePredictionDataset,
     time_cache: dict
 ) -> float:
-    """Calculates the evaluation time: eval_time = train_time * 20 + valid_time + test_time"""
+    """
+    Calculates the evaluation time: eval_time = train_time * 20 + valid_time + test_time.
+    
+    Args:
+        index (int): Graph index to calculate evaluation time for
+        dataset (PerformancePredictionDataset): Dataset containing timing data
+        time_cache (dict): Cache for storing calculated evaluation times
+        
+    Returns:
+        Optional[float]: Total evaluation time in seconds, or None if timing data
+            is not available or invalid.
+    """
     epochs = 20
 
     if index in time_cache:
