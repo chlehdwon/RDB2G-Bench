@@ -36,6 +36,56 @@ def full_graph_heuristic_analysis(
     higher_is_better: bool,
     method_name: str = "Full Graph"
 ):
+    """
+    Analyze the performance of using the full graph configuration as a heuristic baseline.
+    
+    This function evaluates the performance of the predefined full graph configuration,
+    which includes all possible edges in the search space. It serves as an important
+    baseline for comparison with other heuristic search methods.
+    
+    Args:
+        dataset (PerformancePredictionDataset): The performance prediction dataset containing
+            experimental results and full graph configuration information.
+        overall_actual_y (torch.Tensor): Tensor containing actual performance values for
+            all graph configurations in the dataset.
+        higher_is_better (bool): Whether higher performance values indicate better results.
+            True for metrics like accuracy/ROC-AUC, False for metrics like MAE/loss.
+        method_name (str, optional): Name identifier for this analysis method.
+            Defaults to "Full Graph".
+    
+    Returns:
+        dict or None: Dictionary containing analysis results, or None if full graph
+        configuration is not available or accessible.
+        
+        The returned dictionary contains:
+            - method (str): Method name identifier
+            - selected_graph_id (int): ID of the full graph configuration
+            - actual_y_perf_of_selected (float): Actual performance of full graph
+            - selected_graph_origin (str): Source description ("Predefined Full Graph")
+            - selection_metric_value (None): Not applicable for predefined configuration
+            - rank_position_overall (int): Rank position among all configurations
+            - percentile_overall (float): Percentile ranking (0-100)
+            - total_samples_overall (int): Total number of configurations evaluated
+    
+    Example:
+        >>> import torch
+        >>> from rdb2g_bench.benchmark.dataset import PerformancePredictionDataset
+        >>> 
+        >>> # Load dataset and performance data
+        >>> dataset = PerformancePredictionDataset("rel-f1", "driver-top3")
+        >>> performance_values = torch.tensor([0.85, 0.92, 0.78, 0.89])
+        >>> 
+        >>> # Analyze full graph performance
+        >>> results = full_graph_heuristic_analysis(
+        ...     dataset=dataset,
+        ...     overall_actual_y=performance_values,
+        ...     higher_is_better=True
+        ... )
+        >>> 
+        >>> if results:
+        ...     print(f"Full graph rank: {results['rank_position_overall']}")
+        ...     print(f"Performance: {results['actual_y_perf_of_selected']:.4f}")
+    """
     if not hasattr(dataset, 'full_graph_id') or dataset.full_graph_id is None:
         print("Warning: Full graph ID not set in dataset. Skipping full graph heuristic.")
         return None
@@ -70,6 +120,70 @@ def full_graph_heuristic_analysis(
     return results
 
 def main(args):
+    """
+    Execute the complete RDB2G-Bench benchmarking pipeline.
+    
+    This function orchestrates the entire benchmarking process, including dataset preparation,
+    search space initialization, execution of multiple heuristic algorithms, and comprehensive
+    performance analysis. It supports multiple independent runs for statistical significance
+    and provides detailed trajectory tracking and result aggregation.
+    
+    Args:
+        args: Parsed command-line arguments containing benchmark configuration.
+        
+        Expected attributes in args:
+            - dataset (str): Dataset name (e.g., "rel-f1", "rel-avito")
+            - task (str): Task name (e.g., "driver-top3", "user-ad-visit")  
+            - method (list): List of methods to execute ("all", "ea", "greedy", "rl", "bo")
+            - num_runs (int): Number of independent runs for statistical analysis
+            - budget_percentage (float): Budget as fraction of total search space (0.0-1.0)
+            - seed (int): Base random seed for reproducibility
+            - cache_dir (str): Directory for caching processed data
+            - result_dir (str): Directory for saving benchmark results
+            - tag (str): Experiment tag for organizing results
+    
+    Returns:
+        None: Results are saved to CSV files and printed to console.
+        
+        Generated output files:
+            - Individual trajectory CSVs for each method
+            - Combined trajectories CSV for all methods
+            - Performance summary CSV with final results
+            - Console output with detailed analysis
+
+    Example:
+        >>> import argparse
+        >>> from rdb2g_bench.benchmark.benchmark import main
+        >>> 
+        >>> # Create argument parser and set configuration
+        >>> parser = argparse.ArgumentParser()
+        >>> # ... add argument definitions ...
+        >>> args = parser.parse_args([
+        ...     '--dataset', 'rel-f1',
+        ...     '--task', 'driver-top3', 
+        ...     '--method', 'ea', 'greedy',
+        ...     '--num_runs', '3',
+        ...     '--budget_percentage', '0.1'
+        ... ])
+        >>> 
+        >>> # Execute benchmark
+        >>> main(args)
+        >>> # Results saved to CSV files and printed to console
+    
+    Output Structure:
+        The function generates comprehensive output including:
+        
+        **Output Logs**:
+            - Progress updates for each run and method
+            - Performance summaries with rankings and percentiles
+            - Execution time statistics
+            - Method comparison analysis
+        
+        **CSV Files**:
+            - `avg_trajectory_{method}_{num_runs}runs.csv`: Average performance trajectories
+            - `all_methods_trajectories_{num_runs}runs.csv`: Combined trajectory data
+            - `performance_summary_{num_runs}runs.csv`: Final performance comparison
+    """
     all_runs_results = {}
     original_overall_actual_y = None
     original_overall_graph_ids = None
