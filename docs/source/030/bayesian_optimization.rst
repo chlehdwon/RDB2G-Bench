@@ -16,7 +16,7 @@ The Bayesian optimization algorithm process:
 4. Update the surrogate model with new observation
 5. Repeat until budget is exhausted
 
-Bayesian optimization baseline
+Bayesian Optimization Baseline
 ------------------------------
 
 .. automodule:: rdb2g_bench.benchmark.baselines.bo

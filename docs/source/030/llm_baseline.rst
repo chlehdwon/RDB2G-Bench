@@ -15,7 +15,7 @@ The LLM-based baseline process:
 5. LLM refines its suggestions based on feedback
 6. Repeat until the budget is exhausted
 
-LLM-Based baseline
+LLM-Based Baseline
 ------------------
 
 .. automodule:: rdb2g_bench.benchmark.llm.llm_runner
