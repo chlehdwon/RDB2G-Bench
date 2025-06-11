@@ -240,7 +240,7 @@ class PerformancePredictionDataset(Dataset):
         data = Data(y=target, graph_bin_str=graph_bin_str)
         return data
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> Data:
         """
         Enables indexing access to dataset samples.
 

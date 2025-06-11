@@ -53,6 +53,9 @@ templates_path = ['_templates']
 
 html_theme = 'sphinx_rtd_theme'
 
+# -- Autodoc configuration for type hints
+autodoc_typehints = 'description'
+
 autodoc_mock_imports = [
     "torch", "numpy", "pandas", "typing_extensions",
     "torch_frame", "torch_geometric", "torch_scatter", "torch_sparse", 

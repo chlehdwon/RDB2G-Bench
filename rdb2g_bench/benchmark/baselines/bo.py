@@ -72,7 +72,7 @@ class MLPSurrogate(nn.Module):
         torch.Size([10, 1])
     """
     
-    def __init__(self, input_dim, hidden_dim1=64, hidden_dim2=64, dropout_rate=0.1):
+    def __init__(self, input_dim: int, hidden_dim1: int = 64, hidden_dim2: int = 64, dropout_rate: float = 0.1):
         """
         Initialize the MLP surrogate model.
         
@@ -93,7 +93,7 @@ class MLPSurrogate(nn.Module):
             nn.Linear(hidden_dim2, 1)
         )
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Forward pass through the surrogate model.
         

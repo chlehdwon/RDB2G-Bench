@@ -48,7 +48,7 @@ class ControllerRNN(nn.Module):
         >>> action_logits, new_hidden = controller(state_emb, hidden)
     """
     
-    def __init__(self, input_dim, hidden_dim, num_actions, rnn_type='lstm', num_layers=1):
+    def __init__(self, input_dim: int, hidden_dim: int, num_actions: int, rnn_type: str = 'lstm', num_layers: int = 1):
         """
         Initialize the Controller RNN.
         
@@ -73,7 +73,7 @@ class ControllerRNN(nn.Module):
 
         self.action_head = nn.Linear(hidden_dim, num_actions)
 
-    def forward(self, state_embedding, hidden_state):
+    def forward(self, state_embedding: torch.Tensor, hidden_state: Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]) -> Tuple[torch.Tensor, Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]]:
         """
         Forward pass through the controller.
         
@@ -90,7 +90,7 @@ class ControllerRNN(nn.Module):
         action_logits = self.action_head(output.squeeze(1))
         return action_logits, next_hidden
 
-    def init_hidden(self, batch_size=1):
+    def init_hidden(self, batch_size: int = 1) -> Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]:
         """
         Initialize hidden state for the RNN.
         
@@ -112,7 +112,7 @@ class ControllerRNN(nn.Module):
         else:
              raise ValueError(f"Trying to initialize hidden state for unsupported RNN type: {self.rnn_type}")
 
-def get_state_embedding(current_edge_set, embedding_dim):
+def get_state_embedding(current_edge_set: Union[tuple, list], embedding_dim: int) -> torch.Tensor:
     """
     Convert edge set representation into a fixed-size embedding for RNN input.
     
@@ -143,7 +143,7 @@ def get_state_embedding(current_edge_set, embedding_dim):
     embedding[0, 0, :] = edge_tensor
     return embedding
 
-def get_action_space(micro_action_set: MicroActionSet, current_edge_set):
+def get_action_space(micro_action_set: MicroActionSet, current_edge_set: Union[tuple, list]) -> Tuple[List[Tuple[dict, int]], int]:
     """
     Determine valid actions from the current architecture state.
     
@@ -200,7 +200,7 @@ def get_action_space(micro_action_set: MicroActionSet, current_edge_set):
 
     return possible_actions_with_ids, num_total_valid_actions
 
-def apply_action(current_edge_set, action_details, micro_action_set: MicroActionSet):
+def apply_action(current_edge_set: Union[tuple, list], action_details: dict, micro_action_set: MicroActionSet) -> Tuple[Union[tuple, list], int]:
     """
     Apply the selected action to transition to a new architecture state.
     
@@ -257,7 +257,7 @@ def rl_heuristic_analysis(
     gamma: float = 0.99,
     termination_threshold_ratio: float = 0.1,
     method_name: str = "RL Heuristic (Policy Gradient)",
-):
+) -> dict:
     """
     Perform Neural Architecture Search using Reinforcement Learning with Policy Gradients.
     
