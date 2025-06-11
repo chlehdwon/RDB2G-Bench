@@ -54,6 +54,24 @@ templates_path = ['_templates']
 
 html_theme = 'sphinx_rtd_theme'
 
+# HTML theme options for sphinx_rtd_theme
+html_theme_options = {
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    'vcs_pageview_mode': '',
+    'style_nav_header_background': '#2980B9',
+    # These options are for the theme but we'll add GitHub link via html_context
+}
+
+# Add GitHub link in the HTML context
+html_context = {
+    'display_github': True,
+    'github_user': 'chlehdwon',
+    'github_repo': 'RDB2G-Bench',
+    'github_version': 'main',
+    'conf_py_path': '/docs/source/',
+}
+
 # -- Autodoc configuration for type hints
 autodoc_typehints = 'signature'
 
