@@ -1,16 +1,3 @@
-"""
-RDB2G-Bench Data Loading and Access Module
-
-This module provides classes for hierarchical access to RDB2G-Bench benchmark data.
-The data access pattern follows: RDB2GBench[dataset][task][idx] -> results.
-
-Classes:
-    RDB2GBench: Main benchmark data container
-    DatasetAccessor: Provides access to tasks within a dataset
-    TaskAccessor: Provides access to indices within a task
-    IndexAccessor: Provides access to metrics for a specific graph configuration
-"""
-
 import pandas as pd
 from pathlib import Path
 from typing import Dict, List, Union, Optional
@@ -280,13 +267,15 @@ class IndexAccessor:
         Calculates mean and standard deviation for performance metrics across
         all seeds, and mean values for parameter counts and timing information.
         
+        Returns a dictionary containing computed statistics with keys:
+        
+        - params: Mean parameter count (int)
+        - \\*_time: Mean timing values (float) for train/valid/test
+        - \\*_mean: Mean values for other numeric columns (float)
+        - \\*_std: Standard deviation for other numeric columns (float)
+        
         Returns:
-            Dict: Dictionary containing computed statistics with keys:
-            
-                - params: Mean parameter count (int)
-                - \\*_time: Mean timing values (float) for train/valid/test
-                - \\*_mean: Mean values for other numeric columns (float)
-                - \\*_std: Standard deviation for other numeric columns (float)
+            Dict[str, Union[int, float]]
         """
         if self._stats is None:
             self._stats = {}

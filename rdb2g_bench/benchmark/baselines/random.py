@@ -1,18 +1,8 @@
-"""
-RDB2G-Bench Random Search Baseline Module
-
-This module implements random search baseline for neural architecture search on RDB2G-Bench.
-Random search provides a simple yet effective baseline by uniformly sampling architectures
-from the search space without any heuristic guidance.
-
-Random search is particularly useful as a baseline method to evaluate the difficulty
-of the search space and compare against more sophisticated optimization algorithms.
-"""
-
 import torch
 import random
 import numpy as np
 import time
+from typing import Dict, Union, List, Optional
 
 from ..dataset import PerformancePredictionDataset
 from ..micro_action import MicroActionSet
@@ -34,6 +24,22 @@ def random_heuristic_analysis(
     evaluated independently without any guidance from previous evaluations, providing
     an unbiased baseline for comparison with other optimization methods.
     
+    Returns a search results dictionary containing:
+    
+    - method (str): Method name
+    - selected_graph_id (Optional[int]): Index of best found architecture
+    - actual_y_perf_of_selected (float): Performance of selected architecture
+    - selection_metric_value (float): Metric value used for selection
+    - selected_graph_origin (str): Origin method name
+    - discovered_count (int): Number of architectures evaluated
+    - total_iterations_run (int): Number of random samples drawn
+    - rank_position_overall (float): Rank among all architectures
+    - percentile_overall (float): Percentile ranking
+    - total_samples_overall (int): Total available architectures
+    - performance_trajectory (List): Performance over time
+    - total_evaluation_time (float): Time spent on evaluations
+    - total_run_time (float): Total algorithm runtime
+    
     Args:
         dataset (PerformancePredictionDataset): Dataset containing architecture 
             performance data
@@ -48,19 +54,7 @@ def random_heuristic_analysis(
             Defaults to "Random Heuristic".
             
     Returns:
-        method (str): Method name
-        selected_graph_id (Optional[int]): Index of best found architecture
-        actual_y_perf_of_selected (float): Performance of selected architecture
-        selection_metric_value (float): Metric value used for selection
-        selected_graph_origin (str): Origin method name
-        discovered_count (int): Number of architectures evaluated
-        total_iterations_run (int): Number of random samples drawn
-        rank_position_overall (float): Rank among all architectures
-        percentile_overall (float): Percentile ranking
-        total_samples_overall (int): Total available architectures
-        performance_trajectory (List): Performance over time
-        total_evaluation_time (float): Time spent on evaluations
-        total_run_time (float): Total algorithm runtime
+        Dict[str, Union[str, int, float, List, Optional[int]]]
             
     Example:
         >>> results = random_heuristic_analysis(

@@ -1,17 +1,5 @@
-"""
-RDB2G-Bench Benchmark Runner Module
-
-This module provides the main entry point for running comprehensive benchmarks on RDB2G-Bench.
-It offers a simplified interface to execute multiple neural architecture search algorithms
-and compare their performance across different datasets and tasks.
-
-The benchmark runner supports multiple search strategies including evolutionary algorithms,
-greedy search, reinforcement learning, Bayesian optimization, and random sampling baselines.
-Results are automatically aggregated and analyzed for statistical comparison.
-"""
-
 import os
-from typing import Dict, List, Union, Optional
+from typing import Dict, List, Union, Optional, Any
 
 from .benchmark import main as benchmark_main
 
@@ -24,7 +12,7 @@ def run_benchmark(
     num_runs: int = 10,
     seed: int = 0,
     **kwargs
-) -> Dict:
+) -> Dict[str, Any]:
     """
     Execute comprehensive benchmark analysis on specified dataset and task.
     
@@ -69,12 +57,17 @@ def run_benchmark(
               Defaults to "./results".
         
     Returns:
-        avg_actual_y_perf_of_selected (float): Average performance across runs
-        avg_rank_position_overall (float): Average ranking position
-        avg_percentile_overall (float): Average percentile ranking
-        selected_graph_ids_runs (List[int]): Graph IDs selected in each run
-        avg_evaluation_time (float): Average time spent on evaluations
-        avg_run_time (float): Average total runtime per run
+        Dict[str, Any]: Dictionary containing comprehensive benchmark results.
+        
+        - avg_actual_y_perf_of_selected (float): Average performance across runs
+        - avg_rank_position_overall (float): Average ranking position
+        - avg_percentile_overall (float): Average percentile ranking
+        - selected_graph_ids_runs (List[int]): Graph IDs selected in each run
+        - avg_evaluation_time (float): Average time spent on evaluations
+        - avg_run_time (float): Average total runtime per run
+        - method_wise_statistics (Dict): Detailed statistics for each method
+        - performance_trajectories (Dict): Performance over time for each method
+        - statistical_comparisons (Dict): Rankings and comparisons between methods
 
     Example:
         >>> # Run all methods on default dataset/task
@@ -115,7 +108,6 @@ def run_benchmark(
         - Results are automatically saved to CSV files for further analysis
         - Performance trajectories are exported for visualization
         - All intermediate data is cached to speed up repeated experiments
-        - GPU acceleration is used automatically when available
         - Large datasets may require significant memory and storage
     """
     

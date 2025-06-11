@@ -1,14 +1,3 @@
-"""
-RDB2G-Bench LLM Baseline Module
-
-This module implements Large Language Model (LLM) based baseline for neural architecture search 
-on RDB2G-Bench. The LLM baseline leverages the reasoning capabilities of large language models
-to iteratively improve graph modelings.
-
-The LLM approach uses conversational AI to understand the graph modeling task and make informed
-decisions about which micro actions to apply for architecture optimization. 
-"""
-
 import os
 import json
 import ast
@@ -54,50 +43,43 @@ def run_llm_baseline(
     **kwargs
 ) -> Dict:
     """
-    Perform Neural Architecture Search using Large Language Model Strategy.
+    Run Large Language Model baseline for neural architecture search.
     
-    This function implements LLM-based neural architecture search that leverages the reasoning
-    capabilities of large language models to iteratively improve graph configurations.
-    The LLM interacts with the search space through natural language, making informed decisions
-    about micro actions based on current performance and historical context.
-    
-    The LLM baseline operates in two phases:
-
-    1. Initial exploration: Try to find an initial improvement from the full graph configuration
-    2. Iterative refinement: Continue optimizing based on performance feedback and action history
+    This function provides an LLM-based baseline that leverages the reasoning
+    capabilities of large language models to guide graph neural network architecture
+    search. The approach uses natural language prompts to describe the search space
+    and current state, then interprets LLM responses to execute micro actions.
     
     Args:
-        dataset (str): Name of the RelBench dataset (e.g., "rel-f1", "rel-avito").
-            Defaults to "rel-f1".
-        task (str): Name of the RelBench task (e.g., "driver-top3", "user-ad-visit").
-            Defaults to "driver-top3".
-        budget_percentage (float): Budget percentage for the search process as fraction
-            of total search space. Defaults to 0.05.
+        dataset (str): Name of the RelBench dataset to use. Defaults to "rel-f1".
+        task (str): Name of the RelBench task to evaluate. Defaults to "driver-top3".
+        budget_percentage (float): Budget as fraction of total search space (0.0-1.0).
+            Defaults to 0.05.
         seed (int): Random seed for reproducibility. Defaults to 42.
-        model (str): LLM model identifier to use for reasoning. 
-            Defaults to "claude-3-5-sonnet-latest".
-        temperature (float): Temperature for LLM generation controlling randomness (0.0-1.0).
-            Higher values increase creativity. Defaults to 0.8.
-        tag (str): Tag identifying the experiment for result organization.
-            Defaults to "final".
-        cache_dir (str): Directory for caching dataset and model data.
+        model (str): Anthropic model name to use. Defaults to "claude-3-5-sonnet-latest".
+        temperature (float): Sampling temperature for LLM responses (0.0-1.0).
+            Defaults to 0.8.
+        tag (str): Experiment tag for result organization. Defaults to "final".
+        cache_dir (str): Directory for caching datasets and models.
             Defaults to "~/.cache/relbench_examples".
-        result_dir (str): Root directory for saving results.
+        result_dir (str): Directory for saving results.
             Defaults to "./results".
         **kwargs: Additional configuration parameters passed to underlying components.
         
     Returns:
-        best_score (float): Best achieved performance score during search
-        best_edge_set (Tuple[int, ...]): Best graph edge configuration found
-        best_valid_action_result (List[Dict]): Sequence of valid actions leading to best result
-        initial_score (float): Initial performance before search optimization
-        initial_edge_set (Tuple[int, ...]): Initial graph edge configuration
-        budget_percentage (float): Budget percentage used for the search
-        initial_budget (int): Total evaluation budget allocated
-        remaining_budget (int): Unused evaluation budget remaining
-        history_actions (str): String representation of action history
-        action_result (List[Dict]): Complete sequence of all actions attempted
-        score_result (List[float]): Performance trajectory during search process
+        Dict[str, Any]: Dictionary containing LLM baseline results.
+        
+        - best_score (float): Best performance achieved during search
+        - initial_score (float): Initial performance of full graph
+        - best_edge_set (tuple): Best graph configuration found
+        - action_history (List): Sequence of actions taken
+        - budget_used (int): Number of evaluations performed
+        - score_trajectory (List[float]): Performance over time
+        - error_count (int): Number of invalid actions attempted
+        - success_rate (float): Fraction of valid actions
+        - total_time (float): Total execution time
+        - convergence_step (int): Step when best score was found
+        - final_improvement (float): Best score minus initial score
         
     Example:
         >>> # Set API key first

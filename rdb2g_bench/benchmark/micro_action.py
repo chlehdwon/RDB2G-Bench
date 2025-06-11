@@ -1,16 +1,3 @@
-"""
-RDB2G-Bench Micro Actions Module
-
-This module defines the core micro actions used by optimization algorithms for systematic
-graph construction exploration. Micro actions represent atomic operations that transform
-one valid graph construction (edge set) into another, enabling algorithms to navigate
-the space of possible graph configurations.
-
-The micro actions include:
-- Adding/removing foreign key-primary key edges between tables
-- Converting between row and edge representations of relational data
-"""
-
 from typing import Tuple, Set, Optional, Type, Union, List, Dict
 import torch
 from torch_geometric.data import HeteroData
@@ -141,10 +128,11 @@ class MicroActionSet:
                 where 1 indicates edge is included, 0 indicates it's not
                 
         Returns:
-            List[Tuple[Tuple[int, ...], int]]: List of tuples where each tuple contains:
+            List[Tuple[Tuple[int, ...], int]]: List of possible next edge sets with their indices.
             
-            new_edge_set (Tuple[int, ...]): The modified edge set with an added FK-PK edge
-            index (int): Index of the new edge set in the valid_edge_sets_list
+            Each tuple contains:
+            - new_edge_set (Tuple[int, ...]): The modified edge set with an added FK-PK edge
+            - index (int): Index of the new edge set in the valid_edge_sets_list
                 
         Example:
             >>> current = (1, 0, 1, 0)  # Some edges included, some not
@@ -177,10 +165,11 @@ class MicroActionSet:
                 where 1 indicates edge is included, 0 indicates it's not
                 
         Returns:
-            List[Tuple[Tuple[int, ...], int]]: List of tuples where each tuple contains:
+            List[Tuple[Tuple[int, ...], int]]: List of possible next edge sets with their indices.
             
-            new_edge_set (Tuple[int, ...]): The modified edge set with a removed FK-PK edge
-            index (int): Index of the new edge set in the valid_edge_sets_list
+            Each tuple contains:
+            - new_edge_set (Tuple[int, ...]): The modified edge set with a removed FK-PK edge
+            - index (int): Index of the new edge set in the valid_edge_sets_list
                 
         Example:
             >>> current = (1, 1, 1, 0)  # Some edges included
@@ -213,10 +202,11 @@ class MicroActionSet:
             current_edge_set (Tuple[int, ...]): Current binary edge set representation
                 
         Returns:
-            List[Tuple[Tuple[int, ...], int]]: List of tuples where each tuple contains:
+            List[Tuple[Tuple[int, ...], int]]: List of possible next edge sets with their indices.
             
-            new_edge_set (Tuple[int, ...]): The modified edge set with row-to-edge conversion
-            index (int): Index of the new edge set in the valid_edge_sets_list
+            Each tuple contains:
+            - new_edge_set (Tuple[int, ...]): The modified edge set with row-to-edge conversion
+            - index (int): Index of the new edge set in the valid_edge_sets_list
                 
         Note:
             This conversion is only possible when both required FK-PK edges are present
@@ -257,10 +247,11 @@ class MicroActionSet:
             current_edge_set (Tuple[int, ...]): Current binary edge set representation
                 
         Returns:
-            List[Tuple[Tuple[int, ...], int]]: List of tuples where each tuple contains:
+            List[Tuple[Tuple[int, ...], int]]: List of possible next edge sets with their indices.
             
-            new_edge_set (Tuple[int, ...]): The modified edge set with edge-to-row conversion  
-            index (int): Index of the new edge set in the valid_edge_sets_list
+            Each tuple contains:
+            - new_edge_set (Tuple[int, ...]): The modified edge set with edge-to-row conversion  
+            - index (int): Index of the new edge set in the valid_edge_sets_list
                 
         Note:
             This conversion is only possible when the R2E edge is present and

@@ -1,15 +1,3 @@
-"""
-RDB2G-Bench Node Classification/Regression Worker Module
-
-This module provides functionality to run GNN-based node classification and regression
-experiments on RDB2G-Bench datasets. It supports various GNN architectures and handles
-the complete training pipeline including data loading, model training, evaluation,
-and result saving.
-
-The worker function processes different graph configurations generated from a search space
-and evaluates their performance on node-level prediction tasks.
-"""
-
 # Reference: https://github.com/snap-stanford/relbench/blob/main/examples/gnn_node.py
 
 import copy
@@ -70,7 +58,7 @@ def run_gnn_node_worker(
     target_indices: Optional[List[int]] = None,
     device: Optional[torch.device] = None,
     save_csv: bool = True,
-) -> Dict:
+) -> Dict[str, Union[List[int], int, Optional[str]]]:
     """
     Run GNN node classification/regression worker function.
     
@@ -121,11 +109,11 @@ def run_gnn_node_worker(
         save_csv (bool): Whether to save results to CSV file. Defaults to True.
         
     Returns:
-        Dict: Dictionary containing processing status with keys:
+        Dict[str, Union[List[int], int, Optional[str]]]: Dictionary containing processing status information.
         
-        processed_graphs (List[int]): List of graph indices that were processed
-        total_processed (int): Number of graphs processed
-        csv_file (Optional[str]): Path to CSV file if save_csv=True, None otherwise
+        - processed_graphs (List[int]): List of graph indices that were processed
+        - total_processed (int): Number of graphs processed
+        - csv_file (Optional[str]): Path to CSV file if save_csv=True, None otherwise
         
     Example:
         >>> # Run single experiment in debug mode
@@ -221,7 +209,7 @@ def run_gnn_node_worker(
             edge_tf_dict: Edge transformation dictionary
             
         Returns:
-            float: Average training loss for the epoch
+            float: Average training loss for the epoch.
         """
         model.train()
         loss_accum = count_accum = 0
@@ -259,7 +247,7 @@ def run_gnn_node_worker(
             edge_tf_dict: Edge transformation dictionary
             
         Returns:
-            np.ndarray: Model predictions as numpy array
+            np.ndarray: Model predictions as numpy array.
         """
         model.eval()
         pred_list = []

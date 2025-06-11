@@ -1,19 +1,8 @@
-"""
-RDB2G-Bench Evolutionary Algorithm Baseline Module
-
-This module implements evolutionary algorithm for neural architecture search on RDB2G-Bench.
-The evolutionary approach maintains a population of graph neural network architectures and
-evolves them through selection, mutation, and replacement operations to find high-performing
-configurations.
-
-The evolutionary algorithm is particularly effective for exploring large search spaces
-and maintaining diversity in the population of candidate architectures.
-"""
-
 import torch
 import numpy as np
 import random
 import time
+from typing import Dict, Union, List, Optional
 
 from ..dataset import PerformancePredictionDataset
 from ..micro_action import MicroActionSet
@@ -57,19 +46,21 @@ def evolutionary_heuristic_analysis(
             Defaults to 1000.
             
     Returns:
-        method (str): Method name
-        selected_graph_id (Optional[int]): Index of best found architecture
-        actual_y_perf_of_selected (float): Performance of selected architecture
-        selection_metric_value (float): Metric value used for selection
-        selected_graph_origin (str): Origin method name
-        discovered_count (int): Number of architectures evaluated
-        total_iterations_run (int): Number of generations completed
-        rank_position_overall (float): Rank among all architectures
-        percentile_overall (float): Percentile ranking
-        total_samples_overall (int): Total available architectures
-        performance_trajectory (List): Performance over time
-        total_evaluation_time (float): Time spent on evaluations
-        total_run_time (float): Total algorithm runtime
+        Dict[str, Union[str, int, float, List, Optional[int]]]: Dictionary containing search results and performance metrics.
+        
+        - method (str): Method name
+        - selected_graph_id (Optional[int]): Index of best found architecture
+        - actual_y_perf_of_selected (float): Performance of selected architecture
+        - selection_metric_value (float): Metric value used for selection
+        - selected_graph_origin (str): Origin method name
+        - discovered_count (int): Number of architectures evaluated
+        - total_iterations_run (int): Number of generations completed
+        - rank_position_overall (float): Rank among all architectures
+        - percentile_overall (float): Percentile ranking
+        - total_samples_overall (int): Total available architectures
+        - performance_trajectory (List): Performance over time
+        - total_evaluation_time (float): Time spent on evaluations
+        - total_run_time (float): Total algorithm runtime
             
     Example:
         >>> results = evolutionary_heuristic_analysis(

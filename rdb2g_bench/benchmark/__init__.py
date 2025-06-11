@@ -1,7 +1,3 @@
-"""
-Benchmark module - contains benchmarking functionality and analysis methods.
-"""
-
 from . import baselines
 from . import llm
 from .bench_runner import run_benchmark

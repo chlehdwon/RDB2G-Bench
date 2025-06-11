@@ -1,19 +1,8 @@
-"""
-RDB2G-Bench Greedy Search Baseline Module
-
-This module implements multiple greedy search strategies for neural architecture search on RDB2G-Bench.
-Greedy algorithms make locally optimal choices at each step, providing fast and deterministic
-search strategies for finding good graph neural network architectures.
-
-Each strategy uses micro actions to explore neighboring architectures and greedily
-selects the best improvement at each step.
-"""
-
 import torch
 import numpy as np
 import random
 import time
-from typing import Tuple
+from typing import Tuple, Dict, Union, List, Optional
 
 from ..dataset import PerformancePredictionDataset
 from ..micro_action import MicroActionSet
@@ -30,10 +19,9 @@ def forward_greedy_heuristic_analysis(
     """
     Perform Neural Architecture Search using Forward Greedy Strategy.
     
-    This function implements forward greedy search that starts from minimal graph
-    configurations (single edges) and iteratively adds edges or applies transformations
-    to improve performance. The algorithm greedily selects the best local improvement
-    at each step.
+    This function implements forward greedy search that starts from minimal graphs
+    and progressively adds edges through micro actions. It explores the architecture
+    space by systematically expanding configurations to improve performance.
     
     Args:
         dataset (PerformancePredictionDataset): Dataset containing architecture 
@@ -49,19 +37,21 @@ def forward_greedy_heuristic_analysis(
             Defaults to "Forward Greedy Heuristic".
             
     Returns:
-        method (str): Method name
-        selected_graph_id (Optional[int]): Index of best found architecture
-        actual_y_perf_of_selected (float): Performance of selected architecture
-        selection_metric_value (float): Metric value used for selection
-        selected_graph_origin (str): Origin method name
-        discovered_count (int): Number of architectures evaluated
-        total_iterations_run (int): Number of greedy steps completed
-        rank_position_overall (float): Rank among all architectures
-        percentile_overall (float): Percentile ranking
-        total_samples_overall (int): Total available architectures
-        performance_trajectory (List): Performance over time
-        total_evaluation_time (float): Time spent on evaluations
-        total_run_time (float): Total algorithm runtime
+        Dict[str, Union[str, int, float, List, Optional[int]]]: Dictionary containing search results and performance metrics.
+        
+        - method (str): Method name
+        - selected_graph_id (Optional[int]): Index of best found architecture
+        - actual_y_perf_of_selected (float): Performance of selected architecture
+        - selection_metric_value (float): Metric value used for selection
+        - selected_graph_origin (str): Origin method name
+        - discovered_count (int): Number of architectures evaluated
+        - total_iterations_run (int): Number of greedy steps completed
+        - rank_position_overall (float): Rank among all architectures
+        - percentile_overall (float): Percentile ranking
+        - total_samples_overall (int): Total available architectures
+        - performance_trajectory (List): Performance over time
+        - total_evaluation_time (float): Time spent on evaluations
+        - total_run_time (float): Total algorithm runtime
             
     Example:
         >>> results = forward_greedy_heuristic_analysis(
@@ -269,19 +259,21 @@ def backward_greedy_heuristic_analysis(
             Defaults to "Backward Greedy Heuristic".
             
     Returns:
-        method (str): Method name
-        selected_graph_id (Optional[int]): Index of best found architecture
-        actual_y_perf_of_selected (float): Performance of selected architecture
-        selection_metric_value (float): Metric value used for selection
-        selected_graph_origin (str): Origin method name
-        discovered_count (int): Number of architectures evaluated
-        total_iterations_run (int): Number of greedy steps completed
-        rank_position_overall (float): Rank among all architectures
-        percentile_overall (float): Percentile ranking
-        total_samples_overall (int): Total available architectures
-        performance_trajectory (List): Performance over time
-        total_evaluation_time (float): Time spent on evaluations
-        total_run_time (float): Total algorithm runtime
+        Dict[str, Union[str, int, float, List, Optional[int]]]: Dictionary containing search results and performance metrics.
+        
+        - method (str): Method name
+        - selected_graph_id (Optional[int]): Index of best found architecture
+        - actual_y_perf_of_selected (float): Performance of selected architecture
+        - selection_metric_value (float): Metric value used for selection
+        - selected_graph_origin (str): Origin method name
+        - discovered_count (int): Number of architectures evaluated
+        - total_iterations_run (int): Number of greedy steps completed
+        - rank_position_overall (float): Rank among all architectures
+        - percentile_overall (float): Percentile ranking
+        - total_samples_overall (int): Total available architectures
+        - performance_trajectory (List): Performance over time
+        - total_evaluation_time (float): Time spent on evaluations
+        - total_run_time (float): Total algorithm runtime
             
     Example:
         >>> results = backward_greedy_heuristic_analysis(
@@ -291,6 +283,8 @@ def backward_greedy_heuristic_analysis(
         ...     higher_is_better=True,
         ...     termination_threshold_ratio=0.05
         ... )
+        >>> print(f"Best architecture: {results['selected_graph_id']}")
+        >>> print(f"Performance: {results['actual_y_perf_of_selected']:.4f}")
     """
     performance_cache = {}
     time_cache = {}
@@ -442,19 +436,21 @@ def random_greedy_heuristic_analysis(
             Defaults to "Local Greedy Heuristic".
             
     Returns:
-        method (str): Method name
-        selected_graph_id (Optional[int]): Index of best found architecture
-        actual_y_perf_of_selected (float): Performance of selected architecture
-        selection_metric_value (float): Metric value used for selection
-        selected_graph_origin (str): Origin method name
-        discovered_count (int): Number of architectures evaluated
-        total_iterations_run (int): Number of greedy steps completed
-        rank_position_overall (float): Rank among all architectures
-        percentile_overall (float): Percentile ranking
-        total_samples_overall (int): Total available architectures
-        performance_trajectory (List): Performance over time
-        total_evaluation_time (float): Time spent on evaluations
-        total_run_time (float): Total algorithm runtime
+        Dict[str, Union[str, int, float, List, Optional[int]]]: Dictionary containing search results and performance metrics.
+        
+        - method (str): Method name
+        - selected_graph_id (Optional[int]): Index of best found architecture
+        - actual_y_perf_of_selected (float): Performance of selected architecture
+        - selection_metric_value (float): Metric value used for selection
+        - selected_graph_origin (str): Origin method name
+        - discovered_count (int): Number of architectures evaluated
+        - total_iterations_run (int): Number of greedy steps completed
+        - rank_position_overall (float): Rank among all architectures
+        - percentile_overall (float): Percentile ranking
+        - total_samples_overall (int): Total available architectures
+        - performance_trajectory (List): Performance over time
+        - total_evaluation_time (float): Time spent on evaluations
+        - total_run_time (float): Total algorithm runtime
             
     Example:
         >>> results = random_greedy_heuristic_analysis(

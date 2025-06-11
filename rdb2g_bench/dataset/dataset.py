@@ -1,17 +1,3 @@
-"""
-RDB2G-Bench Dataset Management Module
-
-This module provides functionality to download, load, and manage RDB2G-Bench benchmark datasets.
-It includes functions for downloading pre-computed results from Hugging Face and organizing
-them in a structured format for easy access through the benchmark interface.
-
-The module supports:
-- Downloading benchmark data from Hugging Face Hub
-- Loading existing local benchmark results
-- Getting statistics about available datasets and tasks
-- Organizing data by dataset/task structure
-"""
-
 import os
 import pandas as pd
 from pathlib import Path
@@ -120,8 +106,9 @@ def download_rdb2g_bench(
             Defaults to "hf".
         
     Returns:
-        Dict[str, List[str]]: Dictionary mapping dataset/task combinations
-            to lists of saved file paths. Keys are in format "dataset/task".
+        Dict[str, List[str]]: Dictionary mapping dataset/task combinations to lists of saved file paths.
+        
+        Keys are in format "dataset/task".
             
     Example:
         >>> saved_files = download_rdb2g_bench(
@@ -191,15 +178,16 @@ def get_dataset_stats(cache_dir: Optional[str] = None) -> pd.DataFrame:
             If None, uses default HF cache location.
         
     Returns:
-        pd.DataFrame: DataFrame with columns:
-            - dataset: Dataset name
-            - task: Task name  
-            - idx: Number of unique graph configurations
-            - seed: Number of random seeds
-            - test_metric_mean: Mean test performance
-            - test_metric_std: Standard deviation of test performance
-            - test_metric_min: Minimum test performance
-            - test_metric_max: Maximum test performance
+        pd.DataFrame: DataFrame with statistical information about all datasets and tasks.
+        
+        - dataset: Dataset name
+        - task: Task name  
+        - idx: Number of unique graph configurations
+        - seed: Number of random seeds
+        - test_metric_mean: Mean test performance
+        - test_metric_std: Standard deviation of test performance
+        - test_metric_min: Minimum test performance
+        - test_metric_max: Maximum test performance
             
     Example:
         >>> stats = get_dataset_stats()

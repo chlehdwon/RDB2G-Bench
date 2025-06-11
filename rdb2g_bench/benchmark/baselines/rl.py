@@ -1,14 +1,3 @@
-"""
-RDB2G-Bench Reinforcement Learning Baseline Module
-
-This module implements reinforcement learning for neural architecture search on RDB2G-Bench.
-The approach uses a recurrent neural network controller that learns to generate sequences
-of micro actions to construct high-performing graph neural network architectures.
-
-The reinforcement learning approach can learn complex policies for architecture
-construction by exploring the space of micro action sequences.
-"""
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -275,7 +264,7 @@ def rl_heuristic_analysis(
     This function implements a complete RL-based search using REINFORCE algorithm.
     An RNN controller learns to generate sequences of micro actions that construct
     high-performing graph neural network architectures.
-
+    
     Args:
         dataset (PerformancePredictionDataset): Dataset containing architecture 
             performance data
@@ -300,19 +289,21 @@ def rl_heuristic_analysis(
             Defaults to "RL Heuristic (Policy Gradient)".
             
     Returns:
-        method (str): Method name
-        selected_graph_id (Optional[int]): Index of best found architecture
-        actual_y_perf_of_selected (float): Performance of selected architecture
-        selection_metric_value (float): Metric value used for selection
-        selected_graph_origin (str): Origin method name
-        discovered_count (int): Number of architectures evaluated
-        total_iterations_run (int): Number of episodes completed
-        rank_position_overall (float): Rank among all architectures
-        percentile_overall (float): Percentile ranking
-        total_samples_overall (int): Total available architectures
-        performance_trajectory (List): Performance over time
-        total_evaluation_time (float): Time spent on evaluations
-        total_run_time (float): Total algorithm runtime
+        Dict[str, Union[str, int, float, List, Optional[int]]]: Dictionary containing search results and performance metrics.
+        
+        - method (str): Method name
+        - selected_graph_id (Optional[int]): Index of best found architecture
+        - actual_y_perf_of_selected (float): Performance of selected architecture
+        - selection_metric_value (float): Metric value used for selection
+        - selected_graph_origin (str): Origin method name
+        - discovered_count (int): Number of architectures evaluated
+        - total_iterations_run (int): Number of episodes completed
+        - rank_position_overall (float): Rank among all architectures
+        - percentile_overall (float): Percentile ranking
+        - total_samples_overall (int): Total available architectures
+        - performance_trajectory (List): Performance over time
+        - total_evaluation_time (float): Time spent on evaluations
+        - total_run_time (float): Total algorithm runtime
             
     Example:
         >>> results = rl_heuristic_analysis(

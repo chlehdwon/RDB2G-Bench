@@ -1,12 +1,3 @@
-"""
-RDB2G-Bench Bayesian Optimization Baseline Module
-
-This module implements Bayesian optimization for neural architecture search on RDB2G-Bench.
-It uses a Multi-Layer Perceptron (MLP) as a surrogate model to approximate the performance
-of different graph neural network architectures, and employs Expected Improvement (EI)
-as the acquisition function to guide the search process.
-"""
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -193,19 +184,21 @@ def bayesian_optimization_analysis(
             Defaults to 50.
             
     Returns:
-        method (str): Method name
-        selected_graph_id (Optional[int]): Index of best found architecture
-        actual_y_perf_of_selected (float): Performance of selected architecture
-        selection_metric_value (float): Metric value used for selection
-        selected_graph_origin (str): Origin method name
-        discovered_count (int): Number of architectures evaluated
-        total_iterations_run (int): Number of BO iterations completed
-        rank_position_overall (float): Rank among all architectures
-        percentile_overall (float): Percentile ranking
-        total_samples_overall (int): Total available architectures
-        performance_trajectory (List): Performance over time
-        total_evaluation_time (float): Time spent on evaluations
-        total_run_time (float): Total algorithm runtime
+        Dict[str, Union[str, int, float, List, Optional[int]]]: Dictionary containing search results and performance metrics.
+        
+        - method (str): Method name
+        - selected_graph_id (Optional[int]): Index of best found architecture
+        - actual_y_perf_of_selected (float): Performance of selected architecture
+        - selection_metric_value (float): Metric value used for selection
+        - selected_graph_origin (str): Origin method name
+        - discovered_count (int): Number of architectures evaluated
+        - total_iterations_run (int): Number of BO iterations completed
+        - rank_position_overall (float): Rank among all architectures
+        - percentile_overall (float): Percentile ranking
+        - total_samples_overall (int): Total available architectures
+        - performance_trajectory (List): Performance over time
+        - total_evaluation_time (float): Time spent on evaluations
+        - total_run_time (float): Total algorithm runtime
             
     Example:
         >>> results = bayesian_optimization_analysis(

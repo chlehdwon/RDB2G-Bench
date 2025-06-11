@@ -223,10 +223,10 @@ class PerformancePredictionDataset(Dataset):
             original_idx (int): Index of the sample to retrieve from the aggregated results.
 
         Returns:
-            Data: PyTorch Geometric Data object with the following attributes:
+            Data: PyTorch Geometric Data object with graph configuration and performance data.
             
-            y (torch.Tensor): Target performance value as a 1D tensor.
-            graph_bin_str (str): Binary string representation of the graph configuration.
+            - y (torch.Tensor): Target performance value as a 1D tensor
+            - graph_bin_str (str): Binary string representation of the graph configuration
         """
         row = self.df_result_group.iloc[original_idx]
 
