@@ -56,7 +56,7 @@ Example Usage
 ----------------
 
 Node Classification/Regression
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -94,7 +94,7 @@ Node Classification/Regression
    )
 
 Link Prediction
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -123,7 +123,7 @@ Link Prediction
 
 
 Parallel Processing
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 

@@ -9,7 +9,7 @@ point for evaluating more sophisticated optimization algorithms.
 How it Works
 ------------
 
-The random search algorithm:
+The random search algorithm process:
 
 1. Uniformly sample graph constructions from the entire search space
 2. Evaluate the performance of each sampled graph construction

@@ -6,7 +6,7 @@ This module implements Large Language Model (LLM) based baseline.
 How it Works
 ------------
 
-The LLM-based optimization process:
+The LLM-based baseline process:
 
 1. Provide the LLM with problem description and search space
 2. LLM suggests promising micro actions for graph constructions

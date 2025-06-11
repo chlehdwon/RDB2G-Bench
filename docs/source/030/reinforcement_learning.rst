@@ -9,7 +9,7 @@ for constructing high-performing graph neural network architectures.
 How it Works
 ------------
 
-The reinforcement learning process:
+The reinforcement learning algorithm process:
 
 1. Initialize RNN-based controller to learn graph construction actions
 2. Start from random graph construction and convert to state embedding

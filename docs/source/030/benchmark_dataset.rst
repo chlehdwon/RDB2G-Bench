@@ -1,5 +1,5 @@
 Performance Prediction Dataset
-=============================
+===============================
 
 This module implements the ``PerformancePredictionDataset`` class, which is used to load performance data for benchmarking RDB-to-Graph search algorithms on RDB2G-Bench.
 
@@ -17,7 +17,7 @@ The dataset loading process involves the following steps:
 5. **Graph Indexing**: Creates mappings between graph configurations and search space
 
 Performance Prediction Dataset
--------------
+-------------------------------
 
 .. automodule:: rdb2g_bench.benchmark.dataset
    :members:

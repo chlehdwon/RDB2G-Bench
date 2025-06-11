@@ -14,7 +14,7 @@ The greedy search algorithm implements three different greedy strategies for gra
 2. **Backward Greedy**: Starts with the full graph construction and iteratively removes edges to find the best construction
 3. **Local Greedy**: Combines forward and backward greedy strategies with random graph construction
 
-The greedy search algorithm:
+The greedy search algorithm process:
 
 1. Starts with a random graph construction
 2. Evaluates the performance of the graph construction
