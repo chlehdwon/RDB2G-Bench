@@ -19,7 +19,7 @@ import random
 import time
 import pandas as pd
 from collections import deque
-from typing import Union, Tuple
+from typing import Union, Tuple, Optional, List
 
 from ..dataset import PerformancePredictionDataset
 from ..micro_action import MicroActionSet
@@ -300,20 +300,19 @@ def rl_heuristic_analysis(
             Defaults to "RL Heuristic (Policy Gradient)".
             
     Returns:
-        Dict: Comprehensive results dictionary containing:
-            - method: Method name
-            - selected_graph_id: Index of best found architecture
-            - actual_y_perf_of_selected: Performance of selected architecture
-            - selection_metric_value: Metric value used for selection
-            - selected_graph_origin: Origin method name
-            - discovered_count: Number of architectures evaluated
-            - total_iterations_run: Number of episodes completed
-            - rank_position_overall: Rank among all architectures
-            - percentile_overall: Percentile ranking
-            - total_samples_overall: Total available architectures
-            - performance_trajectory: Performance over time
-            - total_evaluation_time: Time spent on evaluations
-            - total_run_time: Total algorithm runtime
+        method (str): Method name
+        selected_graph_id (Optional[int]): Index of best found architecture
+        actual_y_perf_of_selected (float): Performance of selected architecture
+        selection_metric_value (float): Metric value used for selection
+        selected_graph_origin (str): Origin method name
+        discovered_count (int): Number of architectures evaluated
+        total_iterations_run (int): Number of episodes completed
+        rank_position_overall (float): Rank among all architectures
+        percentile_overall (float): Percentile ranking
+        total_samples_overall (int): Total available architectures
+        performance_trajectory (List): Performance over time
+        total_evaluation_time (float): Time spent on evaluations
+        total_run_time (float): Total algorithm runtime
             
     Example:
         >>> results = rl_heuristic_analysis(

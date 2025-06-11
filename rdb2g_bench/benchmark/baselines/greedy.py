@@ -49,8 +49,6 @@ def forward_greedy_heuristic_analysis(
             Defaults to "Forward Greedy Heuristic".
             
     Returns:
-        Dict: Comprehensive results dictionary containing:
-        
         method (str): Method name
         selected_graph_id (Optional[int]): Index of best found architecture
         actual_y_perf_of_selected (float): Performance of selected architecture
@@ -171,7 +169,9 @@ def forward_greedy_heuristic_analysis(
             "rank_position_overall": np.nan,
             "percentile_overall": np.nan,
             "total_samples_overall": total_samples,
-            "performance_trajectory": performance_trajectory
+            "performance_trajectory": performance_trajectory,
+            "total_evaluation_time": total_evaluation_time,
+            "total_run_time": time.time() - start_time
         }
         pad_trajectory(performance_trajectory, total_evaluated_count, termination_count_threshold, method_name)
         if global_best_index != -1 and overall_actual_y is not None and not np.isnan(final_selected_perf):
@@ -269,8 +269,6 @@ def backward_greedy_heuristic_analysis(
             Defaults to "Backward Greedy Heuristic".
             
     Returns:
-        Dict: Comprehensive results dictionary containing:
-        
         method (str): Method name
         selected_graph_id (Optional[int]): Index of best found architecture
         actual_y_perf_of_selected (float): Performance of selected architecture
@@ -346,7 +344,9 @@ def backward_greedy_heuristic_analysis(
             "selection_metric_value": np.nan, "selected_graph_origin": method_origin,
             "discovered_count": total_evaluated_count, "total_iterations_run": final_iteration_count,
             "rank_position_overall": np.nan, "percentile_overall": np.nan,
-            "total_samples_overall": total_samples, "performance_trajectory": performance_trajectory
+            "total_samples_overall": total_samples, "performance_trajectory": performance_trajectory,
+            "total_evaluation_time": total_evaluation_time,
+            "total_run_time": time.time() - start_time
         }
         pad_trajectory(performance_trajectory, total_evaluated_count, termination_count_threshold, method_name)
         return results
@@ -442,8 +442,6 @@ def random_greedy_heuristic_analysis(
             Defaults to "Local Greedy Heuristic".
             
     Returns:
-        Dict: Comprehensive results dictionary containing:
-        
         method (str): Method name
         selected_graph_id (Optional[int]): Index of best found architecture
         actual_y_perf_of_selected (float): Performance of selected architecture

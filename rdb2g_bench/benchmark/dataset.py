@@ -33,16 +33,25 @@ class PerformancePredictionDataset(Dataset):
                  seed: int = 42,
                  device: str = 'cpu'):
         """
-        Initializes the dataset, handling data loading and preprocessing.
+        Initialize Performance Prediction Dataset for RDB2G-Bench.
 
         Args:
-            dataset_name (str): Name of the RelBench dataset.
-            task_name (str): Name of the RelBench task.
-            tag (Optional[str]): Identifier for the results sub-directory. If None, tries to find suitable results.
-            cache_dir (str): Directory for caching materialized graphs and stypes.
-            result_dir (str): Root directory where results are stored.
-            seed (int): Random seed for reproducibility.
-            device (str): Device ('cpu' or 'cuda:X') for potential GPU operations like text embedding.
+            dataset_name (str): Name of the RelBench dataset (e.g., "rel-f1", "rel-avito").
+                Defaults to "rel-f1".
+            task_name (str): Name of the RelBench task (e.g., "driver-top3", "user-ad-visit").
+                Task availability depends on the dataset. Defaults to "driver-top3".
+            tag (Optional[str]): Identifier for the results sub-directory. If None, 
+                attempts to find suitable results automatically. Used to organize
+                different experimental runs.
+            cache_dir (str): Directory for caching materialized graphs and schema types.
+                Helps speed up repeated dataset loading. Defaults to "~/.cache/relbench_examples".
+            result_dir (str): Root directory where performance results are stored.
+                Expected structure: {result_dir}/tables/{dataset_name}/{task_name}/{tag}/
+                Defaults to "./results".
+            seed (int): Random seed for reproducibility of graph materialization and
+                data processing. Defaults to 42.
+            device (str): Device for GPU operations during text embedding ('cpu' or 'cuda:X').
+                Defaults to 'cpu'.
         """
         super().__init__()
         self.dataset_name = dataset_name

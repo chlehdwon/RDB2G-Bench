@@ -57,8 +57,6 @@ def evolutionary_heuristic_analysis(
             Defaults to 1000.
             
     Returns:
-        Dict: Comprehensive results dictionary containing:
-        
         method (str): Method name
         selected_graph_id (Optional[int]): Index of best found architecture
         actual_y_perf_of_selected (float): Performance of selected architecture

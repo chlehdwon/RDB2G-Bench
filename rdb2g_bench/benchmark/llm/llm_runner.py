@@ -87,8 +87,6 @@ def run_llm_baseline(
         **kwargs: Additional configuration parameters passed to underlying components.
         
     Returns:
-        Dict: Comprehensive results dictionary containing:
-        
         best_score (float): Best achieved performance score during search
         best_edge_set (Tuple[int, ...]): Best graph edge configuration found
         best_valid_action_result (List[Dict]): Sequence of valid actions leading to best result

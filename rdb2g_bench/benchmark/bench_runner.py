@@ -69,22 +69,12 @@ def run_benchmark(
               Defaults to "./results".
         
     Returns:
-        Dict: Comprehensive benchmark results containing:
-        
-            - Method-wise aggregated statistics across all runs
-            - Performance trajectories and convergence analysis
-            - Statistical comparisons and rankings
-            - Timing and efficiency metrics
-            - Best architecture configurations found
-            
-        Each method entry includes:
-        
-            - avg_actual_y_perf_of_selected: Average performance across runs
-            - avg_rank_position_overall: Average ranking position
-            - avg_percentile_overall: Average percentile ranking
-            - selected_graph_ids_runs: Graph IDs selected in each run
-            - avg_evaluation_time: Average time spent on evaluations
-            - avg_run_time: Average total runtime per run
+        avg_actual_y_perf_of_selected (float): Average performance across runs
+        avg_rank_position_overall (float): Average ranking position
+        avg_percentile_overall (float): Average percentile ranking
+        selected_graph_ids_runs (List[int]): Graph IDs selected in each run
+        avg_evaluation_time (float): Average time spent on evaluations
+        avg_run_time (float): Average total runtime per run
 
     Example:
         >>> # Run all methods on default dataset/task
