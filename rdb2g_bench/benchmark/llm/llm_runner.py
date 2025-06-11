@@ -38,8 +38,8 @@ def run_llm_baseline(
     model: str = "claude-3-5-sonnet-latest",
     temperature: float = 0.8,
     tag: str = "final",
-    cache_dir: str = os.path.expanduser("~/.cache/relbench_examples"),
-    result_dir: str = os.path.expanduser("./results"),
+    cache_dir: str = "~/.cache/relbench_examples",
+    result_dir: str = "./results",
     **kwargs
 ) -> Dict:
     """

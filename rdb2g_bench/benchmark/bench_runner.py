@@ -116,8 +116,8 @@ def run_benchmark(
     
     default_params = {
         "tag": "hf",
-        "cache_dir": os.path.expanduser("~/.cache/relbench_examples"),
-        "result_dir": os.path.expanduser("./results"),
+        "cache_dir": "~/.cache/relbench_examples",
+        "result_dir": "./results",
     }
     
     params = {**default_params, **kwargs}

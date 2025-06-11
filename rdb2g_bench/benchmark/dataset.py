@@ -28,8 +28,8 @@ class PerformancePredictionDataset(Dataset):
                  dataset_name: str = "rel-f1",
                  task_name: str = "driver-top3",
                  tag: Optional[str] = None,
-                 cache_dir: str = os.path.expanduser("~/.cache/relbench_examples"),
-                 result_dir: str = os.path.expanduser("./results"),
+                 cache_dir: str = "~/.cache/relbench_examples",
+                 result_dir: str = "./results",
                  seed: int = 42,
                  device: str = 'cpu'):
         """
