@@ -103,7 +103,7 @@ class RDB2GBench:
             >>> bench = RDB2GBench("./results")
             >>> available = bench.get_available()
             >>> print(available)
-            {'rel-f1': ['driver-top3', 'artist-top3'], 'rel-movielens1m': ['user-top3']}
+            {'rel-f1': ['driver-top3', 'driver-dnf', 'driver-position'], ...}
         """
         return {dataset: list(tasks.keys()) for dataset, tasks in self.data.items()}
     
