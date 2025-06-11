@@ -33,7 +33,7 @@ class MicroActionSet:
         ...     hetero_data=data,
         ...     GNNSpaceClass=GNNNodeSearchSpace,
         ...     num_layers=2,
-        ...     src_entity_table="driver"
+        ...     src_entity_table="drivers"
         ... )
         >>> current_set = (1, 0, 1, 0)
         >>> new_sets = micro_actions.add_fk_pk_edge(current_set)
@@ -131,6 +131,7 @@ class MicroActionSet:
             List[Tuple[Tuple[int, ...], int]]: List of possible next edge sets with their indices.
             
             Each tuple contains:
+
             - new_edge_set (Tuple[int, ...]): The modified edge set with an added FK-PK edge
             - index (int): Index of the new edge set in the valid_edge_sets_list
                 
@@ -168,6 +169,7 @@ class MicroActionSet:
             List[Tuple[Tuple[int, ...], int]]: List of possible next edge sets with their indices.
             
             Each tuple contains:
+
             - new_edge_set (Tuple[int, ...]): The modified edge set with a removed FK-PK edge
             - index (int): Index of the new edge set in the valid_edge_sets_list
                 
@@ -205,6 +207,7 @@ class MicroActionSet:
             List[Tuple[Tuple[int, ...], int]]: List of possible next edge sets with their indices.
             
             Each tuple contains:
+
             - new_edge_set (Tuple[int, ...]): The modified edge set with row-to-edge conversion
             - index (int): Index of the new edge set in the valid_edge_sets_list
                 
@@ -250,6 +253,7 @@ class MicroActionSet:
             List[Tuple[Tuple[int, ...], int]]: List of possible next edge sets with their indices.
             
             Each tuple contains:
+
             - new_edge_set (Tuple[int, ...]): The modified edge set with edge-to-row conversion  
             - index (int): Index of the new edge set in the valid_edge_sets_list
                 

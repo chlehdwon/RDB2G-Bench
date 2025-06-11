@@ -23,22 +23,7 @@ def random_heuristic_analysis(
     network architectures from the entire valid search space. Each architecture is
     evaluated independently without any guidance from previous evaluations, providing
     an unbiased baseline for comparison with other optimization methods.
-    
-    Returns a search results dictionary containing:
-    
-    - method (str): Method name
-    - selected_graph_id (Optional[int]): Index of best found architecture
-    - actual_y_perf_of_selected (float): Performance of selected architecture
-    - selection_metric_value (float): Metric value used for selection
-    - selected_graph_origin (str): Origin method name
-    - discovered_count (int): Number of architectures evaluated
-    - total_iterations_run (int): Number of random samples drawn
-    - rank_position_overall (float): Rank among all architectures
-    - percentile_overall (float): Percentile ranking
-    - total_samples_overall (int): Total available architectures
-    - performance_trajectory (List): Performance over time
-    - total_evaluation_time (float): Time spent on evaluations
-    - total_run_time (float): Total algorithm runtime
+
     
     Args:
         dataset (PerformancePredictionDataset): Dataset containing architecture 
@@ -54,8 +39,22 @@ def random_heuristic_analysis(
             Defaults to "Random Heuristic".
             
     Returns:
-        Dict[str, Union[str, int, float, List, Optional[int]]]
-            
+        Dict[str, Union[str, int, float, List, Optional[int]]]: Dictionary containing search results and performance metrics.
+        
+        - method (str): Method name
+        - selected_graph_id (Optional[int]): Index of best found architecture
+        - actual_y_perf_of_selected (float): Performance of selected architecture
+        - selection_metric_value (float): Metric value used for selection
+        - selected_graph_origin (str): Origin method name
+        - discovered_count (int): Number of architectures evaluated
+        - total_iterations_run (int): Number of random samples drawn
+        - rank_position_overall (float): Rank among all architectures
+        - percentile_overall (float): Percentile ranking
+        - total_samples_overall (int): Total available architectures
+        - performance_trajectory (List): Performance over time
+        - total_evaluation_time (float): Time spent on evaluations
+        - total_run_time (float): Total algorithm runtime
+
     Example:
         >>> results = random_heuristic_analysis(
         ...     dataset=dataset,

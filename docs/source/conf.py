@@ -38,7 +38,8 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
-    'sphinx.ext.todo'
+    'sphinx.ext.todo',
+    'sphinx.ext.napoleon',
 ]
 
 intersphinx_mapping = {
@@ -54,7 +55,7 @@ templates_path = ['_templates']
 html_theme = 'sphinx_rtd_theme'
 
 # -- Autodoc configuration for type hints
-autodoc_typehints = 'description'
+autodoc_typehints = 'signature'
 
 autodoc_mock_imports = [
     "torch", "numpy", "pandas", "typing_extensions",
