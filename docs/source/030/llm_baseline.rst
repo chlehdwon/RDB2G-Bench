@@ -33,7 +33,8 @@ Example Usage
    # Run LLM-based baseline
    results = run_llm_baseline(
        dataset="rel-f1",
-       task="driver-top3", 
+       task="driver-top3",
+       gnn="GraphSAGE",
        budget_percentage=0.05,
        seed=42,
        model="claude-3-5-sonnet-latest",

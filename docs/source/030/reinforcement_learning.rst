@@ -36,7 +36,8 @@ Example Usage
    # Run reinforcement learning with default parameters
    results = run_benchmark(
        dataset="rel-f1",
-       task="driver-top3", 
+       task="driver-top3",
+       gnn="GraphSAGE",
        budget_percentage=0.05,
        method=["rl"],
        num_runs=10,

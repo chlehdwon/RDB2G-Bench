@@ -34,7 +34,8 @@ Example Usage
    # Run random search baseline
    results = run_benchmark(
        dataset="rel-f1",
-       task="driver-top3", 
+       task="driver-top3",
+       gnn="GraphSAGE",
        budget_percentage=0.05,
        method=["random"],
        num_runs=10,

@@ -12,7 +12,7 @@ The dataset loading process involves the following steps:
 
 1. **RelBench Integration**: Connects to the specified RelBench dataset and task
 2. **Graph Materialization**: Creates heterogeneous graph data with proper embeddings
-3. **Results Loading**: Reads performance data from CSV files in the results directory
+3. **Results Loading**: Reads performance data from CSV files for the specified GNN model
 4. **Data Aggregation**: Groups results by graph configuration and aggregates across seeds
 5. **Graph Indexing**: Creates mappings between graph configurations and search space
 
@@ -34,7 +34,8 @@ Example Usage
    # Initialize dataset
    dataset = PerformancePredictionDataset(
        dataset_name="rel-f1",
-       task_name="driver-top3", 
+       task_name="driver-top3",
+       gnn="GraphSAGE",
        tag="hf",
        result_dir="./results"
    )
