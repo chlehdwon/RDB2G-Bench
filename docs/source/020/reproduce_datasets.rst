@@ -66,7 +66,7 @@ Node Classification/Regression
    results = run_gnn_node_worker(
        dataset_name="rel-f1",
        task_name="driver-top3",
-       gnn_model="GraphSAGE",
+       gnn="GraphSAGE",
        epochs=20,
        lr=0.005,
        batch_size=512,
@@ -78,7 +78,7 @@ Node Classification/Regression
    results = run_gnn_node_worker(
        dataset_name="rel-f1",
        task_name="driver-position",
-       gnn_model="GIN",
+       gnn="GIN",
        epochs=50,
        lr=0.001,
        weight_decay=1e-4
@@ -104,7 +104,7 @@ Link Prediction
    results = run_idgnn_link_worker(
        dataset_name="rel-avito",
        task_name="user-ad-visit",
-       gnn_model="GraphSAGE",
+       gnn="GraphSAGE",
        epochs=20,
        lr=0.001,
        batch_size=512,

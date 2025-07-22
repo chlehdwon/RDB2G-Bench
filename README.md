@@ -1,6 +1,6 @@
 # RDB2G-Bench 
 
-[![Latest Release](https://img.shields.io/badge/Latest-v0.1-success)](https://github.com/chlehdwon/RDB2G-Bench/releases)
+[![Latest Release](https://img.shields.io/badge/Latest-v0.1.1-success)](https://github.com/chlehdwon/RDB2G-Bench/releases)
 [![Read the Docs](https://img.shields.io/readthedocs/RDB2G-Bench)](https://rdb2g-bench.readthedocs.io/en/latest/)
 [![Hugging Face](https://img.shields.io/badge/🤗_Hugging_Face-Datasets-blue)](https://huggingface.co/datasets/kaistdata/RDB2G-Bench)
 [![arXiv](https://img.shields.io/badge/arXiv-2506.01360-b31b1b.svg)](https://arxiv.org/abs/2506.01360)
@@ -50,9 +50,9 @@ train_time = result['train_time']           # Train time
 from rdb2g_bench.dataset.node_worker import run_gnn_node_worker
 
 results = run_gnn_node_worker(
-    dataset="rel-f1",
-    task="driver-top3",
-    gnn_model="GraphSAGE",
+    dataset_name="rel-f1",
+    task_name="driver-top3",
+    gnn="GraphSAGE",
     epochs=20,
     lr=0.005
 )
@@ -64,9 +64,9 @@ results = run_gnn_node_worker(
 from rdb2g_bench.dataset.link_worker import run_idgnn_link_worker
 
 results = run_idgnn_link_worker(
-    dataset="rel-avito",
-    task="user-ad-visit",
-    gnn_model="GraphSAGE",
+    dataset_name="rel-avito",
+    task_name="user-ad-visit",
+    gnn="GraphSAGE",
     epochs=20,
     lr=0.001
 )
@@ -75,11 +75,12 @@ results = run_idgnn_link_worker(
 ### Run Benchmarks
 
 ```python
-from rdb2g_bench.benchmark.runner import run_benchmark
+from rdb2g_bench.benchmark.bench_runner import run_benchmark
 
 results = run_benchmark(
     dataset="rel-f1",
-    task="driver-top3", 
+    task="driver-top3",
+    gnn="GraphSAGE",
     budget_percentage=0.05,
     method="all",
     num_runs=10,
@@ -101,6 +102,7 @@ from rdb2g_bench.benchmark.llm.llm_runner import run_llm_baseline
 results = run_llm_baseline(
     dataset="rel-f1",
     task="driver-top3",
+    gnn="GraphSAGE",
     budget_percentage=0.05,
     model="claude-3-5-sonnet-latest",
     temperature=0.8,

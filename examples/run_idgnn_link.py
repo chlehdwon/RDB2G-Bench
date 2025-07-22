@@ -9,7 +9,7 @@ results = run_idgnn_link_worker(
 
 print(results['processed_graphs']) # [0, ..., 908]
 print(results['total_processed']) # 909
-print(results['csv_file']) # ./results/rel-avito/user-ad-visit/42.csv
+print(results['csv_file']) # ./results/tables/rel-avito/user-ad-visit/{tag}/GraphSAGE/42.csv
 
 # Example 2: Run parallelly on multiple GPUs
 results_even = run_idgnn_link_worker(

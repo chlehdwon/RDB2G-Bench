@@ -54,8 +54,13 @@ def load_rdb2g_bench(
                 for task_dir in dataset_dir.iterdir():
                     if task_dir.is_dir():
                         for tag_dir in task_dir.iterdir():
-                            if tag_dir.is_dir() and list(tag_dir.glob("*.csv")):
-                                has_data = True
+                            if tag_dir.is_dir():
+                                # Check for GNN subdirectories with CSV files
+                                for gnn_dir in tag_dir.iterdir():
+                                    if gnn_dir.is_dir() and list(gnn_dir.glob("*.csv")):
+                                        has_data = True
+                                        break
+                            if has_data:
                                 break
                     if has_data:
                         break
@@ -83,6 +88,7 @@ def download_rdb2g_bench(
     cache_dir: Optional[str] = None,
     dataset_names: Optional[List[str]] = None,
     task_names: Optional[List[str]] = None,
+    gnn_names: Optional[List[str]] = None,
     tag: str = "hf",
 ) -> Dict[str, List[str]]:
     """
@@ -102,6 +108,8 @@ def download_rdb2g_bench(
             If None, downloads all available datasets.
         task_names (Optional[List[str]]): List of specific tasks to download.
             If None, downloads all available tasks.
+        gnn_names (Optional[List[str]]): List of specific GNN models to download.
+            If None, downloads all available GNN models.
         tag (str): Tag to identify the download and organize files.
             Defaults to "hf".
         
@@ -113,10 +121,11 @@ def download_rdb2g_bench(
     Example:
         >>> saved_files = download_rdb2g_bench(
         ...     dataset_names=['rel-f1'],
-        ...     task_names=['driver-top3']
+        ...     task_names=['driver-top3'],
+        ...     gnn_names=['GraphSAGE']
         ... )
         >>> print(saved_files)
-        {'rel-f1/driver-top3': ['./results/tables/rel-f1/driver-top3/hf/0.csv', ...]}
+        {'rel-f1/driver-top3': ['./results/tables/rel-f1/driver-top3/hf/GraphSAGE/0.csv', ...]}
     """
     result_dir = Path(result_dir)
     result_dir.mkdir(parents=True, exist_ok=True)
@@ -134,6 +143,9 @@ def download_rdb2g_bench(
         
     if task_names is not None:
         df = df[df['task'].isin(task_names)]
+        
+    if gnn_names is not None:
+        df = df[df['gnn'].isin(gnn_names)]
     
     if df.empty:
         return {}
@@ -142,25 +154,26 @@ def download_rdb2g_bench(
     grouped = df.groupby(['dataset', 'task'])
     
     for (dataset_name, task_name), group_df in grouped:
-        task_dir = result_dir / "tables" / dataset_name / task_name / tag
-        task_dir.mkdir(parents=True, exist_ok=True)
-        
         group_df = group_df.sort_values(['seed', 'idx'])
         
-        seed_files = []
-        for seed, seed_df in group_df.groupby('seed'):
-            output_df = seed_df[[
-                'idx', 'graph', 'test_metric', 'params', 
-                'train_time', 'valid_time', 'test_time'
-            ]].copy()
-            
-            filename = f"{seed}.csv"
-            filepath = task_dir / filename
-            output_df.to_csv(filepath, index=False)
-            seed_files.append(str(filepath))
-        
         combination_key = f"{dataset_name}/{task_name}"
-        saved_files[combination_key] = seed_files
+        saved_files[combination_key] = []
+        
+        # Group by GNN to create separate directories
+        for gnn_name, gnn_group_df in group_df.groupby('gnn'):
+            gnn_dir = result_dir / "tables" / dataset_name / task_name / tag / gnn_name
+            gnn_dir.mkdir(parents=True, exist_ok=True)
+            
+            for seed, seed_df in gnn_group_df.groupby('seed'):
+                output_df = seed_df[[
+                    'idx', 'graph', 'train_metric', 'valid_metric', 'test_metric', 'params', 
+                    'train_time', 'valid_time', 'test_time', 'gnn'
+                ]].copy()
+                
+                filename = f"{seed}.csv"
+                filepath = gnn_dir / filename
+                output_df.to_csv(filepath, index=False)
+                saved_files[combination_key].append(str(filepath))
     
     return saved_files
 
@@ -181,7 +194,8 @@ def get_dataset_stats(cache_dir: Optional[str] = None) -> pd.DataFrame:
         pd.DataFrame: DataFrame with statistical information about all datasets and tasks.
         
         - dataset: Dataset name
-        - task: Task name  
+        - task: Task name
+        - gnn: GNN model name
         - idx: Number of unique graph configurations
         - seed: Number of random seeds
         - test_metric_mean: Mean test performance
@@ -192,8 +206,8 @@ def get_dataset_stats(cache_dir: Optional[str] = None) -> pd.DataFrame:
     Example:
         >>> stats = get_dataset_stats()
         >>> print(stats.head())
-        dataset    task         idx  seed  test_metric_mean  test_metric_std  ...
-        rel-f1     driver-top3   50    10            0.8542           0.0123  ...
+        dataset    task         gnn         idx  seed  test_metric_mean  test_metric_std  ...
+        rel-f1     driver-top3  GraphSAGE    50    10            0.8542           0.0123  ...
     """
     dataset = load_dataset(
         "kaistdata/RDB2G-Bench",
@@ -203,7 +217,7 @@ def get_dataset_stats(cache_dir: Optional[str] = None) -> pd.DataFrame:
     
     df = dataset.to_pandas()
     
-    stats = df.groupby(['dataset', 'task']).agg({
+    stats = df.groupby(['dataset', 'task', 'gnn']).agg({
         'idx': 'nunique',
         'seed': 'nunique',
         'test_metric': ['mean', 'std', 'min', 'max']

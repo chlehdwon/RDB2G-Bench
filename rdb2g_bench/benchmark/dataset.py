@@ -27,6 +27,7 @@ class PerformancePredictionDataset(Dataset):
     def __init__(self,
                  dataset_name: str = "rel-f1",
                  task_name: str = "driver-top3",
+                 gnn: str = "GraphSAGE",
                  tag: Optional[str] = None,
                  cache_dir: str = "~/.cache/relbench_examples",
                  result_dir: str = "./results",
@@ -40,13 +41,15 @@ class PerformancePredictionDataset(Dataset):
                 Defaults to "rel-f1".
             task_name (str): Name of the RelBench task (e.g., "driver-top3", "user-ad-visit").
                 Task availability depends on the dataset. Defaults to "driver-top3".
+            gnn (str): Name of the GNN model to load results for (e.g., "GraphSAGE", "GIN", "GPS").
+                Defaults to "GraphSAGE".
             tag (Optional[str]): Identifier for the results sub-directory. If None, 
                 attempts to find suitable results automatically. Used to organize
                 different experimental runs.
             cache_dir (str): Directory for caching materialized graphs and schema types.
                 Helps speed up repeated dataset loading. Defaults to "~/.cache/relbench_examples".
             result_dir (str): Root directory where performance results are stored.
-                Expected structure: {result_dir}/tables/{dataset_name}/{task_name}/{tag}/
+                Expected structure: {result_dir}/tables/{dataset_name}/{task_name}/{tag}/{gnn_name}/
                 Defaults to "./results".
             seed (int): Random seed for reproducibility of graph materialization and
                 data processing. Defaults to 42.
@@ -56,6 +59,7 @@ class PerformancePredictionDataset(Dataset):
         super().__init__()
         self.dataset_name = dataset_name
         self.task_name = task_name
+        self.gnn = gnn
         self.tag = tag
         self.cache_dir = cache_dir
         self.result_dir = result_dir
@@ -130,13 +134,10 @@ class PerformancePredictionDataset(Dataset):
         self.search_space = search_space
         print(f"Calculated {len(self.full_edges)} possible edge types.")
 
-        file_dir = os.path.join(self.result_dir, "tables", self.dataset_name, self.task_name, self.tag)
-        print(f"Loading results from: {file_dir}")
-        if not os.path.isdir(file_dir):
-            raise FileNotFoundError(f"Result directory not found: {file_dir}")
-        file_names = os.listdir(file_dir)
-        if not file_names:
-             raise ValueError(f"No result files found in {file_dir}")
+        base_dir = os.path.join(self.result_dir, "tables", self.dataset_name, self.task_name, self.tag)
+        print(f"Loading results from: {base_dir}")
+        if not os.path.isdir(base_dir):
+            raise FileNotFoundError(f"Result directory not found: {base_dir}")
 
         df_result = pd.DataFrame()
         required_cols = [
@@ -145,23 +146,54 @@ class PerformancePredictionDataset(Dataset):
             "params", "train_time",
             "valid_time", "test_time"
         ]
-        for fn in file_names:
-            if fn.endswith(".csv"):
-                try:
-                    df_single = pd.read_csv(os.path.join(file_dir, fn))
-                    missing_cols = [col for col in required_cols if col not in df_single.columns]
-                    if missing_cols:
-                        print(f"Warning: File {fn} is missing columns: {missing_cols}. Skipping this file.")
-                        continue
-                    df_result = pd.concat([df_result, df_single[required_cols]], axis=0, ignore_index=True)
-                except Exception as e:
-                    print(f"Warning: Failed to read or process file {fn}: {e}")
+        
+        # Support both old structure (direct CSV files) and new structure (GNN subdirectories)
+        csv_files_found = []
+        
+        # Load specific GNN model (new structure only: dataset/task/tag/gnn/seed.csv)
+        gnn_dir = os.path.join(base_dir, self.gnn)
+        if not os.path.isdir(gnn_dir):
+            raise FileNotFoundError(f"GNN directory '{self.gnn}' not found in {base_dir}")
+        
+        gnn_files = [f for f in os.listdir(gnn_dir) if f.endswith(".csv")]
+        if not gnn_files:
+            raise ValueError(f"No CSV files found in GNN directory '{gnn_dir}'")
+        
+        for fn in gnn_files:
+            csv_files_found.append((os.path.join(gnn_dir, fn), fn, self.gnn))
+        
+        print(f"Loading results for GNN: {self.gnn} ({len(gnn_files)} files)")
+
+        for file_path, filename, gnn_name in csv_files_found:
+            try:
+                df_single = pd.read_csv(file_path)
+                
+                # Ensure GNN column is present with correct value
+                df_single['gnn'] = gnn_name
+                
+                missing_cols = [col for col in required_cols if col not in df_single.columns]
+                if missing_cols:
+                    print(f"Warning: File {filename} is missing required columns: {missing_cols}. Skipping this file.")
+                    continue
+                
+                # Select all required columns plus optional metric columns
+                cols_to_select = required_cols + ['gnn']
+                if 'train_metric' in df_single.columns:
+                    cols_to_select.append('train_metric')
+                if 'valid_metric' in df_single.columns:
+                    cols_to_select.append('valid_metric')
+                    
+                df_result = pd.concat([df_result, df_single[cols_to_select]], axis=0, ignore_index=True)
+            except Exception as e:
+                print(f"Error: Failed to read or process file {filename}: {e}")
+                raise
 
         if df_result.empty:
-            raise ValueError(f"No valid data loaded from result files in {file_dir}. Check file contents and required columns: {required_cols}")
+            raise ValueError(f"No valid data loaded from result files in {base_dir}. Check file contents and required columns: {required_cols}")
 
-        print(f"Loaded {len(df_result)} rows from {len([f for f in file_names if f.endswith('.csv')])} CSV files.")
+        print(f"Loaded {len(df_result)} rows from {len(csv_files_found)} CSV files.")
 
+        # Build aggregation dictionary based on available columns
         agg_dict = {
             "test_metric": ["mean", "std"],
             "params": "mean",
@@ -169,10 +201,19 @@ class PerformancePredictionDataset(Dataset):
             "valid_time": "mean",
             "test_time": "mean"
         }
+        
+        # Add train_metric and valid_metric if available
+        if 'train_metric' in df_result.columns:
+            agg_dict["train_metric"] = ["mean", "std"]
+        if 'valid_metric' in df_result.columns:
+            agg_dict["valid_metric"] = ["mean", "std"]
 
-        self.df_result_group = df_result.groupby(["idx", "graph"], dropna=False).agg(agg_dict).reset_index()
+        # Group by idx, graph, and gnn (GNN is always present in new structure)
+        group_cols = ["idx", "graph", "gnn"]
+        
+        self.df_result_group = df_result.groupby(group_cols, dropna=False).agg(agg_dict).reset_index()
 
-        new_columns = ["idx", "graph"]
+        new_columns = group_cols.copy()  # Start with grouping columns (idx, graph, gnn if present)
         for col, funcs in agg_dict.items():
             if isinstance(funcs, list):
                 for func in funcs:
@@ -181,7 +222,7 @@ class PerformancePredictionDataset(Dataset):
             else:
                 new_columns.append(col)
         self.df_result_group.columns = new_columns
-        print(f"Grouped results into {len(self.df_result_group)} unique graphs.")
+        print(f"Grouped results into {len(self.df_result_group)} unique graph configurations for GNN: {self.gnn}")
 
         self.df_result_group['graph'] = self.df_result_group['graph'].astype(str)
         

@@ -33,6 +33,7 @@ from .prompts.prompt import augmentation_prompt
 def run_llm_baseline(
     dataset: str = "rel-f1",
     task: str = "driver-top3",
+    gnn: str = "GraphSAGE",
     budget_percentage: float = 0.05,
     seed: int = 42,
     model: str = "claude-3-5-sonnet-latest",
@@ -53,6 +54,7 @@ def run_llm_baseline(
     Args:
         dataset (str): Name of the RelBench dataset to use. Defaults to "rel-f1".
         task (str): Name of the RelBench task to evaluate. Defaults to "driver-top3".
+        gnn (str): GNN model to use for evaluation. Defaults to "GraphSAGE".
         budget_percentage (float): Budget as fraction of total search space (0.0-1.0).
             Defaults to 0.05.
         seed (int): Random seed for reproducibility. Defaults to 42.
@@ -90,6 +92,7 @@ def run_llm_baseline(
         >>> results = run_llm_baseline(
         ...     dataset="rel-f1",
         ...     task="driver-top3",
+        ...     gnn="GraphSAGE",
         ...     budget_percentage=0.05,
         ...     model="claude-3-5-sonnet-latest",
         ...     temperature=0.8,
@@ -119,6 +122,7 @@ def run_llm_baseline(
     args = Args(
         dataset=dataset,
         task=task,
+        gnn=gnn,
         budget_percentage=budget_percentage,
         seed=seed,
         tag=tag,
@@ -130,8 +134,8 @@ def run_llm_baseline(
     
     client = anthropic.Anthropic()
     
-    initial_budget = get_budget(args.dataset, args.task, args.budget_percentage)
-    print(f"Dataset: {args.dataset} Task: {args.task} Budget: {initial_budget}")
+    initial_budget = get_budget(args.dataset, args.task, args.budget_percentage, args.gnn, args.tag)
+    print(f"Dataset: {args.dataset} Task: {args.task} GNN: {args.gnn} Budget: {initial_budget}")
     
     json_file = f"./outputs/{args.tag}/{args.dataset}_{args.task}_{args.budget_percentage}.json"
     if not os.path.exists(os.path.dirname(json_file)):
@@ -210,6 +214,7 @@ def run_llm_baseline(
     perf_pred_dataset = PerformancePredictionDataset(
         dataset_name=args.dataset,
         task_name=args.task,
+        gnn=args.gnn,
         tag=args.tag,
         cache_dir=args.cache_dir,
         result_dir=args.result_dir,
@@ -444,7 +449,7 @@ def run_llm_baseline(
     print(f"Results saved to {json_file}")
     
     print('===============================================')
-    print(f"Dataset: {args.dataset} Task: {args.task}")
+    print(f"Dataset: {args.dataset} Task: {args.task} GNN: {args.gnn}")
     print(f"Initial score: {initial_score:.4f}")
     print(f"Final score: {best_score:.4f}")
     print(f"Score result: {score_result}")

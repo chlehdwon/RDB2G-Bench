@@ -34,10 +34,11 @@ Basic Benchmark Execution
 
    from rdb2g_bench.benchmark.bench_runner import run_benchmark
 
-   # Run all methods on default dataset and task
+   # Run all methods on default dataset and task with specific GNN
    results = run_benchmark(
        dataset="rel-f1",
        task="driver-top3",
+       gnn="GraphSAGE",
        budget_percentage=0.05,
        method="all",
        num_runs=10,
@@ -59,7 +60,8 @@ Specific Methods Comparison
    # Compare evolutionary algorithm vs greedy search
    results = run_benchmark(
        dataset="rel-avito",
-       task="user-ad-visit", 
+       task="user-ad-visit",
+       gnn="GIN", 
        budget_percentage=0.05,
        method=["ea", "greedy", "random"],
        num_runs=15,
@@ -114,8 +116,8 @@ Output Files
 
 The benchmark automatically generates several output files:
 
-- **Individual Trajectories**: ``avg_trajectory_{method}_{num_runs}runs.csv``
-- **Combined Trajectories**: ``all_methods_trajectories_{num_runs}runs.csv``  
-- **Performance Summary**: ``performance_summary_{num_runs}runs.csv``
+- **Individual Trajectories**: ``avg_trajectory_{method}_{gnn}_{num_runs}runs.csv``
+- **Combined Trajectories**: ``all_methods_trajectories_{gnn}_{num_runs}runs.csv``  
+- **Performance Summary**: ``performance_summary_{gnn}_{num_runs}runs.csv``
 
-These files are saved in: ``{result_dir}/benchmark/{dataset}/{task}/{tag}/``
+These files are saved in: ``{result_dir}/benchmark/{dataset}/{task}/{tag}/{gnn}/``

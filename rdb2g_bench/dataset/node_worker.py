@@ -312,12 +312,12 @@ def run_gnn_node_worker(
     csv_writer = None
     csv_file = None
     if save_csv:
-        csv_dir = f"{result_dir}/tables/{dataset_name}/{task_name}/{tag}"
+        csv_dir = f"{result_dir}/tables/{dataset_name}/{task_name}/{tag}/{gnn}"
         os.makedirs(csv_dir, exist_ok=True)
         
         csv_file_path = f"{csv_dir}/{seed}.csv"
         
-        columns = ["idx", "graph", "train_metric", "val_metric", "test_metric", "params", "train_time", "valid_time", "test_time", "dataset", "task", "seed"]
+        columns = ["idx", "graph", "train_metric", "valid_metric", "test_metric", "params", "train_time", "valid_time", "test_time", "dataset", "task", "seed", "gnn"]
         
         if not os.path.exists(csv_file_path):
             print(f"Creating CSV file: {csv_file_path}")
@@ -438,7 +438,7 @@ def run_gnn_node_worker(
         graph_str = f"graph_{graph_str}"
         
         if save_csv and not debug:
-            one_data = [graph_idx, graph_str, train_metrics[tune_metric], val_metrics[tune_metric], test_metrics[tune_metric], params, train_time, valid_time, test_time, dataset_name, task_name, seed]
+            one_data = [graph_idx, graph_str, train_metrics[tune_metric], val_metrics[tune_metric], test_metrics[tune_metric], params, train_time, valid_time, test_time, dataset_name, task_name, seed, gnn]
             df_one = pd.DataFrame([one_data], columns=columns)
             df_one.to_csv(csv_file_path, mode='a', header=False, index=False)
         
