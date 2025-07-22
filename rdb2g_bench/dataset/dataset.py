@@ -88,6 +88,7 @@ def download_rdb2g_bench(
     cache_dir: Optional[str] = None,
     dataset_names: Optional[List[str]] = None,
     task_names: Optional[List[str]] = None,
+    gnn_names: Optional[List[str]] = None,
     tag: str = "hf",
 ) -> Dict[str, List[str]]:
     """
@@ -107,6 +108,8 @@ def download_rdb2g_bench(
             If None, downloads all available datasets.
         task_names (Optional[List[str]]): List of specific tasks to download.
             If None, downloads all available tasks.
+        gnn_names (Optional[List[str]]): List of specific GNN models to download.
+            If None, downloads all available GNN models.
         tag (str): Tag to identify the download and organize files.
             Defaults to "hf".
         
@@ -118,10 +121,11 @@ def download_rdb2g_bench(
     Example:
         >>> saved_files = download_rdb2g_bench(
         ...     dataset_names=['rel-f1'],
-        ...     task_names=['driver-top3']
+        ...     task_names=['driver-top3'],
+        ...     gnn_names=['GraphSAGE']
         ... )
         >>> print(saved_files)
-        {'rel-f1/driver-top3': ['./results/tables/rel-f1/driver-top3/hf/0.csv', ...]}
+        {'rel-f1/driver-top3': ['./results/tables/rel-f1/driver-top3/hf/GraphSAGE/0.csv', ...]}
     """
     result_dir = Path(result_dir)
     result_dir.mkdir(parents=True, exist_ok=True)
@@ -139,6 +143,9 @@ def download_rdb2g_bench(
         
     if task_names is not None:
         df = df[df['task'].isin(task_names)]
+        
+    if gnn_names is not None:
+        df = df[df['gnn'].isin(gnn_names)]
     
     if df.empty:
         return {}

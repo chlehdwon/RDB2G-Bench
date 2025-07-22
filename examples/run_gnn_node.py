@@ -30,10 +30,10 @@ results_odd = run_gnn_node_worker(
     device="cuda:1"
 )
 
-# Example 3: Run worker on specific target indices
+# Example 3: Run worker on specific GNN and target indices
 results_0 = run_gnn_node_worker(
     dataset_name="rel-f1",
     task_name="driver-top3",
-    gnn="GraphSAGE",
+    gnn="GPS",
     target_indices=[0]
 )

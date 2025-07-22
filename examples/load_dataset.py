@@ -60,7 +60,7 @@ test_metric_std = stats['test_metric_std']
 params = stats['params']
 train_time = stats['train_time']
 
-print(f"Test metric: {test_metric_mean:.4f} ± {test_metric_std:.4f}") # 0.8052 ± 0.0349
+print(f"Test metric: {test_metric_mean:.4f} ± {test_metric_std:.4f}") # 0.8052 ± 0.0347
 print(f"Parameters: {params:.0f}") # 954241
 print(f"Train time: {train_time:.4f} seconds") # 0.3066
 

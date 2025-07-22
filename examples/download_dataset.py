@@ -32,14 +32,15 @@ print(f"\nDownloaded {len(saved_files)} dataset/task combinations")
 for combo, files in saved_files.items():
     print(f"{combo}: {len(files)} files")
 
-# Download specific RDB2G-Bench dataset
+# Download specific RDB2G-Bench dataset with specific GNN model
 saved_files = download_rdb2g_bench(
     result_dir="./results",
     cache_dir="~/.cache",
     dataset_names=["rel-f1"],
     task_names=["driver-top3"],
-    tag="hf_top3"
+    gnn_names=["GIN"],
+    tag="hf_gin"
 )
-print(f"\nSpecific download saved files:")
+print(f"\nSpecific GNN model download saved files:")
 for combo, files in saved_files.items():
     print(f"{combo}: {files}")
