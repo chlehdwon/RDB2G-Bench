@@ -1,6 +1,6 @@
 # RDB2G-Bench 
 
-[![Latest Release](https://img.shields.io/badge/Latest-v0.1-success)](https://github.com/chlehdwon/RDB2G-Bench/releases)
+[![Latest Release](https://img.shields.io/badge/Latest-v0.1.1-success)](https://github.com/chlehdwon/RDB2G-Bench/releases)
 [![Read the Docs](https://img.shields.io/readthedocs/RDB2G-Bench)](https://rdb2g-bench.readthedocs.io/en/latest/)
 [![Hugging Face](https://img.shields.io/badge/🤗_Hugging_Face-Datasets-blue)](https://huggingface.co/datasets/kaistdata/RDB2G-Bench)
 [![arXiv](https://img.shields.io/badge/arXiv-2506.01360-b31b1b.svg)](https://arxiv.org/abs/2506.01360)
