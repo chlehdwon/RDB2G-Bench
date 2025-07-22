@@ -20,7 +20,7 @@ copyright = 'KAIST Data Mining Lab'
 author = 'Dongwon Choi'
 
 release = '0.1'
-version = '0.1.0'
+version = '0.1.1'
 
 # -- General configuration
 
