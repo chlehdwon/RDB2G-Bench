@@ -18,9 +18,10 @@ class RDB2GBench:
             └── dataset_name/
                 └── task_name/
                     └── tag/
-                        ├── 0.csv
-                        ├── 1.csv
-                        └── ...
+                        └── gnn_name/
+                            ├── 0.csv
+                            ├── 1.csv
+                            └── ...
     
     Attributes:
         result_dir (Path): Path to the results directory
@@ -73,11 +74,14 @@ class RDB2GBench:
                     
                 task_name = task_dir.name
                 
-                # Find CSV files (look in tag subdirectories)
+                # Find CSV files (look in tag/gnn subdirectories)
                 csv_files = []
                 for tag_dir in task_dir.iterdir():
                     if tag_dir.is_dir():
-                        csv_files.extend(tag_dir.glob("*.csv"))
+                        # Look for GNN subdirectories within tag directory
+                        for gnn_dir in tag_dir.iterdir():
+                            if gnn_dir.is_dir():
+                                csv_files.extend(gnn_dir.glob("*.csv"))
                 
                 if csv_files:
                     # Load and combine all CSV files
@@ -85,6 +89,10 @@ class RDB2GBench:
                     for csv_file in csv_files:
                         df = pd.read_csv(csv_file)
                         df['seed'] = int(csv_file.stem)  # Add seed from filename
+                        # Add GNN info from directory name
+                        gnn_name = csv_file.parent.name
+                        if 'gnn' not in df.columns:
+                            df['gnn'] = gnn_name
                         dfs.append(df)
                     
                     combined_df = pd.concat(dfs, ignore_index=True)
@@ -92,20 +100,28 @@ class RDB2GBench:
         
         return data
     
-    def get_available(self) -> Dict[str, List[str]]:
+    def get_available(self) -> Dict[str, Dict[str, List[str]]]:
         """
-        Get available datasets and tasks.
+        Get available datasets, tasks, and GNN models.
         
         Returns:
-            Dict[str, List[str]]: Dictionary mapping dataset names to lists of available tasks
+            Dict[str, Dict[str, List[str]]]: Nested dictionary mapping dataset names to task names to lists of available GNN models
             
         Example:
             >>> bench = RDB2GBench("./results")
             >>> available = bench.get_available()
             >>> print(available)
-            {'rel-f1': ['driver-top3', 'driver-dnf', 'driver-position'], ...}
+            {'rel-f1': {'driver-top3': ['GIN', 'GPS', 'GraphSAGE'], ...}, ...}
         """
-        return {dataset: list(tasks.keys()) for dataset, tasks in self.data.items()}
+        result = {}
+        for dataset, tasks in self.data.items():
+            result[dataset] = {}
+            for task, task_data in tasks.items():
+                if 'gnn' in task_data.columns:
+                    result[dataset][task] = sorted(task_data['gnn'].unique().tolist())
+                else:
+                    result[dataset][task] = []
+        return result
     
     def __getitem__(self, dataset_name: str):
         """
@@ -168,11 +184,11 @@ class DatasetAccessor:
 
 class TaskAccessor:
     """
-    Accessor for graph configurations (indices) within a specific task.
+    Accessor for GNN models within a specific task.
     
-    This class provides access to all graph configurations available for a 
-    particular dataset/task combination and returns IndexAccessor objects
-    containing aggregated results.
+    This class provides access to all GNN models available for a 
+    particular dataset/task combination and returns GNNAccessor objects
+    for further navigation.
     
     Attributes:
         data (pd.DataFrame): DataFrame containing all results for this task
@@ -193,6 +209,85 @@ class TaskAccessor:
         self.dataset_name = dataset_name
         self.task_name = task_name
     
+    def __getitem__(self, gnn_name: str):
+        """
+        Access specific GNN model by name.
+        
+        Args:
+            gnn_name (str): Name of the GNN model to access
+            
+        Returns:
+            GNNAccessor: Accessor object for the specified GNN model
+            
+        Raises:
+            KeyError: If GNN model is not found in this task
+        """
+        gnn_data = self.data[self.data['gnn'] == gnn_name]
+        if gnn_data.empty:
+            raise KeyError(f"GNN '{gnn_name}' not found")
+        return GNNAccessor(gnn_data, self.dataset_name, self.task_name, gnn_name)
+    
+    def get_available_gnns(self) -> List[str]:
+        """
+        Get list of available GNN models.
+        
+        Returns:
+            List[str]: Sorted list of available GNN models for this task
+            
+        Example:
+            >>> task = bench['rel-f1']['driver-top3']
+            >>> gnns = task.get_available_gnns()
+            >>> print(gnns)
+            ['GIN', 'GPS', 'GraphSAGE']
+        """
+        return sorted(self.data['gnn'].unique().tolist())
+    
+    def get_available_indices(self) -> List[int]:
+        """
+        Get list of available graph configuration indices across all GNNs.
+        
+        Returns:
+            List[int]: Sorted list of available indices for this task
+            
+        Example:
+            >>> task = bench['rel-f1']['driver-top3']
+            >>> indices = task.get_available_indices()
+            >>> print(indices)
+            [0, 1, 2, 3, ..., 49]
+        """
+        return sorted(self.data['idx'].unique().tolist())
+
+
+class GNNAccessor:
+    """
+    Accessor for graph configurations (indices) within a specific GNN model.
+    
+    This class provides access to all graph configurations available for a 
+    particular dataset/task/GNN combination and returns IndexAccessor objects
+    containing aggregated results.
+    
+    Attributes:
+        data (pd.DataFrame): DataFrame containing all results for this GNN model
+        dataset_name (str): Name of the dataset
+        task_name (str): Name of the task
+        gnn_name (str): Name of the GNN model
+    """
+    
+    def __init__(self, data: pd.DataFrame, dataset_name: str, task_name: str, gnn_name: str):
+        """
+        Initialize GNNAccessor.
+        
+        Args:
+            data (pd.DataFrame): DataFrame containing GNN model results
+            dataset_name (str): Name of the dataset
+            task_name (str): Name of the task
+            gnn_name (str): Name of the GNN model
+        """
+        self.data = data
+        self.dataset_name = dataset_name
+        self.task_name = task_name
+        self.gnn_name = gnn_name
+    
     def __getitem__(self, idx: int):
         """
         Access specific graph configuration by index.
@@ -204,23 +299,23 @@ class TaskAccessor:
             IndexAccessor: Accessor object for the specified graph configuration
             
         Raises:
-            KeyError: If index is not found in this task
+            KeyError: If index is not found for this GNN model
         """
         idx_data = self.data[self.data['idx'] == idx]
         if idx_data.empty:
-            raise KeyError(f"Index {idx} not found")
-        return IndexAccessor(idx_data, self.dataset_name, self.task_name, idx)
+            raise KeyError(f"Index {idx} not found for GNN '{self.gnn_name}'")
+        return IndexAccessor(idx_data, self.dataset_name, self.task_name, self.gnn_name, idx)
     
     def get_available_indices(self) -> List[int]:
         """
-        Get list of available graph configuration indices.
+        Get list of available graph configuration indices for this GNN model.
         
         Returns:
-            List[int]: Sorted list of available indices for this task
+            List[int]: Sorted list of available indices for this GNN model
             
         Example:
-            >>> task = bench['rel-f1']['driver-top3']
-            >>> indices = task.get_available_indices()
+            >>> gnn = bench['rel-f1']['driver-top3']['GraphSAGE']
+            >>> indices = gnn.get_available_indices()
             >>> print(indices)
             [0, 1, 2, 3, ..., 49]
         """
@@ -238,12 +333,13 @@ class IndexAccessor:
     Attributes:
         data (pd.DataFrame): DataFrame containing results for this configuration
         dataset_name (str): Name of the dataset
-        task_name (str): Name of the task  
+        task_name (str): Name of the task
+        gnn_name (str): Name of the GNN model
         idx (int): Index of the graph configuration
         _stats (Optional[Dict]): Cached computed statistics
     """
     
-    def __init__(self, data: pd.DataFrame, dataset_name: str, task_name: str, idx: int):
+    def __init__(self, data: pd.DataFrame, dataset_name: str, task_name: str, gnn_name: str, idx: int):
         """
         Initialize IndexAccessor.
         
@@ -251,11 +347,13 @@ class IndexAccessor:
             data (pd.DataFrame): DataFrame containing results for this index
             dataset_name (str): Name of the dataset
             task_name (str): Name of the task
+            gnn_name (str): Name of the GNN model
             idx (int): Index of the graph configuration
         """
         self.data = data
         self.dataset_name = dataset_name
         self.task_name = task_name
+        self.gnn_name = gnn_name
         self.idx = idx
         self._stats = None
     
