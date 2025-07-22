@@ -7,7 +7,8 @@ from rdb2g_bench.benchmark.llm.llm_runner import run_llm_baseline
 # Example 1: Basic run
 run_benchmark(
     dataset="rel-f1",
-    task="driver-top3", 
+    task="driver-top3",
+    gnn="GraphSAGE",
     budget_percentage=0.05,
     method="all",
     num_runs=1,
@@ -17,7 +18,8 @@ run_benchmark(
 # Example 2: Run only for specific methods (Currently, Greedy, BO, RL, and EA are supported)
 run_benchmark(
     dataset="rel-f1",
-    task="driver-top3", 
+    task="driver-top3",
+    gnn="GraphSAGE",
     budget_percentage=0.05,
     method=["rl", "bo"],
     num_runs=1,
@@ -27,7 +29,8 @@ run_benchmark(
 # Example 3: Run LLM-based baseline
 run_llm_baseline(
     dataset="rel-f1",
-    task="driver-top3", 
+    task="driver-top3",
+    gnn="GraphSAGE",
     budget_percentage=0.05,
     seed=0,
 )

@@ -9,7 +9,7 @@ results = run_gnn_node_worker(
 
 print(results['processed_graphs']) # [0, ..., 721]
 print(results['total_processed']) # 722
-print(results['csv_file']) # ./results/rel-f1/driver-top3/42.csv
+print(results['csv_file']) # ./results/tables/rel-f1/driver-top3/{tag}/GraphSAGE/42.csv
 
 # Example 2: Run parallelly on multiple GPUs
 results_even = run_gnn_node_worker(
