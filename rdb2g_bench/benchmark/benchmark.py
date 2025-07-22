@@ -72,7 +72,7 @@ def full_graph_heuristic_analysis(
         >>> from rdb2g_bench.benchmark.dataset import PerformancePredictionDataset
         >>> 
         >>> # Load dataset and performance data
-        >>> dataset = PerformancePredictionDataset("rel-f1", "driver-top3")
+        >>> dataset = PerformancePredictionDataset("rel-f1", "driver-top3", gnn="GraphSAGE")
         >>> performance_values = torch.tensor([0.85, 0.92, 0.78, 0.89])
         >>> 
         >>> # Analyze full graph performance
@@ -133,7 +133,8 @@ def main(args):
         
         Expected attributes in args:
             - dataset (str): Dataset name (e.g., "rel-f1", "rel-avito")
-            - task (str): Task name (e.g., "driver-top3", "user-ad-visit")  
+            - task (str): Task name (e.g., "driver-top3", "user-ad-visit")
+            - gnn (str): GNN model name (e.g., "GraphSAGE", "GIN", "GPS")
             - method (list): List of methods to execute ("all", "ea", "greedy", "rl", "bo")
             - num_runs (int): Number of independent runs for statistical analysis
             - budget_percentage (float): Budget as fraction of total search space (0.0-1.0)
@@ -180,9 +181,9 @@ def main(args):
             - Method comparison analysis
         
         **CSV Files**:
-            - `avg_trajectory_{method}_{num_runs}runs.csv`: Average performance trajectories
-            - `all_methods_trajectories_{num_runs}runs.csv`: Combined trajectory data
-            - `performance_summary_{num_runs}runs.csv`: Final performance comparison
+            - `avg_trajectory_{method}_{gnn}_{num_runs}runs.csv`: Average performance trajectories
+            - `all_methods_trajectories_{gnn}_{num_runs}runs.csv`: Combined trajectory data
+            - `performance_summary_{gnn}_{num_runs}runs.csv`: Final performance comparison
     """
     all_runs_results = {}
     original_overall_actual_y = None
@@ -256,6 +257,7 @@ def main(args):
     perf_pred_dataset = PerformancePredictionDataset(
         dataset_name=args.dataset,
         task_name=args.task,
+        gnn=args.gnn,
         tag=args.tag,
         cache_dir=args.cache_dir,
         result_dir=args.result_dir,
@@ -272,7 +274,7 @@ def main(args):
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
         current_seed = args.seed + run_index
-        print(f"\n--- Starting Run {run_index + 1}/{args.num_runs} (Seed: {current_seed}) ---")
+        print(f"\n--- Starting Run {run_index + 1}/{args.num_runs} (Dataset: {args.dataset}, Task: {args.task}, GNN: {args.gnn}, Seed: {current_seed}) ---")
         
         seed_everything(current_seed)
         
@@ -471,7 +473,7 @@ def main(args):
 
     for agg_results in aggregated_results_list:
         method = agg_results['method']
-        print(f"\n[{method}] (Avg over {args.num_runs} runs)")
+        print(f"\n[{method}] (GNN: {args.gnn}, Avg over {args.num_runs} runs)")
 
         avg_perf = agg_results['avg_actual_y_perf_of_selected']
         avg_rank_pos = agg_results['avg_rank_position_overall']
@@ -507,7 +509,7 @@ def main(args):
         try:
             import pandas as pd
             
-            csv_dir = os.path.join(args.result_dir if args.result_dir else '.', f'benchmark/{args.dataset}/{args.task}/{args.tag}')
+            csv_dir = os.path.join(args.result_dir if args.result_dir else '.', f'benchmark/{args.dataset}/{args.task}/{args.tag}/{args.gnn}')
             if not os.path.exists(csv_dir):
                 os.makedirs(csv_dir)
             
@@ -554,7 +556,7 @@ def main(args):
                     'Num_Runs': len(all_trajectories_perf)
                 })
                 
-                csv_filename = f'avg_trajectory_{method.replace(" ", "_")}_{args.num_runs}runs.csv'
+                csv_filename = f'avg_trajectory_{method.replace(" ", "_")}_{args.gnn}_{args.num_runs}runs.csv'
                 csv_path = os.path.join(csv_dir, csv_filename)
                 df.to_csv(csv_path, index=False)
                 print(f"Saved average trajectory for {method} to: {csv_path}")
@@ -616,7 +618,7 @@ def main(args):
             
             if combined_data:
                 combined_df = pd.DataFrame(combined_data)
-                combined_csv_path = os.path.join(csv_dir, f'all_methods_trajectories_{args.num_runs}runs.csv')
+                combined_csv_path = os.path.join(csv_dir, f'all_methods_trajectories_{args.gnn}_{args.num_runs}runs.csv')
                 combined_df.to_csv(combined_csv_path, index=False)
                 print(f"Saved combined trajectories data to: {combined_csv_path}")
                 
@@ -632,6 +634,9 @@ def main(args):
                             if method_agg_results:
                                 summary_data.append({
                                     'Method': method,
+                                    'GNN': args.gnn,
+                                    'Dataset': args.dataset,
+                                    'Task': args.task,
                                     'Final_Performance': final_perf,
                                     'Evaluation_Time': method_agg_results.get('avg_evaluation_time', 0.0),
                                     'Run_Time': method_agg_results.get('avg_run_time', 0.0)
@@ -639,6 +644,9 @@ def main(args):
                             else:
                                 summary_data.append({
                                     'Method': method,
+                                    'GNN': args.gnn,
+                                    'Dataset': args.dataset,
+                                    'Task': args.task,
                                     'Final_Performance': final_perf,
                                     'Evaluation_Time': 0.0,
                                     'Run_Time': 0.0
@@ -651,6 +659,9 @@ def main(args):
                             if method_agg_results:
                                 summary_data.append({
                                     'Method': method,
+                                    'GNN': args.gnn,
+                                    'Dataset': args.dataset,
+                                    'Task': args.task,
                                     'Final_Performance': final_perf,
                                     'Evaluation_Time': method_agg_results.get('avg_evaluation_time', 0.0),
                                     'Run_Time': method_agg_results.get('avg_run_time', 0.0)
@@ -658,6 +669,9 @@ def main(args):
                             else:
                                 summary_data.append({
                                     'Method': method,
+                                    'GNN': args.gnn,
+                                    'Dataset': args.dataset,
+                                    'Task': args.task,
                                     'Final_Performance': final_perf,
                                     'Evaluation_Time': 0.0,
                                     'Run_Time': 0.0
@@ -681,7 +695,7 @@ def main(args):
                         item['Avg_Top3_Performance'] = avg_top3_perf
                 
                 summary_df = pd.DataFrame(summary_data)
-                summary_csv_path = os.path.join(csv_dir, f'performance_summary_{args.num_runs}runs.csv')
+                summary_csv_path = os.path.join(csv_dir, f'performance_summary_{args.gnn}_{args.num_runs}runs.csv')
                 summary_df.to_csv(summary_csv_path, index=False)
                 print(f"Saved performance summary to: {summary_csv_path}")
             

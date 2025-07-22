@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List, Union, Optional, Any
+from typing import Dict, List, Union, Any
 
 from .benchmark import main as benchmark_main
 
@@ -7,6 +7,7 @@ from .benchmark import main as benchmark_main
 def run_benchmark(
     dataset: str = "rel-f1",
     task: str = "driver-top3",
+    gnn: str = "GraphSAGE",
     budget_percentage: float = 0.05,
     method: Union[str, List[str]] = "all",
     num_runs: int = 10,
@@ -37,6 +38,8 @@ def run_benchmark(
         task (str): Name of the RelBench task to evaluate.
             Task names depend on the dataset (e.g., "driver-top3", "user-ad-visit").
             Defaults to "driver-top3".
+        gnn (str): Name of the GNN model to benchmark (e.g., "GraphSAGE", "GIN", "GPS").
+            Defaults to "GraphSAGE".
         budget_percentage (float): Budget percentage for search algorithms as fraction
             of total search space (0.0-1.0). Higher values allow more thorough search
             but increase computational cost. Defaults to 0.05 (5%).
@@ -70,10 +73,11 @@ def run_benchmark(
         - statistical_comparisons (Dict): Rankings and comparisons between methods
 
     Example:
-        >>> # Run all methods on default dataset/task
+        >>> # Run all methods on default dataset/task with specific GNN
         >>> results = run_benchmark(
         ...     dataset="rel-f1",
         ...     task="driver-top3",
+        ...     gnn="GraphSAGE",
         ...     budget_percentage=0.05,
         ...     method="all",
         ...     num_runs=10,
@@ -89,6 +93,7 @@ def run_benchmark(
         >>> results = run_benchmark(
         ...     dataset="rel-avito",
         ...     task="user-ad-visit",
+        ...     gnn="GIN",
         ...     budget_percentage=0.10,
         ...     method=["ea", "greedy", "rl"],
         ...     num_runs=5,
@@ -99,6 +104,7 @@ def run_benchmark(
         
         >>> # Run quick test with single method
         >>> results = run_benchmark(
+        ...     gnn="GPS",
         ...     method="all",
         ...     num_runs=10,
         ...     budget_percentage=0.05
@@ -130,6 +136,7 @@ def run_benchmark(
     args = Args(
         dataset=dataset,
         task=task,
+        gnn=gnn,
         budget_percentage=budget_percentage,
         method=method,
         num_runs=num_runs,

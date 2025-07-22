@@ -4,8 +4,8 @@ import pandas as pd
 import json
 
 
-def get_budget(dataset, task, budget, path='../results/tables'):
-    csv_path = f"{path}/{dataset}/{task}/final/0.csv"
+def get_budget(dataset, task, budget, gnn="GraphSAGE", tag="final", path='../results/tables'):
+    csv_path = f"{path}/{dataset}/{task}/{tag}/{gnn}/0.csv"
     df = pd.read_csv(csv_path)
     max_idx = df['idx'].max() + 1
     budget = int(max_idx * budget)
