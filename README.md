@@ -1,4 +1,8 @@
-# RDB2G-Bench 
+# RDB2G-Bench (NeurIPS 2025 Datasets & Benchmarks)
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a0125445-7c3d-451c-9046-c1b5ebc7b881" width="70%">
+</p>
 
 [![Latest Release](https://img.shields.io/badge/Latest-v0.1.1-success)](https://github.com/chlehdwon/RDB2G-Bench/releases)
 [![Read the Docs](https://img.shields.io/readthedocs/RDB2G-Bench)](https://rdb2g-bench.readthedocs.io/en/latest/)
