@@ -54,6 +54,9 @@ templates_path = ['_templates']
 
 html_theme = 'sphinx_rtd_theme'
 
+# Show project logo at the top-left of the docs
+html_logo = '../logo.png'
+
 # HTML theme options for sphinx_rtd_theme
 html_theme_options = {
     'prev_next_buttons_location': 'bottom',
