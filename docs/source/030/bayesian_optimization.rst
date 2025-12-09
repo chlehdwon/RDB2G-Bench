@@ -1,9 +1,9 @@
 Bayesian Optimization
 =====================
 
-This module implements Bayesian optimization baseline for neural architecture search.
+This module implements Bayesian optimization baseline for RDB-to-Graph modeling search.
 Bayesian optimization is a sequential model-based optimization technique particularly
-effective for expensive black-box optimization problems like finding optimal GNN architectures.
+effective for expensive black-box optimization problems like finding optimal graph models.
 
 How it Works
 ------------
@@ -11,8 +11,8 @@ How it Works
 The Bayesian optimization algorithm process:
 
 1. Build a probabilistic model (surrogate) of the objective function
-2. Use acquisition function to determine next graph construction to evaluate
-3. Evaluate the objective function at the selected graph construction
+2. Use acquisition function to determine next graph model to evaluate
+3. Evaluate the objective function at the selected graph model
 4. Update the surrogate model with new observation
 5. Repeat until budget is exhausted
 

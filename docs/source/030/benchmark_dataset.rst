@@ -12,9 +12,9 @@ The dataset loading process involves the following steps:
 
 1. **RelBench Integration**: Connects to the specified RelBench dataset and task
 2. **Graph Materialization**: Creates heterogeneous graph data with proper embeddings
-3. **Results Loading**: Reads performance data from CSV files for the specified GNN model
-4. **Data Aggregation**: Groups results by graph configuration and aggregates across seeds
-5. **Graph Indexing**: Creates mappings between graph configurations and search space
+3. **Results Loading**: Reads performance data from CSV files for the specified GNN backbone architectures
+4. **Data Aggregation**: Groups results by graph models and aggregates across seeds
+5. **Graph Indexing**: Creates mappings between graph models and search space
 
 Performance Prediction Dataset
 -------------------------------

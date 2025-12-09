@@ -1,22 +1,22 @@
 Reinforcement Learning
 ======================
 
-This module implements reinforcement learning baseline for neural architecture search.
+This module implements reinforcement learning baseline for RDB-to-Graph modeling search.
 The approach uses deep reinforcement learning with policy gradients to train
 a recurrent neural network controller that learns to generate sequences of micro actions
-for constructing high-performing graph neural network architectures.
+for constructing high-performing graph models.
 
 How it Works
 ------------
 
 The reinforcement learning algorithm process:
 
-1. Initialize RNN-based controller to learn graph construction actions
-2. Start from random graph construction and convert to state embedding
+1. Initialize RNN-based controller to learn micro actions for graph model optimization
+2. Start from random graph model and convert to state embedding
 3. Controller selects actions
-4. Evaluate performance of new graph construction and compute reward
+4. Evaluate the performance of new graph model and compute reward
 5. Update controller policy using Policy Gradient based on discounted rewards
-6. Repeat episodes until budget is exhausted
+6. Repeat episodes until the budget is exhausted
 
 Reinforcement Learning Baseline
 -------------------------------

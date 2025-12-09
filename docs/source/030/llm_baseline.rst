@@ -9,7 +9,7 @@ How it Works
 The LLM-based baseline process:
 
 1. Provide the LLM with problem description and search space
-2. LLM suggests promising micro actions for graph constructions
+2. LLM suggests promising micro actions for graph models
 3. Evaluate suggested micro actions on the actual task
 4. Provide feedback to the LLM about performance
 5. LLM refines its suggestions based on feedback

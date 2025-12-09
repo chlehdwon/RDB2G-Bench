@@ -1,7 +1,7 @@
 Evolutionary Algorithm
 ======================
 
-This module implements evolutionary algorithm baseline for neural architecture search.
+This module implements evolutionary algorithm baseline for RDB-to-Graph modeling search.
 Evolutionary algorithms are population-based metaheuristics that use biological evolution
 mechanisms such as reproduction, mutation, and selection to find optimal solutions.
 
@@ -10,10 +10,10 @@ How it Works
 
 The evolutionary algorithm process:
 
-1. Initialize a population of random graph constructions
-2. Evaluate the performance of each graph construction
+1. Initialize a population of random graph models
+2. Evaluate the performance of each graph model
 3. Select parents for reproduction
-4. Apply crossover and mutation operators to the selected graph constructions
+4. Apply crossover and mutation operators to the selected graph models
 5. Replace old population with new generation
 6. Repeat until budget is exhausted
 

@@ -1,24 +1,24 @@
 Greedy Search
 =============
 
-This module implements multiple greedy search strategies for neural architecture search.
+This module implements multiple greedy search strategies for RDB-to-Graph modeling search.
 Greedy algorithms make locally optimal choices at each step, providing fast and deterministic
-approaches for finding good graph neural network architectures with minimal computational overhead.
+approaches for finding good graph models with minimal computational overhead.
 
 How it Works
 ------------
 
-The greedy search algorithm implements three different greedy strategies for graph construction optimization:
+The greedy search algorithm implements three different greedy strategies for graph model optimization:
 
-1. **Forward Greedy**: Starts with a random graph construction and iteratively moves to the best neighboring construction
-2. **Backward Greedy**: Starts with the full graph construction and iteratively removes edges to find the best construction
-3. **Local Greedy**: Combines forward and backward greedy strategies with random graph construction
+1. **Forward Greedy**: Starts with a graph model only with target table(s) and iteratively moves to the best graph model
+2. **Backward Greedy**: Starts with the All-Rows-to-Nodes(AR2N) graph model and iteratively moves to the best graph model
+3. **Local Greedy**: Combines forward and backward greedy strategies with randomly initialized graph model
 
 The greedy search algorithm process:
 
-1. Starts with a random graph construction
-2. Evaluates the performance of the graph construction
-3. Selects the best improvement based on the chosen greedy strategy
+1. Starts with a random graph model
+2. Evaluates the performance of the graph model
+3. Selects the best local improvement based on the chosen greedy strategy
 4. Repeats until the budget is exhausted
 
 
