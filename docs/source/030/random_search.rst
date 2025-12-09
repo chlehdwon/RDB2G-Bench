@@ -1,8 +1,8 @@
 Random Search
 =============
 
-This module implements random search baseline for neural architecture search.
-Random search provides a simple yet effective baseline by uniformly sampling architectures
+This module implements random search baseline for RDB-to-Graph modeling search.
+Random search provides a simple yet effective baseline by uniformly sampling graph models
 from the search space without any heuristic guidance, serving as an important comparison
 point for evaluating more sophisticated optimization algorithms.
 
@@ -11,10 +11,10 @@ How it Works
 
 The random search algorithm process:
 
-1. Uniformly sample graph constructions from the entire search space
-2. Evaluate the performance of each sampled graph construction
-3. Keep track of the best architecture found so far
-4. Repeat until the evaluation budget is exhausted
+1. Uniformly sample graph models from the entire search space
+2. Evaluate the performance of each sampled graph model
+3. Keep track of the best graph model found so far
+4. Repeat until the budget is exhausted
 
 Random Search Baseline
 ----------------------

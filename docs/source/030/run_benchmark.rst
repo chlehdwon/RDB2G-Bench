@@ -2,10 +2,10 @@ Run Benchmark
 =============
 
 This module provides the main interface for running comprehensive benchmarks on RDB2G-Bench.
-The benchmark runner executes multiple neural architecture search algorithms and provides
+The benchmark runner executes multiple RDB-to-Graph modeling search algorithms and provides
 statistical analysis and comparison across different methods, datasets, and tasks.
 
-The benchmark system supports all available search strategies and automatically handles
+The benchmark system supports all available RDB-to-Graph modeling strategies and automatically handles
 data preparation, caching, multi-run execution, and results aggregation.
 
 Benchmark Runner Interface

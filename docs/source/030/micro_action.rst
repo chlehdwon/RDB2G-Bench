@@ -1,21 +1,21 @@
 Micro Actions
 =============
 
-This module defines the core micro actions used by all optimization algorithms for graph construction.
-These atomic operations enable systematic exploration of the graph construction space by transforming
-one valid configuration into another.
+This module defines the core micro actions used by all optimization algorithms for RDB-to-Graph modeling search.
+These atomic operations enable systematic exploration of the graph model space by transforming
+one valid graph model into another.
 
 How it Works
 ------------
 
-Micro actions represent atomic operations for transforming graph constructions:
+Micro actions represent atomic operations for transforming graph models:
 
 1. **add_fk_pk_edge**: Add foreign key-primary key edge between tables
 2. **remove_fk_pk_edge**: Remove foreign key-primary key edge between tables  
 3. **convert_row_to_edge**: Convert row representation to edge representation
 4. **convert_edge_to_row**: Convert edge representation to row representation
 
-Each action transforms the current graph construction (edge set) to a new valid graph construction, enabling systematic exploration of the graph construction space.
+Each action transforms the current graph model (edge set) to a new valid graph model, enabling systematic exploration of the graph model space.
 
 Micro Action Set
 ----------------
@@ -92,7 +92,7 @@ Example with Data Preparation
        src_entity_table=task.entity_table
    )
 
-   print(f"Total number of valid graph configurations: {len(micro_actions.valid_edge_sets_list)}")
+   print(f"Total number of valid graph models: {len(micro_actions.valid_edge_sets_list)}")
    print(f"Number of FK-PK edges: {len(micro_actions.fk_pk_indices)}")
    print(f"Number of R2E edges: {len(micro_actions.r2e_indices)}")
 
