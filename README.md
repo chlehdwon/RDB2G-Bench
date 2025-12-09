@@ -135,6 +135,15 @@ The dataset construction and implementation of RDB2G-Bench is based on the [RelB
 If you use RDB2G-Bench in your research, please cite:
 
 ```bibtex
+@inproceedings{choi2025rdb2gbench,
+    title={RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases}, 
+    author={Dongwon Choi and Sunwoo Kim and Juyeon Kim and Kyungho Kim and Geon Lee and Shinhwan Kang and Myunghwan Kim and Kijung Shin},
+    year={2025},
+    booktitle={NeurIPS},
+}
+```
+or
+```bibtex
 @article{choi2025rdb2gbench,
     title={RDB2G-Bench: A Comprehensive Benchmark for Automatic Graph Modeling of Relational Databases}, 
     author={Dongwon Choi and Sunwoo Kim and Juyeon Kim and Kyungho Kim and Geon Lee and Shinhwan Kang and Myunghwan Kim and Kijung Shin},
@@ -142,7 +151,6 @@ If you use RDB2G-Bench in your research, please cite:
     url={https://arxiv.org/abs/2506.01360}, 
 }
 ```
-
 
 ## ⚖️ License
 
