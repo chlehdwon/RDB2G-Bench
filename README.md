@@ -42,7 +42,7 @@ from rdb2g_bench.dataset.dataset import load_rdb2g_bench
 
 bench = load_rdb2g_bench("./results")
 
-result = bench['rel-f1']['driver-top3'][0]  # Access by graph index
+result = bench['rel-f1']['driver-top3']['GraphSAGE'][0]  # Select GNN, then graph index
 test_metric = result['test_metric']         # Test performance
 params = result['params']                   # Model parameters
 train_time = result['train_time']           # Train time

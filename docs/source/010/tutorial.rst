@@ -19,7 +19,7 @@ Here's a simple example to get you started:
    bench = load_rdb2g_bench("./results")
    
    # Access specific results
-   result = bench['rel-f1']['driver-top3'][0]
+   result = bench['rel-f1']['driver-top3']['GraphSAGE'][0]
    test_metric = result['test_metric']
    params = result['params']
    train_time = result['train_time']

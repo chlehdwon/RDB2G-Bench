@@ -33,7 +33,7 @@ def load_rdb2g_bench(
         
     Returns:
         RDB2GBench: Benchmark object for accessing organized results with
-            hierarchical access pattern: bench[dataset][task][idx].
+            hierarchical access pattern: bench[dataset][task][gnn][idx].
         
     Raises:
         RuntimeError: If no valid data is found in the result directory
@@ -42,7 +42,7 @@ def load_rdb2g_bench(
     Example:
         >>> bench = load_rdb2g_bench("./my_results")
         >>> available = bench.get_available()
-        >>> result = bench['rel-f1']['driver-top3'][0]
+        >>> result = bench['rel-f1']['driver-top3']['GraphSAGE'][0]
     """
     result_path = Path(result_dir)
     tables_path = result_path / "tables"
