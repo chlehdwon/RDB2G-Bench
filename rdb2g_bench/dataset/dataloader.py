@@ -9,7 +9,7 @@ class RDB2GBench:
     Main benchmark data container for RDB2G-Bench results.
     
     This class loads and organizes all benchmark data from a specified directory
-    structure and provides hierarchical access to results through dataset and task names.
+    structure and provides hierarchical access through dataset, task, GNN, and graph index.
     
     The expected directory structure is::
     
@@ -412,7 +412,7 @@ class IndexAccessor:
             KeyError: If column is not found in computed statistics
             
         Example:
-            >>> result = bench['rel-f1']['driver-top3'][0]
+            >>> result = bench['rel-f1']['driver-top3']['GraphSAGE'][0]
             >>> test_perf = result['test_metric']  # Gets test_metric_mean
             >>> test_mean = result['test_metric_mean']  # Same as above
             >>> test_std = result['test_metric_std']
